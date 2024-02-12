@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit50dfb20154d6a73d911ebb5c84143a86
+class ComposerStaticInit99dd93462bdd098a3d12154b8e71b543
 {
     public static $prefixLengthsPsr4 = array (
         'P' => 
@@ -234,6 +234,7 @@ class ComposerStaticInit50dfb20154d6a73d911ebb5c84143a86
         'Mollie\\WooCommerce\\MerchantCapture\\Capture\\Type\\StateChangeCapture' => __DIR__ . '/../..' . '/src/MerchantCapture/Capture/Type/StateChangeCapture.php',
         'Mollie\\WooCommerce\\MerchantCapture\\ManualCaptureStatus' => __DIR__ . '/../..' . '/src/MerchantCapture/ManualCaptureStatus.php',
         'Mollie\\WooCommerce\\MerchantCapture\\MerchantCaptureModule' => __DIR__ . '/../..' . '/src/MerchantCapture/MerchantCaptureModule.php',
+        'Mollie\\WooCommerce\\MerchantCapture\\MollieCaptureSettings' => __DIR__ . '/../..' . '/src/MerchantCapture/MollieCaptureSettings.php',
         'Mollie\\WooCommerce\\MerchantCapture\\OrderListPaymentColumn' => __DIR__ . '/../..' . '/src/MerchantCapture/OrderListPaymentColumn.php',
         'Mollie\\WooCommerce\\MerchantCapture\\UI\\OrderActionBlock' => __DIR__ . '/../..' . '/src/MerchantCapture/UI/OrderActionBlock.php',
         'Mollie\\WooCommerce\\MerchantCapture\\UI\\StatusButton' => __DIR__ . '/../..' . '/src/MerchantCapture/UI/StatusButton.php',
@@ -248,6 +249,7 @@ class ComposerStaticInit50dfb20154d6a73d911ebb5c84143a86
         'Mollie\\WooCommerce\\PaymentMethods\\Banktransfer' => __DIR__ . '/../..' . '/src/PaymentMethods/Banktransfer.php',
         'Mollie\\WooCommerce\\PaymentMethods\\Belfius' => __DIR__ . '/../..' . '/src/PaymentMethods/Belfius.php',
         'Mollie\\WooCommerce\\PaymentMethods\\Billie' => __DIR__ . '/../..' . '/src/PaymentMethods/Billie.php',
+        'Mollie\\WooCommerce\\PaymentMethods\\Blik' => __DIR__ . '/../..' . '/src/PaymentMethods/Blik.php',
         'Mollie\\WooCommerce\\PaymentMethods\\Constants' => __DIR__ . '/../..' . '/src/PaymentMethods/Constants.php',
         'Mollie\\WooCommerce\\PaymentMethods\\Creditcard' => __DIR__ . '/../..' . '/src/PaymentMethods/Creditcard.php',
         'Mollie\\WooCommerce\\PaymentMethods\\Directdebit' => __DIR__ . '/../..' . '/src/PaymentMethods/Directdebit.php',
@@ -279,6 +281,7 @@ class ComposerStaticInit50dfb20154d6a73d911ebb5c84143a86
         'Mollie\\WooCommerce\\PaymentMethods\\PaymentFieldsStrategies\\DefaultFieldsStrategy' => __DIR__ . '/../..' . '/src/PaymentMethods/PaymentFieldsStrategies/DefaultFieldsStrategy.php',
         'Mollie\\WooCommerce\\PaymentMethods\\PaymentFieldsStrategies\\GiftcardFieldsStrategy' => __DIR__ . '/../..' . '/src/PaymentMethods/PaymentFieldsStrategies/GiftcardFieldsStrategy.php',
         'Mollie\\WooCommerce\\PaymentMethods\\PaymentFieldsStrategies\\IdealFieldsStrategy' => __DIR__ . '/../..' . '/src/PaymentMethods/PaymentFieldsStrategies/IdealFieldsStrategy.php',
+        'Mollie\\WooCommerce\\PaymentMethods\\PaymentFieldsStrategies\\In3FieldsStrategy' => __DIR__ . '/../..' . '/src/PaymentMethods/PaymentFieldsStrategies/In3FieldsStrategy.php',
         'Mollie\\WooCommerce\\PaymentMethods\\PaymentFieldsStrategies\\IssuersDropdownBehavior' => __DIR__ . '/../..' . '/src/PaymentMethods/PaymentFieldsStrategies/IssuersDropdownBehavior.php',
         'Mollie\\WooCommerce\\PaymentMethods\\PaymentFieldsStrategies\\KbcFieldsStrategy' => __DIR__ . '/../..' . '/src/PaymentMethods/PaymentFieldsStrategies/KbcFieldsStrategy.php',
         'Mollie\\WooCommerce\\PaymentMethods\\PaymentFieldsStrategies\\PaymentFieldsStrategyI' => __DIR__ . '/../..' . '/src/PaymentMethods/PaymentFieldsStrategies/PaymentFieldsStrategyI.php',
@@ -291,6 +294,7 @@ class ComposerStaticInit50dfb20154d6a73d911ebb5c84143a86
         'Mollie\\WooCommerce\\PaymentMethods\\Paysafecard' => __DIR__ . '/../..' . '/src/PaymentMethods/Paysafecard.php',
         'Mollie\\WooCommerce\\PaymentMethods\\Przelewy24' => __DIR__ . '/../..' . '/src/PaymentMethods/Przelewy24.php',
         'Mollie\\WooCommerce\\PaymentMethods\\Sofort' => __DIR__ . '/../..' . '/src/PaymentMethods/Sofort.php',
+        'Mollie\\WooCommerce\\PaymentMethods\\Twint' => __DIR__ . '/../..' . '/src/PaymentMethods/Twint.php',
         'Mollie\\WooCommerce\\PaymentMethods\\Voucher' => __DIR__ . '/../..' . '/src/PaymentMethods/Voucher.php',
         'Mollie\\WooCommerce\\Payment\\MollieObject' => __DIR__ . '/../..' . '/src/Payment/MollieObject.php',
         'Mollie\\WooCommerce\\Payment\\MollieOrder' => __DIR__ . '/../..' . '/src/Payment/MollieOrder.php',
@@ -368,9 +372,9 @@ class ComposerStaticInit50dfb20154d6a73d911ebb5c84143a86
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit50dfb20154d6a73d911ebb5c84143a86::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit50dfb20154d6a73d911ebb5c84143a86::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit50dfb20154d6a73d911ebb5c84143a86::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit99dd93462bdd098a3d12154b8e71b543::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit99dd93462bdd098a3d12154b8e71b543::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit99dd93462bdd098a3d12154b8e71b543::$classMap;
 
         }, null, ClassLoader::class);
     }

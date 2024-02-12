@@ -79,11 +79,6 @@
       "js": [
         "/public/js/mollieBillie.min.js"
       ]
-    },
-    "mollieIn3.min": {
-      "js": [
-        "/public/js/mollieIn3.min.js"
-      ]
     }
   }
 }

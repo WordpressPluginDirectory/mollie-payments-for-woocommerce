@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'mollie/mollie-woocommerce',
-        'pretty_version' => 'dev-develop',
-        'version' => 'dev-develop',
-        'reference' => '71b2253d6652a4ff5a00ce6ffb8a5fe2a073440d',
+        'pretty_version' => 'dev-release/7.4.2-beta-1-flags',
+        'version' => 'dev-release/7.4.2-beta-1-flags',
+        'reference' => '14ce7836c8491711490c1f9f314ff32827f793d6',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -29,9 +29,9 @@
             'dev_requirement' => false,
         ),
         'mollie/mollie-woocommerce' => array(
-            'pretty_version' => 'dev-develop',
-            'version' => 'dev-develop',
-            'reference' => '71b2253d6652a4ff5a00ce6ffb8a5fe2a073440d',
+            'pretty_version' => 'dev-release/7.4.2-beta-1-flags',
+            'version' => 'dev-release/7.4.2-beta-1-flags',
+            'reference' => '14ce7836c8491711490c1f9f314ff32827f793d6',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

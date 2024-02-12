@@ -2,8 +2,8 @@
 Contributors: daanvm, danielhuesken, davdebcom, dinamiko, inpsyde, l.vangunst, ndijkstra, robin-mollie, wido, carmen222, inpsyde-maticluznar
 Tags: mollie, payments, payment gateway, woocommerce, credit card, apple pay, ideal, bancontact, klarna, sofort, giropay, woocommerce subscriptions 
 Requires at least: 3.8
-Tested up to: 6.3
-Stable tag: 7.4.1
+Tested up to: 6.4
+Stable tag: 7.5.1
 Requires PHP: 7.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -184,6 +184,22 @@ Please contact info@mollie.com if you need help installing the Mollie WooCommerc
 Automatic updates should work like a charm; as always though, ensure you backup your site just in case.
 
 == Changelog ==
+
+= 7.5.1 - 12-02-2024 =
+
+* Fix - Merchant capture error. Feature flag disabled by default
+
+= 7.5.0 - 05-02-2024 =
+
+* Feature - Add TWINT payment method
+* Feature - Add BLIK payment method
+* Feature - Enable merchant capture feature flag by default
+* Feature - Enable Klarna one feature flag by default
+* Fix - Birth date not showing for in3 on pay for order page
+* Fix - Subscription signup payment not possible when using authorizations 
+* Fix - Transaction ID field not filled for authorized/captured WooCommerce orders
+* Fix - PHP Fatal error: Undefined method isCompleted
+* Fix - Align merchant capture wording with Mollie
 
 = 7.4.1 - 06-11-2023 =
 
