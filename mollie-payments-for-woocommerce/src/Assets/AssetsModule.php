@@ -34,6 +34,7 @@ class AssetsModule implements ExecutableModule
         }
         wp_enqueue_script(MollieCheckoutBlocksSupport::getScriptHandle());
         wp_enqueue_style('mollie-gateway-icons');
+        wp_enqueue_style('mollie-block-custom-field');
 
         MollieCheckoutBlocksSupport::localizeWCBlocksData($dataService, $gatewayInstances);
     }
@@ -276,13 +277,6 @@ class AssetsModule implements ExecutableModule
             (string) filemtime($this->getPluginPath($pluginPath, '/public/js/gatewaySurcharge.min.js')),
             true
         );
-        wp_register_script(
-            'mollie-billie-classic-handles',
-            $this->getPluginUrl($pluginUrl, '/public/js/mollieBillie.min.js'),
-            ['underscore', 'jquery'],
-            (string) filemtime($this->getPluginPath($pluginPath, '/public/js/mollieBillie.min.js')),
-            true
-        );
     }
 
     public function registerBlockScripts(string $pluginUrl, string $pluginPath): void
@@ -294,6 +288,13 @@ class AssetsModule implements ExecutableModule
             ['wc-blocks-registry', 'underscore', 'jquery'],
             (string) filemtime($this->getPluginPath($pluginPath, '/public/js/mollieBlockIndex.min.js')),
             true
+        );
+        wp_register_style(
+            'mollie-block-custom-field',
+            $this->getPluginUrl($pluginUrl, '/public/css/mollie-block-custom-field.min.css'),
+            [],
+            (string) filemtime($this->getPluginPath($pluginPath, '/public/css/mollie-block-custom-field.min.css')),
+            'screen'
         );
     }
 

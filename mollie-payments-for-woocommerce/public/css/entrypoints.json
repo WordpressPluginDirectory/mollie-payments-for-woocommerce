@@ -19,6 +19,11 @@
       "css": [
         "/public/css/mollie-applepaydirect.min.css"
       ]
+    },
+    "mollie-block-custom-field.min": {
+      "css": [
+        "/public/css/mollie-block-custom-field.min.css"
+      ]
     }
   }
 }

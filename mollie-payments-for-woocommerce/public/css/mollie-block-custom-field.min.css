@@ -1,0 +1,33 @@
+/*!**************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].oneOf[1].use[1]!./node_modules/resolve-url-loader/index.js??ruleSet[1].rules[4].oneOf[1].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].oneOf[1].use[3]!./resources/scss/mollie-block-custom-field.scss ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************************/
+/* Style the container to match WooCommerce styling */
+.custom-input {
+  margin-bottom: 1.5em;
+  display: flex;
+  flex-direction: column;
+}
+
+.custom-input label {
+  margin-bottom: 0.5em;
+  font-weight: bold;
+}
+
+#billing-birthdate,
+#billing-phone-in3 {
+  width: 100%;
+  padding: 0.75em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 1em;
+  margin-bottom: 1.25em;
+}
+
+#billing-birthdate {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoibW9sbGllLWJsb2NrLWN1c3RvbS1maWVsZC5taW4uY3NzIiwibWFwcGluZ3MiOiI7OztBQUFBO0FBQ0E7RUFDRTtFQUNBO0VBQ0E7QUFDRjs7QUFFQTtFQUNFO0VBQ0E7QUFDRjs7QUFFQTs7RUFFRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtBQUNGOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0FBQ0YsQyIsInNvdXJjZXMiOlsid2VicGFjazovL21vbGxpZS1wYXltZW50cy1mb3Itd29vY29tbWVyY2UvLi9yZXNvdXJjZXMvc2Nzcy9tb2xsaWUtYmxvY2stY3VzdG9tLWZpZWxkLnNjc3MiXSwic291cmNlc0NvbnRlbnQiOlsiLyogU3R5bGUgdGhlIGNvbnRhaW5lciB0byBtYXRjaCBXb29Db21tZXJjZSBzdHlsaW5nICovXG4uY3VzdG9tLWlucHV0IHtcbiAgbWFyZ2luLWJvdHRvbTogMS41ZW07XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XG59XG5cbi5jdXN0b20taW5wdXQgbGFiZWwge1xuICBtYXJnaW4tYm90dG9tOiAwLjVlbTtcbiAgZm9udC13ZWlnaHQ6IGJvbGQ7XG59XG5cbiNiaWxsaW5nLWJpcnRoZGF0ZSxcbiNiaWxsaW5nLXBob25lLWluMyB7XG4gIHdpZHRoOiAxMDAlO1xuICBwYWRkaW5nOiAwLjc1ZW07XG4gIGJvcmRlcjogMXB4IHNvbGlkICNjY2M7XG4gIGJvcmRlci1yYWRpdXM6IDRweDtcbiAgYm94LXNpemluZzogYm9yZGVyLWJveDtcbiAgZm9udC1zaXplOiAxZW07XG4gIG1hcmdpbi1ib3R0b206IDEuMjVlbTtcbn1cblxuI2JpbGxpbmctYmlydGhkYXRlIHtcbiAgLXdlYmtpdC1hcHBlYXJhbmNlOiBub25lO1xuICAtbW96LWFwcGVhcmFuY2U6IG5vbmU7XG4gIGFwcGVhcmFuY2U6IG5vbmU7XG59XG4iXSwibmFtZXMiOltdLCJzb3VyY2VSb290IjoiIn0=*/

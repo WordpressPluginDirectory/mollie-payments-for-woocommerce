@@ -6,8 +6,9 @@ declare(strict_types=1);
 
 namespace Mollie\WooCommerce\Gateway;
 
-use Automattic\WooCommerce\Admin\Overrides\Order;
 use Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController;
+use Automattic\WooCommerce\StoreApi\Exceptions\RouteException;
+use DateTime;
 use Mollie\WooCommerce\Vendor\Inpsyde\Modularity\Module\ExecutableModule;
 use Mollie\WooCommerce\Vendor\Inpsyde\Modularity\Module\ModuleClassNameIdTrait;
 use Mollie\WooCommerce\Vendor\Inpsyde\Modularity\Module\ServiceModule;
@@ -103,12 +104,24 @@ class GatewayModule implements ServiceModule, ExecutableModule
                 }
                 return $availableMethods;
             },
-            'gateway.getKlarnaPaymentMethodsAfterFeatureFlag' => static function (ContainerInterface $container): array {
+            'gateway.getPaymentMethodsAfterFeatureFlag' => static function (ContainerInterface $container): array {
                 $availablePaymentMethods = $container->get('gateway.listAllMethodsAvailable');
                 $klarnaOneFlag = apply_filters('inpsyde.feature-flags.mollie-woocommerce.klarna_one_enabled', true);
                 if (!$klarnaOneFlag) {
                     return array_filter($availablePaymentMethods, static function ($method) {
                         return $method['id'] !== Constants::KLARNA;
+                    });
+                }
+                $bancomatpayFlag = apply_filters('inpsyde.feature-flags.mollie-woocommerce.bancomatpay_enabled', true);
+                if (!$bancomatpayFlag) {
+                    return array_filter($availablePaymentMethods, static function ($method) {
+                        return $method['id'] !== Constants::BANCOMATPAY;
+                    });
+                }
+                $almaFlag = apply_filters('inpsyde.feature-flags.mollie-woocommerce.alma_enabled', false);
+                if (!$almaFlag) {
+                    return array_filter($availablePaymentMethods, static function ($method) {
+                        return $method['id'] !== Constants::ALMA;
                     });
                 }
                 return $availablePaymentMethods;
@@ -264,7 +277,15 @@ class GatewayModule implements ServiceModule, ExecutableModule
                 [$this, 'in3FieldsMandatoryPayForOrder'],
                 11
             );
+            add_action(
+                'woocommerce_checkout_posted_data',
+                [$this, 'switchFields'],
+                11
+            );
+            add_action('woocommerce_rest_checkout_process_payment_with_context', [$this, 'addPhoneWhenRest'], 11);
+            add_action('woocommerce_rest_checkout_process_payment_with_context', [$this, 'addBirthdateWhenRest'], 11);
         }
+
         // Set order to paid and processed when eventually completed without Mollie
         add_action('woocommerce_payment_complete', [$this, 'setOrderPaidByOtherGateway'], 10, 1);
         $appleGateway = isset($container->get('gateway.instances')['mollie_wc_gateway_applepay']) ? $container->get(
@@ -314,6 +335,14 @@ class GatewayModule implements ServiceModule, ExecutableModule
             }
         );
         add_action('add_meta_boxes_woocommerce_page_wc-orders', [$this, 'addShopOrderMetabox'], 10);
+        add_filter('woocommerce_checkout_fields', static function ($fields) use ($container) {
+            if (!isset($fields['billing']['billing_phone'])) {
+                update_option('mollie_wc_is_phone_required_flag', false);
+            } else {
+                update_option('mollie_wc_is_phone_required_flag', true);
+            }
+            return $fields;
+        }, 10, 3);
         return true;
     }
 
@@ -583,7 +612,7 @@ class GatewayModule implements ServiceModule, ExecutableModule
     protected function instantiatePaymentMethods($container): array
     {
         $paymentMethods = [];
-        $listAllAvailablePaymentMethods = $container->get('gateway.getKlarnaPaymentMethodsAfterFeatureFlag');
+        $listAllAvailablePaymentMethods = $container->get('gateway.getPaymentMethodsAfterFeatureFlag');
         $iconFactory = $container->get(IconFactory::class);
         assert($iconFactory instanceof IconFactory);
         $settingsHelper = $container->get('settings.settings_helper');
@@ -630,18 +659,15 @@ class GatewayModule implements ServiceModule, ExecutableModule
     public function in3FieldsMandatory($fields, $errors)
     {
         $gatewayName = "mollie_wc_gateway_in3";
-        $phoneField = 'billing_phone';
-        $birthdateField = self::FIELD_IN3_BIRTHDATE;
+        $phoneField = 'billing_phone_in3';
         $phoneLabel = __('Phone', 'mollie-payments-for-woocommerce');
-        $birthDateLabel = __('Birthdate', 'mollie-payments-for-woocommerce');
-        $fields = $this->addPaymentMethodMandatoryFields($fields, $gatewayName, $phoneField, $phoneLabel, $errors);
-        return $this->addPaymentMethodMandatoryFields($fields, $gatewayName, $birthdateField, $birthDateLabel, $errors);
+        return $this->addPaymentMethodMandatoryFieldsPhoneVerification($fields, $gatewayName, $phoneField, $phoneLabel, $errors);
     }
 
     /**
-     * @param Order $order
+     * @param $order
      */
-    public function in3FieldsMandatoryPayForOrder(Order $order)
+    public function in3FieldsMandatoryPayForOrder($order)
     {
         $paymentMethod = filter_input(INPUT_POST, 'payment_method', FILTER_SANITIZE_SPECIAL_CHARS) ?? false;
 
@@ -649,17 +675,12 @@ class GatewayModule implements ServiceModule, ExecutableModule
             return;
         }
 
-        $birthdateValue = filter_input(INPUT_POST, self::FIELD_IN3_BIRTHDATE, FILTER_SANITIZE_SPECIAL_CHARS) ?? false;
-        $birthDateLabel = __('Birthdate', 'mollie-payments-for-woocommerce');
+        $phoneValue = filter_input(INPUT_POST, 'billing_phone_in3', FILTER_SANITIZE_SPECIAL_CHARS) ?? false;
+        $phoneValue = transformPhoneToNLFormat($phoneValue);
+        $phoneValid = $phoneValue && $this->isPhoneValid($phoneValue) ? $phoneValue : null;
 
-        if (!$birthdateValue) {
-            wc_add_notice(
-                sprintf(
-                    __('%s is a required field.', 'woocommerce'),
-                    "<strong>$birthDateLabel</strong>"
-                ),
-                'error'
-            );
+        if ($phoneValid) {
+            $order->set_billing_phone($phoneValue);
         }
     }
 
@@ -722,5 +743,108 @@ class GatewayModule implements ServiceModule, ExecutableModule
         }
 
         return $fields;
+    }
+
+    public function addPaymentMethodMandatoryFieldsPhoneVerification(
+        $fields,
+        string $gatewayName,
+        string $field,
+        string $fieldLabel,
+        $errors
+    ) {
+        if ($fields['payment_method'] !== $gatewayName) {
+            return $fields;
+        }
+        if (!empty($fields['billing_phone']) && $this->isPhoneValid($fields['billing_phone'])) {
+            return $fields;
+        }
+        if (!empty($fields['billing_phone']) && !$this->isPhoneValid($fields['billing_phone'])) {
+            $fields['billing_phone'] = null;
+            return $fields;
+        }
+        $fieldPosted = filter_input(INPUT_POST, $field, FILTER_SANITIZE_SPECIAL_CHARS) ?? false;
+
+        if ($fieldPosted && !$this->isPhoneValid($fieldPosted)) {
+            $fields['billing_phone'] = $fieldPosted;
+            return $fields;
+        }
+        $fields['billing_phone'] = null;
+        return $fields;
+    }
+
+    public function switchFields($data)
+    {
+        if (isset($data['payment_method']) && $data['payment_method'] === 'mollie_wc_gateway_in3') {
+            $fieldPosted = filter_input(INPUT_POST, 'billing_phone_in3', FILTER_SANITIZE_SPECIAL_CHARS) ?? false;
+            if ($fieldPosted) {
+                $data['billing_phone'] = !empty($fieldPosted) ? $fieldPosted : $data['billing_phone'];
+            }
+        }
+        if (isset($data['payment_method']) && $data['payment_method'] === 'mollie_wc_gateway_billie') {
+            $fieldPosted = filter_input(INPUT_POST, 'billing_company_billie', FILTER_SANITIZE_SPECIAL_CHARS) ?? false;
+            if ($fieldPosted) {
+                $data['billing_company'] = !empty($fieldPosted) ? $fieldPosted : $data['billing_company'];
+            }
+        }
+        return $data;
+    }
+
+    private function isPhoneValid($billing_phone)
+    {
+        return preg_match('/^\+[1-9]\d{10,13}$|^[1-9]\d{9,13}$|^06\d{9,13}$/', $billing_phone);
+    }
+
+    private function isBirthValid($billing_birthdate)
+    {
+        $today = new DateTime();
+        $birthdate = DateTime::createFromFormat('Y-m-d', $billing_birthdate);
+        if ($birthdate >= $today) {
+            return false;
+        }
+        return true;
+    }
+
+    public function addPhoneWhenRest($arrayContext)
+    {
+        $context = $arrayContext;
+        $phoneMandatoryGateways = ['mollie_wc_gateway_in3'];
+        $paymentMethod = $context->payment_data['payment_method'];
+        if (in_array($paymentMethod, $phoneMandatoryGateways)) {
+            $billingPhone = $context->order->get_billing_phone();
+            if (!empty($billingPhone) && $this->isPhoneValid($billingPhone)) {
+                return;
+            }
+            if (!empty($billingPhone) && !$this->isPhoneValid($billingPhone)) {
+                $context->order->set_billing_phone(null);
+                $context->order->save();
+                return;
+            }
+            $billingPhone = $context->payment_data['billing_phone'];
+            if ($billingPhone && $this->isPhoneValid($billingPhone)) {
+                $context->order->set_billing_phone($billingPhone);
+                $context->order->save();
+            }
+        }
+    }
+
+    public function addBirthdateWhenRest($arrayContext)
+    {
+        $context = $arrayContext;
+        $birthMandatoryGateways = ['mollie_wc_gateway_in3'];
+        $paymentMethod = $context->payment_data['payment_method'];
+        if (in_array($paymentMethod, $birthMandatoryGateways)) {
+            $billingBirthdate = $context->payment_data['billing_birthdate'];
+            if ($billingBirthdate && $this->isBirthValid($billingBirthdate)) {
+                $context->order->update_meta_data('billing_birthdate', $billingBirthdate);
+                $context->order->save();
+            } else {
+                $message = __('Please introduce a valid birthdate number.', 'mollie-payments-for-woocommerce');
+                throw new RouteException(
+                    'woocommerce_rest_checkout_process_payment_error',
+                    $message,
+                    402
+                );
+            }
+        }
     }
 }

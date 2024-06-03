@@ -33,6 +33,8 @@ class SharedDataDictionary
         'Mollie_WC_Gateway_Directdebit',
         'Mollie_WC_Gateway_Blik',
         'Mollie_WC_Gateway_Twint',
+        'Mollie_WC_Gateway_Bancomatpay',
+        'Mollie_WC_Gateway_Alma',
     ];
 
     public const MOLLIE_OPTIONS_NAMES = [
@@ -68,6 +70,7 @@ class SharedDataDictionary
         'mollie-payments-for-woocommerce_removeOptionsAndTransients',
         'mollie-plugin-version',
         'mollie-new-install',
+        'mollie_wc_is_phone_required_flag',
     ];
     public const DB_VERSION_PARAM_NAME = 'mollie-db-version';
     public const PLUGIN_VERSION_PARAM_NAME = 'mollie-plugin-version';

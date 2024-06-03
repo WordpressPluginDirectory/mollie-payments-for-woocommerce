@@ -74,11 +74,6 @@
       "js": [
         "/public/js/applepayButtonBlockComponent.min.js"
       ]
-    },
-    "mollieBillie.min": {
-      "js": [
-        "/public/js/mollieBillie.min.js"
-      ]
     }
   }
 }
