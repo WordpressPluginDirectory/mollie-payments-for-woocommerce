@@ -284,7 +284,6 @@ class ComposerStaticInit99dd93462bdd098a3d12154b8e71b543
         'Mollie\\WooCommerce\\PaymentMethods\\PaymentFieldsStrategies\\CreditcardFieldsStrategy' => __DIR__ . '/../..' . '/src/PaymentMethods/PaymentFieldsStrategies/CreditcardFieldsStrategy.php',
         'Mollie\\WooCommerce\\PaymentMethods\\PaymentFieldsStrategies\\DefaultFieldsStrategy' => __DIR__ . '/../..' . '/src/PaymentMethods/PaymentFieldsStrategies/DefaultFieldsStrategy.php',
         'Mollie\\WooCommerce\\PaymentMethods\\PaymentFieldsStrategies\\GiftcardFieldsStrategy' => __DIR__ . '/../..' . '/src/PaymentMethods/PaymentFieldsStrategies/GiftcardFieldsStrategy.php',
-        'Mollie\\WooCommerce\\PaymentMethods\\PaymentFieldsStrategies\\IdealFieldsStrategy' => __DIR__ . '/../..' . '/src/PaymentMethods/PaymentFieldsStrategies/IdealFieldsStrategy.php',
         'Mollie\\WooCommerce\\PaymentMethods\\PaymentFieldsStrategies\\In3FieldsStrategy' => __DIR__ . '/../..' . '/src/PaymentMethods/PaymentFieldsStrategies/In3FieldsStrategy.php',
         'Mollie\\WooCommerce\\PaymentMethods\\PaymentFieldsStrategies\\IssuersDropdownBehavior' => __DIR__ . '/../..' . '/src/PaymentMethods/PaymentFieldsStrategies/IssuersDropdownBehavior.php',
         'Mollie\\WooCommerce\\PaymentMethods\\PaymentFieldsStrategies\\KbcFieldsStrategy' => __DIR__ . '/../..' . '/src/PaymentMethods/PaymentFieldsStrategies/KbcFieldsStrategy.php',

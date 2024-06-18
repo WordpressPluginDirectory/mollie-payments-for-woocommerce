@@ -1,9 +1,9 @@
 === Mollie Payments for WooCommerce ===
-Contributors: daanvm, danielhuesken, davdebcom, dinamiko, inpsyde, l.vangunst, ndijkstra, robin-mollie, wido, carmen222, inpsyde-maticluznar
+Contributors: daanvm, danielhuesken, davdebcom, dinamiko, syde, l.vangunst, ndijkstra, robin-mollie, wido, carmen222, inpsyde-maticluznar
 Tags: mollie, payments, payment gateway, woocommerce, credit card, apple pay, ideal, bancontact, klarna, sofort, giropay, woocommerce subscriptions 
 Requires at least: 3.8
 Tested up to: 6.5
-Stable tag: 7.5.4
+Stable tag: 7.5.5
 Requires PHP: 7.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -14,11 +14,11 @@ Accept all major payment methods in WooCommerce today. Credit cards, iDEAL and m
 
 https://www.youtube.com/watch?v=33sQNKelKW4
 
-Quickly integrate all major payment methods in WooCommerce, wherever you need them. Mollie Payments for WooCommerce adds the critical success factor: an easy-to-install, easy-to use, customisable payments gateway as flexible as WooCommerce itself.
+Quickly integrate all major payment methods in WooCommerce, wherever you need them. Mollie Payments for WooCommerce adds the critical success factor: an easy-to-install, easy-to-use, customizable payments gateway that is as flexible as WooCommerce itself.
 
 > **Effortless payments for your customers, designed for growth**
 
-No need to spend weeks on paperwork or security compliance procedures. Enjoy enhanced conversions as we support shopper’s favorite payment methods and ensure their utmost safety. We made payments intuitive and safe for merchants and their customers.
+No need to spend weeks on paperwork or security compliance procedures. Enjoy enhanced conversions as we support shopperâ€™s favorite payment methods and ensure their utmost safety. We made payments intuitive and safe for merchants and their customers.
 
 = Payment methods =
 
@@ -62,17 +62,17 @@ Pay after delivery payment methods:
 
 * Klarna Pay later (Netherlands, Belgium, Germany, Austria, Finland)
 * Klarna Slice it (Germany, Austria, Finland)
-* Billie – Pay by Invoice for Businesses
-* iDEAL in3 – Pay in 3 instalments, 0% interest
+* Billie â€“ Pay by Invoice for Businesses
+* iDEAL in3 â€“ Pay in 3 installments, 0% interest
 
 
 = Get started with Mollie =
 
-1. Create a Mollie account
-2. Install Mollie for WooCommerce on your WordPress website
+1. [Create a Mollie account](https://my.mollie.com/dashboard/signup)
+2. Install **Mollie Payments for WooCommerce** on your WordPress website
 3. Activate Mollie in your WooCommerce webshop and enter your Mollie API key
-4. In your Mollie Dashboard, got to Settings > Website profiles and select the payment methods you want to offer
-5. Go to your WordPress Admin Panel. Open WooCommerce > Settings > Payments and select the same methods
+4. In your Mollie Dashboard, go to Settings > Website profiles and select the payment methods you want to offer
+5. Go to your WordPress Admin Panel. Open WooCommerce > Settings > Payments to check if your preferred methods are enabled
 
 Once your Mollie account has been approved, you can start accepting payments. 
 
@@ -97,11 +97,11 @@ Contact info@mollie.com if you have any questions or comments about this plugin.
 
 = Join the Mollie Community =
 
-Become part of Mollie’s growing community and gain access to our comprehensive support network, including a [Discord Developer Community](https://discord.gg/y2rbjqszbs) to stay connected and informed.
+Become part of Mollieâ€™s growing community and gain access to our comprehensive support network, including a [Discord Developer Community](https://discord.gg/y2rbjqszbs) to stay connected and informed.
 
 > **Your success is our mission. With Mollie, simplify your payments and focus on growing your business.**
 
-[Sign up today](https://my.mollie.com/dashboard/signup) and start enhancing your WooCommerce store with Mollie’s advanced payment solutions.
+[Sign up today](https://my.mollie.com/dashboard/signup) and start enhancing your WooCommerce store with Mollieâ€™s advanced payment solutions.
 
 = More about Mollie =
 
@@ -111,7 +111,7 @@ Initially observing banks offering businesses outdated technology and complex pr
 
 Over the years, Mollie has expanded significantly, yet the core mission remains unchanged: to address and solve customer problems to facilitate their growth.
 
-Mollie champions the belief that simplicity leads to the best solutions and designs products to serve everyone—from solopreneurs and startups to global enterprises. This approach ensures every customer has access to the necessary tools for success.
+Mollie champions the belief that simplicity leads to the best solutions and designs products to serve everyone â€“ from solopreneurs and startups to global enterprises. This approach ensures every customer has access to the necessary tools for success.
 
 Today, Mollie powers growth for over 130,000 businesses with effortless online payments, money management tools, and flexible funding, continuously enhancing payment and financial services for a broad spectrum of clients including global brands, SMEs, marketplaces, SaaS platforms, and more.
 
@@ -218,11 +218,23 @@ Please contact info@mollie.com if you need help installing the Mollie WooCommerc
 
 Automatic updates should work like a charm; as always though, ensure you backup your site just in case.
 
+
 == Changelog ==
+
+= 7.5.5 - 18-06-2024 =
+
+* Feature Flag - Enable Bancomat Pay & Alma feature flag by default (official launch 2024-07-01)
+* Task - update wordpress.org plugin page
+* Fix - Change from iDeal 1.0 to iDeal 2.0
+* Fix - update apple-developer-merchantid-domain-association certificate 
+* Fix - Description not shown on block checkout
+* Fix - All Gift Card issuers displayed despite only some being active
+* Fix - Several Undefined array key warnings malform JSON requests on Block Checkout
+* Fix - Surcharge string to ‘excl. VAT’
 
 = 7.5.4 - 03-06-2024 =
 
-* Feature - Initiative - Alma for WooCommerce Integration - under flag add_filter('inpsyde.feature-flags.mollie-woocommerce.alma_enabled', false);
+* Feature Flag - Initiative - Alma for WooCommerce Integration - under flag add_filter('inpsyde.feature-flags.mollie-woocommerce.alma_enabled', false);
 * Feature - Add WooCommerce as required plugin in header
 * Fix - Display error for Apple Pay Validation Error in Woocommerce
 * Fix - TypeError when WooCommerce Analytics is disabled

@@ -235,7 +235,6 @@ return array(
     'Mollie\\WooCommerce\\PaymentMethods\\PaymentFieldsStrategies\\CreditcardFieldsStrategy' => $baseDir . '/src/PaymentMethods/PaymentFieldsStrategies/CreditcardFieldsStrategy.php',
     'Mollie\\WooCommerce\\PaymentMethods\\PaymentFieldsStrategies\\DefaultFieldsStrategy' => $baseDir . '/src/PaymentMethods/PaymentFieldsStrategies/DefaultFieldsStrategy.php',
     'Mollie\\WooCommerce\\PaymentMethods\\PaymentFieldsStrategies\\GiftcardFieldsStrategy' => $baseDir . '/src/PaymentMethods/PaymentFieldsStrategies/GiftcardFieldsStrategy.php',
-    'Mollie\\WooCommerce\\PaymentMethods\\PaymentFieldsStrategies\\IdealFieldsStrategy' => $baseDir . '/src/PaymentMethods/PaymentFieldsStrategies/IdealFieldsStrategy.php',
     'Mollie\\WooCommerce\\PaymentMethods\\PaymentFieldsStrategies\\In3FieldsStrategy' => $baseDir . '/src/PaymentMethods/PaymentFieldsStrategies/In3FieldsStrategy.php',
     'Mollie\\WooCommerce\\PaymentMethods\\PaymentFieldsStrategies\\IssuersDropdownBehavior' => $baseDir . '/src/PaymentMethods/PaymentFieldsStrategies/IssuersDropdownBehavior.php',
     'Mollie\\WooCommerce\\PaymentMethods\\PaymentFieldsStrategies\\KbcFieldsStrategy' => $baseDir . '/src/PaymentMethods/PaymentFieldsStrategies/KbcFieldsStrategy.php',
