@@ -186,11 +186,7 @@ function mollieWooCommerceFormatCurrencyValue($value, $currency)
     if (in_array($currency, $currenciesWithNoDecimals)) {
         return number_format($value, 0, '.', '');
     }
-    // trying to avoid floating point issues
-    $value = $value * 1000;
-    $value = (int) $value / 1000; //drop the last decimal after the third
-    $value = round($value, 3);
-    $value = round($value, 2, PHP_ROUND_HALF_DOWN); //round down, as seems woo like it :)
+
     return number_format($value, 2, '.', '');
 }
 
@@ -239,4 +235,14 @@ function transformPhoneToNLFormat($phone)
         $phone = $prefix . $phone;
     }
     return $phone;
+}
+
+function isMollieBirthValid($billing_birthdate)
+{
+    $today = new DateTime();
+    $birthdate = DateTime::createFromFormat('Y-m-d', $billing_birthdate);
+    if ($birthdate >= $today) {
+        return false;
+    }
+    return true;
 }

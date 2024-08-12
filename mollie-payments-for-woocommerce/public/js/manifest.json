@@ -13,5 +13,6 @@
   "public/js/mollie-components-blocks.min.js": "/public/js/mollie-components-blocks.min.js",
   "public/js/mollieBlockIndex.min.js": "/public/js/mollieBlockIndex.min.js",
   "public/js/paypalButtonBlockComponent.min.js": "/public/js/paypalButtonBlockComponent.min.js",
-  "public/js/applepayButtonBlockComponent.min.js": "/public/js/applepayButtonBlockComponent.min.js"
+  "public/js/applepayButtonBlockComponent.min.js": "/public/js/applepayButtonBlockComponent.min.js",
+  "public/js/rivertyCountryPlaceholder.min.js": "/public/js/rivertyCountryPlaceholder.min.js"
 }

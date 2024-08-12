@@ -1,9 +1,9 @@
 === Mollie Payments for WooCommerce ===
 Contributors: daanvm, danielhuesken, davdebcom, dinamiko, syde, l.vangunst, ndijkstra, robin-mollie, wido, carmen222, inpsyde-maticluznar
-Tags: mollie, payments, payment gateway, woocommerce, credit card, apple pay, ideal, bancontact, klarna, sofort, giropay, woocommerce subscriptions 
+Tags: mollie, payments, payment gateway, woocommerce, credit card, apple pay, ideal, bancontact, klarna, sofort, woocommerce subscriptions 
 Requires at least: 3.8
-Tested up to: 6.5
-Stable tag: 7.5.5
+Tested up to: 6.6
+Stable tag: 7.7.0
 Requires PHP: 7.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -18,7 +18,7 @@ Quickly integrate all major payment methods in WooCommerce, wherever you need th
 
 > **Effortless payments for your customers, designed for growth**
 
-No need to spend weeks on paperwork or security compliance procedures. Enjoy enhanced conversions as we support shopperâ€™s favorite payment methods and ensure their utmost safety. We made payments intuitive and safe for merchants and their customers.
+No need to spend weeks on paperwork or security compliance procedures. Enjoy enhanced conversions as we support shopper's favorite payment methods and ensure their utmost safety. We made payments intuitive and safe for merchants and their customers.
 
 = Payment methods =
 
@@ -39,7 +39,6 @@ European and local payment methods:
 * Bancomat Pay (Italy)
 * Blik (Poland)
 * Przelewy24 (Poland)
-* Giropay (Germany)
 * EPS (Austria)
 * SOFORT Banking (EU)
 * Belfius (Belgium)
@@ -62,8 +61,8 @@ Pay after delivery payment methods:
 
 * Klarna Pay later (Netherlands, Belgium, Germany, Austria, Finland)
 * Klarna Slice it (Germany, Austria, Finland)
-* Billie â€“ Pay by Invoice for Businesses
-* iDEAL in3 â€“ Pay in 3 installments, 0% interest
+* Billie - Pay by Invoice for Businesses
+* iDEAL in3 - Pay in 3 installments, 0% interest
 
 
 = Get started with Mollie =
@@ -97,11 +96,11 @@ Contact info@mollie.com if you have any questions or comments about this plugin.
 
 = Join the Mollie Community =
 
-Become part of Mollieâ€™s growing community and gain access to our comprehensive support network, including a [Discord Developer Community](https://discord.gg/y2rbjqszbs) to stay connected and informed.
+Become part of Mollie's growing community and gain access to our comprehensive support network, including a [Discord Developer Community](https://discord.gg/y2rbjqszbs) to stay connected and informed.
 
 > **Your success is our mission. With Mollie, simplify your payments and focus on growing your business.**
 
-[Sign up today](https://my.mollie.com/dashboard/signup) and start enhancing your WooCommerce store with Mollieâ€™s advanced payment solutions.
+[Sign up today](https://my.mollie.com/dashboard/signup) and start enhancing your WooCommerce store with Mollie's advanced payment solutions.
 
 = More about Mollie =
 
@@ -111,7 +110,7 @@ Initially observing banks offering businesses outdated technology and complex pr
 
 Over the years, Mollie has expanded significantly, yet the core mission remains unchanged: to address and solve customer problems to facilitate their growth.
 
-Mollie champions the belief that simplicity leads to the best solutions and designs products to serve everyone â€“ from solopreneurs and startups to global enterprises. This approach ensures every customer has access to the necessary tools for success.
+Mollie champions the belief that simplicity leads to the best solutions and designs products to serve everyone: from solopreneurs and startups to global enterprises. This approach ensures every customer has access to the necessary tools for success.
 
 Today, Mollie powers growth for over 130,000 businesses with effortless online payments, money management tools, and flexible funding, continuously enhancing payment and financial services for a broad spectrum of clients including global brands, SMEs, marketplaces, SaaS platforms, and more.
 
@@ -149,8 +148,8 @@ You can either download and use the incomplete translations or help us get the t
 To download translations manually:
 1. Go to [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/mollie-payments-for-woocommerce/)
 2. Click on the percentage in the "Stable" column for your language.
-3. Scroll down to "Export". 
-4. Choose "All current" and "MO - Machine Object" 
+3. Scroll down to "Export".
+4. Choose "All current" and "MO - Machine Object"
 5. Upload this file to plugins/languages/mollie-payments-for-woocommerce/.
 6. Repeat this for all your translations.
 
@@ -220,6 +219,21 @@ Automatic updates should work like a charm; as always though, ensure you backup 
 
 
 == Changelog ==
+
+= 7.7.0 - 12-08-2024 =
+
+* Added - Payconiq payment method 
+* Added - Riverty payment method 
+* Fix - Declaring compatibility in WP Editor 
+* Security - Enhanced object reference security
+
+= 7.6.0 - 10-07-2024 =
+
+* Added - Trustly payment method
+* Deprecated - Giropay payment method ([Giropay Depreciation FAQ](https://help.mollie.com/hc/en-gb/articles/19745480480786-Giropay-Depreciation-FAQ))
+* Fixed - Mollie hooks into unrelated orders
+* Fixed - Notices and type errors after 7.5.5 update
+* Fixed - Rounding issues with products including tax
 
 = 7.5.5 - 18-06-2024 =
 
