@@ -1,18 +1,18 @@
 {
     "packages": [
         {
-            "name": "composer/ca-bundle",
-            "version": "1.5.1",
-            "version_normalized": "1.5.1.0",
+            "name": "composer\/ca-bundle",
+            "version": "1.5.2",
+            "version_normalized": "1.5.2.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/composer/ca-bundle.git",
-                "reference": "063d9aa8696582f5a41dffbbaf3c81024f0a604a"
+                "url": "https:\/\/github.com\/composer\/ca-bundle.git",
+                "reference": "48a792895a2b7a6ee65dd5442c299d7b835b6137"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/063d9aa8696582f5a41dffbbaf3c81024f0a604a",
-                "reference": "063d9aa8696582f5a41dffbbaf3c81024f0a604a",
+                "url": "https:\/\/api.github.com\/repos\/composer\/ca-bundle\/zipball\/48a792895a2b7a6ee65dd5442c299d7b835b6137",
+                "reference": "48a792895a2b7a6ee65dd5442c299d7b835b6137",
                 "shasum": ""
             },
             "require": {
@@ -21,12 +21,12 @@
                 "php": "^7.2 || ^8.0"
             },
             "require-dev": {
-                "phpstan/phpstan": "^1.10",
-                "psr/log": "^1.0 || ^2.0 || ^3.0",
-                "symfony/phpunit-bridge": "^4.2 || ^5",
-                "symfony/process": "^4.0 || ^5.0 || ^6.0 || ^7.0"
+                "phpstan\/phpstan": "^1.10",
+                "phpunit\/phpunit": "^8 || ^9",
+                "psr\/log": "^1.0 || ^2.0 || ^3.0",
+                "symfony\/process": "^4.0 || ^5.0 || ^6.0 || ^7.0"
             },
-            "time": "2024-07-08T15:28:20+00:00",
+            "time": "2024-09-25T07:49:53+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -39,7 +39,7 @@
                     "Composer\\CaBundle\\": "src"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "https:\/\/packagist.org\/downloads\/",
             "license": [
                 "MIT"
             ],
@@ -47,7 +47,7 @@
                 {
                     "name": "Jordi Boggiano",
                     "email": "j.boggiano@seld.be",
-                    "homepage": "http://seld.be"
+                    "homepage": "http:\/\/seld.be"
                 }
             ],
             "description": "Lets you find a path to the system CA bundle, and includes a fallback to the Mozilla CA bundle.",
@@ -59,67 +59,128 @@
                 "tls"
             ],
             "support": {
-                "irc": "irc://irc.freenode.org/composer",
-                "issues": "https://github.com/composer/ca-bundle/issues",
-                "source": "https://github.com/composer/ca-bundle/tree/1.5.1"
+                "irc": "irc:\/\/irc.freenode.org\/composer",
+                "issues": "https:\/\/github.com\/composer\/ca-bundle\/issues",
+                "source": "https:\/\/github.com\/composer\/ca-bundle\/tree\/1.5.2"
             },
             "funding": [
                 {
-                    "url": "https://packagist.com",
+                    "url": "https:\/\/packagist.com",
                     "type": "custom"
                 },
                 {
-                    "url": "https://github.com/composer",
+                    "url": "https:\/\/github.com\/composer",
                     "type": "github"
                 },
                 {
-                    "url": "https://tidelift.com/funding/github/packagist/composer/composer",
+                    "url": "https:\/\/tidelift.com\/funding\/github\/packagist\/composer\/composer",
                     "type": "tidelift"
                 }
             ],
-            "install-path": "./ca-bundle"
+            "install-path": ".\/ca-bundle"
         },
         {
-            "name": "mollie/mollie-api-php",
-            "version": "v2.71.0",
-            "version_normalized": "2.71.0.0",
+            "name": "inpsyde\/modularity",
+            "version": "1.10.0",
+            "version_normalized": "1.10.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/mollie/mollie-api-php.git",
-                "reference": "dff324f0621ff134fbefffa42ee511833a58578f"
+                "url": "https:\/\/github.com\/inpsyde\/modularity.git",
+                "reference": "2119d0e32706741a3c6dc0a85d908ec19ebf142e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/dff324f0621ff134fbefffa42ee511833a58578f",
-                "reference": "dff324f0621ff134fbefffa42ee511833a58578f",
+                "url": "https:\/\/api.github.com\/repos\/inpsyde\/modularity\/zipball\/2119d0e32706741a3c6dc0a85d908ec19ebf142e",
+                "reference": "2119d0e32706741a3c6dc0a85d908ec19ebf142e",
                 "shasum": ""
             },
             "require": {
-                "composer/ca-bundle": "^1.2",
+                "ext-json": "*",
+                "php": ">=7.4 <8.4",
+                "psr\/container": "^1.1.0 || ^2"
+            },
+            "require-dev": {
+                "brain\/monkey": "^2.6.1",
+                "inpsyde\/php-coding-standards": "^2@dev",
+                "inpsyde\/wp-stubs-versions": "dev-latest",
+                "mikey179\/vfsstream": "^v1.6.11",
+                "phpunit\/phpunit": "^9.6.19",
+                "roots\/wordpress-no-content": "@dev",
+                "vimeo\/psalm": "^5.24.0"
+            },
+            "time": "2024-09-03T10:42:50+00:00",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Mollie\\Inpsyde\\Modularity\\": "src\/"
+                }
+            },
+            "notification-url": "https:\/\/packagist.org\/downloads\/",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Inpsyde GmbH",
+                    "email": "hello@inpsyde.com",
+                    "homepage": "https:\/\/inpsyde.com\/",
+                    "role": "Company"
+                }
+            ],
+            "description": "Modular PSR-11 implementation for WordPress plugins, themes or libraries.",
+            "support": {
+                "issues": "https:\/\/github.com\/inpsyde\/modularity\/issues",
+                "source": "https:\/\/github.com\/inpsyde\/modularity\/tree\/1.10.0"
+            },
+            "install-path": "..\/inpsyde\/modularity"
+        },
+        {
+            "name": "mollie\/mollie-api-php",
+            "version": "v2.73.0",
+            "version_normalized": "2.73.0.0",
+            "source": {
+                "type": "git",
+                "url": "https:\/\/github.com\/mollie\/mollie-api-php.git",
+                "reference": "0a26175492d4c55bb461e44fe3e63546539b81c1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https:\/\/api.github.com\/repos\/mollie\/mollie-api-php\/zipball\/0a26175492d4c55bb461e44fe3e63546539b81c1",
+                "reference": "0a26175492d4c55bb461e44fe3e63546539b81c1",
+                "shasum": ""
+            },
+            "require": {
+                "composer\/ca-bundle": "^1.2",
                 "ext-curl": "*",
                 "ext-json": "*",
                 "ext-openssl": "*",
                 "php": "^7.2|^8.0"
             },
             "require-dev": {
-                "eloquent/liberator": "^2.0||^3.0",
-                "friendsofphp/php-cs-fixer": "^3.0",
-                "guzzlehttp/guzzle": "^6.3 || ^7.0",
-                "phpstan/phpstan": "^1.4",
-                "phpunit/phpunit": "^8.5 || ^9.5"
+                "eloquent\/liberator": "^2.0||^3.0",
+                "friendsofphp\/php-cs-fixer": "^3.0",
+                "guzzlehttp\/guzzle": "^6.3 || ^7.0",
+                "phpstan\/phpstan": "^1.12",
+                "phpunit\/phpunit": "^8.5 || ^9.5"
             },
             "suggest": {
-                "mollie/oauth2-mollie-php": "Use OAuth to authenticate with the Mollie API. This is needed for some endpoints. Visit https://docs.mollie.com/ for more information."
+                "mollie\/oauth2-mollie-php": "Use OAuth to authenticate with the Mollie API. This is needed for some endpoints. Visit https:\/\/docs.mollie.com\/ for more information."
             },
-            "time": "2024-07-17T08:02:14+00:00",
+            "time": "2024-09-30T13:16:57+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
                 "psr-4": {
-                    "Mollie\\Api\\": "src/"
+                    "Mollie\\Api\\": "src\/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "https:\/\/packagist.org\/downloads\/",
             "license": [
                 "BSD-2-Clause"
             ],
@@ -130,7 +191,7 @@
                 }
             ],
             "description": "Mollie API client library for PHP. Mollie is a European Payment Service provider and offers international payment methods such as Mastercard, VISA, American Express and PayPal, and local payment methods such as iDEAL, Bancontact, SOFORT Banking, SEPA direct debit, Belfius Direct Net, KBC Payment Button and various gift cards such as Podiumcadeaukaart and fashioncheque.",
-            "homepage": "https://www.mollie.com/en/developers",
+            "homepage": "https:\/\/www.mollie.com\/en\/developers",
             "keywords": [
                 "Apple Pay",
                 "CBC",
@@ -169,23 +230,79 @@
                 "subscriptions"
             ],
             "support": {
-                "issues": "https://github.com/mollie/mollie-api-php/issues",
-                "source": "https://github.com/mollie/mollie-api-php/tree/v2.71.0"
+                "issues": "https:\/\/github.com\/mollie\/mollie-api-php\/issues",
+                "source": "https:\/\/github.com\/mollie\/mollie-api-php\/tree\/v2.73.0"
             },
-            "install-path": "../mollie/mollie-api-php"
+            "install-path": "..\/mollie\/mollie-api-php"
         },
         {
-            "name": "psr/log",
+            "name": "psr\/container",
+            "version": "1.1.0",
+            "version_normalized": "1.1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https:\/\/github.com\/php-fig\/container.git",
+                "reference": "9fc7aab7a78057a124384358ebae8a1711b6f6fc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https:\/\/api.github.com\/repos\/php-fig\/container\/zipball\/9fc7aab7a78057a124384358ebae8a1711b6f6fc",
+                "reference": "9fc7aab7a78057a124384358ebae8a1711b6f6fc",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.0"
+            },
+            "time": "2021-03-05T15:48:30+00:00",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Mollie\\Psr\\Container\\": "src\/"
+                }
+            },
+            "notification-url": "https:\/\/packagist.org\/downloads\/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "https:\/\/www.php-fig.org\/"
+                }
+            ],
+            "description": "Common Container Interface (PHP FIG PSR-11)",
+            "homepage": "https:\/\/github.com\/php-fig\/container",
+            "keywords": [
+                "PSR-11",
+                "container",
+                "container-interface",
+                "container-interop",
+                "psr"
+            ],
+            "support": {
+                "issues": "https:\/\/github.com\/php-fig\/container\/issues",
+                "source": "https:\/\/github.com\/php-fig\/container\/tree\/1.1.0"
+            },
+            "install-path": "..\/psr\/container"
+        },
+        {
+            "name": "psr\/log",
             "version": "1.1.4",
             "version_normalized": "1.1.4.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/php-fig/log.git",
+                "url": "https:\/\/github.com\/php-fig\/log.git",
                 "reference": "d49695b909c3b7628b6289db5479a1c204601f11"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/d49695b909c3b7628b6289db5479a1c204601f11",
+                "url": "https:\/\/api.github.com\/repos\/php-fig\/log\/zipball\/d49695b909c3b7628b6289db5479a1c204601f11",
                 "reference": "d49695b909c3b7628b6289db5479a1c204601f11",
                 "shasum": ""
             },
@@ -202,30 +319,80 @@
             "installation-source": "dist",
             "autoload": {
                 "psr-4": {
-                    "Psr\\Log\\": "Psr/Log/"
+                    "Mollie\\Psr\\Log\\": "Psr\/Log\/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "https:\/\/packagist.org\/downloads\/",
             "license": [
                 "MIT"
             ],
             "authors": [
                 {
                     "name": "PHP-FIG",
-                    "homepage": "https://www.php-fig.org/"
+                    "homepage": "https:\/\/www.php-fig.org\/"
                 }
             ],
             "description": "Common interface for logging libraries",
-            "homepage": "https://github.com/php-fig/log",
+            "homepage": "https:\/\/github.com\/php-fig\/log",
             "keywords": [
                 "log",
                 "psr",
                 "psr-3"
             ],
             "support": {
-                "source": "https://github.com/php-fig/log/tree/1.1.4"
+                "source": "https:\/\/github.com\/php-fig\/log\/tree\/1.1.4"
             },
-            "install-path": "../psr/log"
+            "install-path": "..\/psr\/log"
+        },
+        {
+            "name": "sniccowp\/php-scoper-wordpress-excludes",
+            "version": "6.6.2",
+            "version_normalized": "6.6.2.0",
+            "source": {
+                "type": "git",
+                "url": "https:\/\/github.com\/snicco\/php-scoper-wordpress-excludes.git",
+                "reference": "b87d7455bdf05c25f9a688fc3862bb3f2b7c8b15"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https:\/\/api.github.com\/repos\/snicco\/php-scoper-wordpress-excludes\/zipball\/b87d7455bdf05c25f9a688fc3862bb3f2b7c8b15",
+                "reference": "b87d7455bdf05c25f9a688fc3862bb3f2b7c8b15",
+                "shasum": ""
+            },
+            "require-dev": {
+                "php": "^7.4",
+                "php-stubs\/wordpress-globals": "0.2.0",
+                "php-stubs\/wordpress-stubs": "6.6.2",
+                "sniccowp\/php-scoper-excludes": "dev-master"
+            },
+            "time": "2024-10-01T00:32:14+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "notification-url": "https:\/\/packagist.org\/downloads\/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Calvin Alkan",
+                    "email": "calvin@snicco.de"
+                },
+                {
+                    "name": "Marlon Alkan",
+                    "email": "marlon@snicco.de"
+                }
+            ],
+            "description": "A list of all WordPress core classes, functions and constants. Meant to be used with the PHP-Scoper exclusion functionality.",
+            "keywords": [
+                "php-scoper",
+                "scoping WordPress",
+                "wordpress"
+            ],
+            "support": {
+                "issues": "https:\/\/github.com\/snicco\/php-scoper-wordpress-excludes\/issues",
+                "source": "https:\/\/github.com\/snicco\/php-scoper-wordpress-excludes\/tree\/6.6.2"
+            },
+            "install-path": "..\/sniccowp\/php-scoper-wordpress-excludes"
         }
     ],
     "dev": false,

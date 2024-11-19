@@ -6,16 +6,13 @@ use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\Resources\Order;
 use Mollie\Api\Resources\Shipment;
 use Mollie\Api\Resources\ShipmentCollection;
-
-class ShipmentEndpoint extends CollectionEndpointAbstract
+class ShipmentEndpoint extends \Mollie\Api\Endpoints\CollectionEndpointAbstract
 {
     protected $resourcePath = "orders_shipments";
-
     /**
      * @var string
      */
     public const RESOURCE_ID_PREFIX = 'shp_';
-
     /**
      * Get the object that is used by this API endpoint. Every API endpoint uses one type of object.
      *
@@ -25,7 +22,6 @@ class ShipmentEndpoint extends CollectionEndpointAbstract
     {
         return new Shipment($this->client);
     }
-
     /**
      * Get the collection object that is used by this API endpoint. Every API
      * endpoint uses one type of collection object.
@@ -39,7 +35,6 @@ class ShipmentEndpoint extends CollectionEndpointAbstract
     {
         return new ShipmentCollection($count, $_links);
     }
-
     /**
      * Create a shipment for some order lines. You can provide an empty array for the
      * "lines" option to include all unshipped lines for this order.
@@ -55,7 +50,6 @@ class ShipmentEndpoint extends CollectionEndpointAbstract
     {
         return $this->createForId($order->id, $options, $filters);
     }
-
     /**
      * Create a shipment for some order lines. You can provide an empty array for the
      * "lines" option to include all unshipped lines for this order.
@@ -70,10 +64,8 @@ class ShipmentEndpoint extends CollectionEndpointAbstract
     public function createForId($orderId, array $options = [], array $filters = [])
     {
         $this->parentId = $orderId;
-
         return parent::rest_create($options, $filters);
     }
-
     /**
      * Retrieve a single shipment and the order lines shipped by a shipment’s ID.
      *
@@ -88,7 +80,6 @@ class ShipmentEndpoint extends CollectionEndpointAbstract
     {
         return $this->getForId($order->id, $shipmentId, $parameters);
     }
-
     /**
      * Retrieve a single shipment and the order lines shipped by a shipment’s ID.
      *
@@ -102,10 +93,8 @@ class ShipmentEndpoint extends CollectionEndpointAbstract
     public function getForId($orderId, $shipmentId, array $parameters = [])
     {
         $this->parentId = $orderId;
-
         return parent::rest_read($shipmentId, $parameters);
     }
-
     /**
      * Update a specific Order Shipment resource.
      *
@@ -123,12 +112,9 @@ class ShipmentEndpoint extends CollectionEndpointAbstract
         if (empty($shipmentId) || strpos($shipmentId, self::RESOURCE_ID_PREFIX) !== 0) {
             throw new ApiException("Invalid subscription ID: '{$shipmentId}'. An subscription ID should start with '" . self::RESOURCE_ID_PREFIX . "'.");
         }
-
         $this->parentId = $orderId;
-
         return parent::rest_update($shipmentId, $data);
     }
-
     /**
      * Return all shipments for the Order provided.
      *
@@ -142,7 +128,6 @@ class ShipmentEndpoint extends CollectionEndpointAbstract
     {
         return $this->listForId($order->id, $parameters);
     }
-
     /**
      * Return all shipments for the provided Order id.
      *
@@ -155,7 +140,6 @@ class ShipmentEndpoint extends CollectionEndpointAbstract
     public function listForId($orderId, array $parameters = [])
     {
         $this->parentId = $orderId;
-
         return parent::rest_list(null, null, $parameters);
     }
 }

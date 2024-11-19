@@ -7,13 +7,10 @@ use Mollie\Api\Resources\CurrentProfile;
 use Mollie\Api\Resources\LazyCollection;
 use Mollie\Api\Resources\Profile;
 use Mollie\Api\Resources\ProfileCollection;
-
-class ProfileEndpoint extends CollectionEndpointAbstract
+class ProfileEndpoint extends \Mollie\Api\Endpoints\CollectionEndpointAbstract
 {
     protected $resourcePath = "profiles";
-
     protected $resourceClass = Profile::class;
-
     /**
      * @var string
      */
@@ -27,7 +24,6 @@ class ProfileEndpoint extends CollectionEndpointAbstract
     {
         return new $this->resourceClass($this->client);
     }
-
     /**
      * Get the collection object that is used by this API endpoint. Every API endpoint uses one type of collection object.
      *
@@ -40,7 +36,6 @@ class ProfileEndpoint extends CollectionEndpointAbstract
     {
         return new ProfileCollection($this->client, $count, $_links);
     }
-
     /**
      * Creates a Profile in Mollie.
      *
@@ -54,7 +49,6 @@ class ProfileEndpoint extends CollectionEndpointAbstract
     {
         return $this->rest_create($data, $filters);
     }
-
     /**
      * Retrieve a Profile from Mollie.
      *
@@ -71,10 +65,8 @@ class ProfileEndpoint extends CollectionEndpointAbstract
         if ($profileId === 'me') {
             return $this->getCurrent($parameters);
         }
-
         return $this->rest_read($profileId, $parameters);
     }
-
     /**
      * Update a specific Profile resource.
      *
@@ -91,10 +83,8 @@ class ProfileEndpoint extends CollectionEndpointAbstract
         if (empty($profileId) || strpos($profileId, self::RESOURCE_ID_PREFIX) !== 0) {
             throw new ApiException("Invalid profile id: '{$profileId}'. An profile id should start with '" . self::RESOURCE_ID_PREFIX . "'.");
         }
-
         return parent::rest_update($profileId, $data);
     }
-
     /**
      * Retrieve the current Profile from Mollie.
      *
@@ -106,10 +96,8 @@ class ProfileEndpoint extends CollectionEndpointAbstract
     public function getCurrent(array $parameters = [])
     {
         $this->resourceClass = CurrentProfile::class;
-
         return $this->rest_read('me', $parameters);
     }
-
     /**
      * Delete a Profile from Mollie.
      *
@@ -126,7 +114,6 @@ class ProfileEndpoint extends CollectionEndpointAbstract
     {
         return $this->rest_delete($profileId, $data);
     }
-
     /**
      * Retrieves a collection of Profiles from Mollie.
      *
@@ -141,7 +128,6 @@ class ProfileEndpoint extends CollectionEndpointAbstract
     {
         return $this->rest_list($from, $limit, $parameters);
     }
-
     /**
      * Create an iterator for iterating over profiles retrieved from Mollie.
      *
@@ -152,7 +138,7 @@ class ProfileEndpoint extends CollectionEndpointAbstract
      *
      * @return LazyCollection
      */
-    public function iterator(?string $from = null, ?int $limit = null, array $parameters = [], bool $iterateBackwards = false): LazyCollection
+    public function iterator(?string $from = null, ?int $limit = null, array $parameters = [], bool $iterateBackwards = \false): LazyCollection
     {
         return $this->rest_iterator($from, $limit, $parameters, $iterateBackwards);
     }

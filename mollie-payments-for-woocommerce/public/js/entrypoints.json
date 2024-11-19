@@ -70,14 +70,19 @@
         "/public/js/paypalButtonBlockComponent.min.js"
       ]
     },
-    "applepayButtonBlockComponent.min": {
+    "applepayButtonBlock.min": {
       "js": [
-        "/public/js/applepayButtonBlockComponent.min.js"
+        "/public/js/applepayButtonBlock.min.js"
       ]
     },
     "rivertyCountryPlaceholder.min": {
       "js": [
         "/public/js/rivertyCountryPlaceholder.min.js"
+      ]
+    },
+    "mollie-settings-2024.min": {
+      "js": [
+        "/public/js/mollie-settings-2024.min.js"
       ]
     }
   }

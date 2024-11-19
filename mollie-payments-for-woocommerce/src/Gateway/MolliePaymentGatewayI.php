@@ -6,57 +6,43 @@ use Mollie\Api\Resources\Method;
 use Mollie\WooCommerce\PaymentMethods\PaymentMethodI;
 use WC_Order;
 use WP_Error;
-
 interface MolliePaymentGatewayI
 {
     public function paymentMethod(): PaymentMethodI;
-
     public function paymentService();
-
     public function dataService();
-
     public function pluginId();
-
     public function initIcon();
-
     public function get_icon();
-
     /**
      * Initialise Gateway Settings Form Fields
      */
     public function init_form_fields();
-
     /**
      * Display fields below payment method in checkout
      */
     public function payment_fields();
-
     /**
      * Save settings
      *
      * @since 1.0
      */
     public function init_settings();
-
     /**
      * Check if this gateway can be used
      *
      * @return bool
      */
     public function isValidForUse(): bool;
-
     /**
      * @return Method|null
      */
     public function getMollieMethod();
-
     /**
      * Save options in admin.
      */
     public function process_admin_options();
-
     public function admin_options();
-
     /**
      * Validates the multiselect country field.
      * Overrides the one called by get_field_value() on WooCommerce abstract-wc-settings-api.php
@@ -67,14 +53,12 @@ interface MolliePaymentGatewayI
      * @return array|string
      */
     public function validate_multi_select_countries_field($key, $value);
-
     /**
      * Check if the gateway is available for use
      *
      * @return bool
      */
     public function is_available(): bool;
-
     /**
      * Check if payment method is available in checkout based on amount, currency and sequenceType
      *
@@ -83,32 +67,27 @@ interface MolliePaymentGatewayI
      * @return bool
      */
     public function isAvailableMethodInCheckout($filters): bool;
-
     /**
      * @return array|false|int
      */
     public function get_recurring_total();
-
     /**
      * @param int $orderId
      *
      * @return array
      */
     public function process_payment($orderId);
-
     /**
      * @param $order
      * @param $payment
      */
     public function handlePaidOrderWebhook($order, $payment);
-
     /**
      * @param WC_Order $order
      *
      * @return string
      */
     public function getReturnRedirectUrlForOrder(WC_Order $order): string;
-
     /**
      * Process a refund if supported
      *
@@ -120,12 +99,10 @@ interface MolliePaymentGatewayI
      * @since WooCommerce 2.2
      */
     public function process_refund($order_id, $amount = null, $reason = '');
-
     /**
      * Output for the order received page.
      */
     public function thankyou_page($order_id);
-
     /**
      * Add content to the WC emails.
      *
@@ -135,8 +112,7 @@ interface MolliePaymentGatewayI
      *
      * @return void
      */
-    public function displayInstructions(WC_Order $order, bool $admin_instructions = false, bool $plain_text = false);
-
+    public function displayInstructions(WC_Order $order, bool $admin_instructions = \false, bool $plain_text = \false);
     /**
      * @param      $title
      * @param null $id
@@ -144,7 +120,6 @@ interface MolliePaymentGatewayI
      * @return string|void
      */
     public function onOrderReceivedTitle($title, $id = null);
-
     /**
      * @param          $text
      * @param WC_Order| null $order
@@ -152,12 +127,10 @@ interface MolliePaymentGatewayI
      * @return string|void
      */
     public function onOrderReceivedText($text, $order);
-
     /**
      * @return string|NULL
      */
     public function getSelectedIssuer(): ?string;
-
     /**
      * Get the transaction URL.
      *
@@ -166,7 +139,6 @@ interface MolliePaymentGatewayI
      * @return string
      */
     public function get_transaction_url($order): string;
-
     /**
      * Get the correct currency for this payment or order
      * On order-pay page, order is already created and has an order currency
@@ -175,7 +147,6 @@ interface MolliePaymentGatewayI
      * @return string
      */
     public function getCurrencyFromOrder();
-
     /**
      * Retrieve the customer's billing country
      * or fallback to the shop country

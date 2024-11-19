@@ -6,11 +6,9 @@ use Mollie\Api\Resources\LazyCollection;
 use Mollie\Api\Resources\Payment;
 use Mollie\Api\Resources\Refund;
 use Mollie\Api\Resources\RefundCollection;
-
-class PaymentRefundEndpoint extends CollectionEndpointAbstract
+class PaymentRefundEndpoint extends \Mollie\Api\Endpoints\CollectionEndpointAbstract
 {
     protected $resourcePath = "payments_refunds";
-
     /**
      * Get the object that is used by this API endpoint. Every API endpoint uses one type of object.
      *
@@ -20,7 +18,6 @@ class PaymentRefundEndpoint extends CollectionEndpointAbstract
     {
         return new Refund($this->client);
     }
-
     /**
      * Get the collection object that is used by this API endpoint. Every API endpoint uses one type of collection object.
      *
@@ -33,7 +30,6 @@ class PaymentRefundEndpoint extends CollectionEndpointAbstract
     {
         return new RefundCollection($this->client, $count, $_links);
     }
-
     /**
      * @param Payment $payment
      * @param string $refundId
@@ -46,7 +42,6 @@ class PaymentRefundEndpoint extends CollectionEndpointAbstract
     {
         return $this->getForId($payment->id, $refundId, $parameters);
     }
-
     /**
      * @param string $paymentId
      * @param string $refundId
@@ -58,10 +53,8 @@ class PaymentRefundEndpoint extends CollectionEndpointAbstract
     public function getForId($paymentId, $refundId, array $parameters = [])
     {
         $this->parentId = $paymentId;
-
         return parent::rest_read($refundId, $parameters);
     }
-
     /**
      * @param Payment $payment
      * @param array $parameters
@@ -73,7 +66,6 @@ class PaymentRefundEndpoint extends CollectionEndpointAbstract
     {
         return $this->listForId($payment->id, $parameters);
     }
-
     /**
      * Create an iterator for iterating over refunds for the given payment, retrieved from Mollie.
      *
@@ -85,11 +77,10 @@ class PaymentRefundEndpoint extends CollectionEndpointAbstract
      *
      * @return LazyCollection
      */
-    public function iteratorFor(Payment $payment, ?string $from = null, ?int $limit = null, array $parameters = [], bool $iterateBackwards = false): LazyCollection
+    public function iteratorFor(Payment $payment, ?string $from = null, ?int $limit = null, array $parameters = [], bool $iterateBackwards = \false): LazyCollection
     {
         return $this->iteratorForId($payment->id, $from, $limit, $parameters, $iterateBackwards);
     }
-
     /**
      * @param string $paymentId
      * @param array $parameters
@@ -100,10 +91,8 @@ class PaymentRefundEndpoint extends CollectionEndpointAbstract
     public function listForId($paymentId, array $parameters = [])
     {
         $this->parentId = $paymentId;
-
         return parent::rest_list(null, null, $parameters);
     }
-
     /**
      * Create an iterator for iterating over refunds for the given payment id, retrieved from Mollie.
      *
@@ -115,14 +104,11 @@ class PaymentRefundEndpoint extends CollectionEndpointAbstract
      *
      * @return LazyCollection
      */
-    public function iteratorForId(string $paymentId, ?string $from = null, ?int $limit = null, array $parameters = [], bool $iterateBackwards = false): LazyCollection
+    public function iteratorForId(string $paymentId, ?string $from = null, ?int $limit = null, array $parameters = [], bool $iterateBackwards = \false): LazyCollection
     {
         $this->parentId = $paymentId;
-
         return $this->rest_iterator($from, $limit, $parameters, $iterateBackwards);
     }
-
-
     /**
      * Creates a refund for a specific payment.
      *
@@ -137,7 +123,6 @@ class PaymentRefundEndpoint extends CollectionEndpointAbstract
     {
         return $this->createForId($payment->id, $data, $filters);
     }
-
     /**
      * Creates a refund for a specific payment.
      *
@@ -151,7 +136,6 @@ class PaymentRefundEndpoint extends CollectionEndpointAbstract
     public function createForId(string $paymentId, array $data, array $filters = [])
     {
         $this->parentId = $paymentId;
-
         return parent::rest_create($data, $filters);
     }
 }

@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Mollie\WooCommerce\PaymentMethods\PaymentRedirectStrategies;
 
 use Mollie\WooCommerce\Payment\MollieObject;
@@ -9,8 +8,7 @@ use Mollie\WooCommerce\Payment\MollieOrder;
 use Mollie\WooCommerce\Payment\MolliePayment;
 use Mollie\WooCommerce\PaymentMethods\PaymentMethodI;
 use WC_Order;
-
-class BanktransferRedirectStrategy implements PaymentRedirectStrategyI
+class BanktransferRedirectStrategy implements \Mollie\WooCommerce\PaymentMethods\PaymentRedirectStrategies\PaymentRedirectStrategyI
 {
     /**
      * Redirect location after successfully completing process_payment
@@ -24,14 +22,8 @@ class BanktransferRedirectStrategy implements PaymentRedirectStrategyI
     public function execute(PaymentMethodI $paymentMethod, $order, $paymentObject, string $redirectUrl)
     {
         if ($paymentMethod->getProperty('skip_mollie_payment_screen') === 'yes') {
-            return add_query_arg(
-                [
-                    'utm_nooverride' => 1,
-                ],
-                $redirectUrl
-            );
+            return add_query_arg(['utm_nooverride' => 1], $redirectUrl);
         }
-
         return $paymentObject->getCheckoutUrl();
     }
 }

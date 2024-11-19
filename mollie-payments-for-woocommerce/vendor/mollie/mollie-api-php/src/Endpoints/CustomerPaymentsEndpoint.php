@@ -6,11 +6,9 @@ use Mollie\Api\Resources\Customer;
 use Mollie\Api\Resources\LazyCollection;
 use Mollie\Api\Resources\Payment;
 use Mollie\Api\Resources\PaymentCollection;
-
-class CustomerPaymentsEndpoint extends CollectionEndpointAbstract
+class CustomerPaymentsEndpoint extends \Mollie\Api\Endpoints\CollectionEndpointAbstract
 {
     protected $resourcePath = "customers_payments";
-
     /**
      * Get the object that is used by this API endpoint. Every API endpoint uses one type of object.
      *
@@ -20,7 +18,6 @@ class CustomerPaymentsEndpoint extends CollectionEndpointAbstract
     {
         return new Payment($this->client);
     }
-
     /**
      * Get the collection object that is used by this API endpoint. Every API endpoint uses one type of collection object.
      *
@@ -33,7 +30,6 @@ class CustomerPaymentsEndpoint extends CollectionEndpointAbstract
     {
         return new PaymentCollection($this->client, $count, $_links);
     }
-
     /**
      * Create a subscription for a Customer
      *
@@ -48,7 +44,6 @@ class CustomerPaymentsEndpoint extends CollectionEndpointAbstract
     {
         return $this->createForId($customer->id, $options, $filters);
     }
-
     /**
      * Create a subscription for a Customer ID
      *
@@ -62,10 +57,8 @@ class CustomerPaymentsEndpoint extends CollectionEndpointAbstract
     public function createForId($customerId, array $options = [], array $filters = [])
     {
         $this->parentId = $customerId;
-
         return parent::rest_create($options, $filters);
     }
-
     /**
      * @param Customer $customer
      * @param string $from The first resource ID you want to include in your list.
@@ -79,7 +72,6 @@ class CustomerPaymentsEndpoint extends CollectionEndpointAbstract
     {
         return $this->listForId($customer->id, $from, $limit, $parameters);
     }
-
     /**
      * Create an iterator for iterating over payments for the given customer, retrieved from Mollie.
      *
@@ -91,11 +83,10 @@ class CustomerPaymentsEndpoint extends CollectionEndpointAbstract
      *
      * @return LazyCollection
      */
-    public function iteratorFor(Customer $customer, ?string $from = null, ?int $limit = null, array $parameters = [], bool $iterateBackwards = false): LazyCollection
+    public function iteratorFor(Customer $customer, ?string $from = null, ?int $limit = null, array $parameters = [], bool $iterateBackwards = \false): LazyCollection
     {
         return $this->iteratorForId($customer->id, $from, $limit, $parameters, $iterateBackwards);
     }
-
     /**
      * @param string $customerId
      * @param string $from The first resource ID you want to include in your list.
@@ -108,10 +99,8 @@ class CustomerPaymentsEndpoint extends CollectionEndpointAbstract
     public function listForId($customerId, ?string $from = null, ?int $limit = null, array $parameters = [])
     {
         $this->parentId = $customerId;
-
         return parent::rest_list($from, $limit, $parameters);
     }
-
     /**
      * Create an iterator for iterating over payments for the given customer id, retrieved from Mollie.
      *
@@ -123,10 +112,9 @@ class CustomerPaymentsEndpoint extends CollectionEndpointAbstract
      *
      * @return LazyCollection
      */
-    public function iteratorForId(string $customerId, ?string $from = null, ?int $limit = null, array $parameters = [], bool $iterateBackwards = false): LazyCollection
+    public function iteratorForId(string $customerId, ?string $from = null, ?int $limit = null, array $parameters = [], bool $iterateBackwards = \false): LazyCollection
     {
         $this->parentId = $customerId;
-
         return $this->rest_iterator($from, $limit, $parameters, $iterateBackwards);
     }
 }

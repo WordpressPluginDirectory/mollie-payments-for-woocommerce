@@ -1,17 +1,14 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Mollie\Api\Endpoints;
 
 use Mollie\Api\Resources\Balance;
 use Mollie\Api\Resources\BalanceReport;
 use Mollie\Api\Resources\ResourceFactory;
-
-class BalanceReportEndpoint extends EndpointAbstract
+class BalanceReportEndpoint extends \Mollie\Api\Endpoints\EndpointAbstract
 {
     protected $resourcePath = "balances_report";
-
     /**
      * @inheritDoc
      */
@@ -19,7 +16,6 @@ class BalanceReportEndpoint extends EndpointAbstract
     {
         return new BalanceReport($this->client);
     }
-
     /**
      * Retrieve a balance report for the provided balance id and parameters.
      *
@@ -31,15 +27,9 @@ class BalanceReportEndpoint extends EndpointAbstract
     public function getForId(string $balanceId, array $parameters = [])
     {
         $this->parentId = $balanceId;
-
-        $result = $this->client->performHttpCall(
-            self::REST_READ,
-            $this->getResourcePath() . $this->buildQueryString($parameters)
-        );
-
+        $result = $this->client->performHttpCall(self::REST_READ, $this->getResourcePath() . $this->buildQueryString($parameters));
         return ResourceFactory::createFromApiResult($result, $this->getResourceObject());
     }
-
     /**
      * Retrieve the primary balance.
      * This is the balance of your account’s primary currency, where all payments are settled to by default.
@@ -52,8 +42,6 @@ class BalanceReportEndpoint extends EndpointAbstract
     {
         return $this->getForId("primary", $parameters);
     }
-
-
     /**
      * Retrieve a balance report for the provided balance resource and parameters.
      *

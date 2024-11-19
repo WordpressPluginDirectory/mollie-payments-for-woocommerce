@@ -1,12 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Mollie\WooCommerce\PaymentMethods;
 
 use Mollie\Api\Types\PaymentMethod;
 use Mollie\WooCommerce\Plugin;
-
 class PaymentMethodsIconUrl
 {
     /**
@@ -16,15 +14,7 @@ class PaymentMethodsIconUrl
     /**
      * @var string[]
      */
-    public const AVAILABLE_CREDITCARD_ICONS = [
-            'amex',
-            'cartasi',
-            'cartebancaire',
-            'maestro',
-            'mastercard',
-            'visa',
-            'vpay',
-        ];
+    public const AVAILABLE_CREDITCARD_ICONS = ['amex', 'cartasi', 'cartebancaire', 'maestro', 'mastercard', 'visa', 'vpay'];
     /**
      * @var string
      */
@@ -45,7 +35,6 @@ class PaymentMethodsIconUrl
      * @var string
      */
     protected $pluginPath;
-
     /**
      * PaymentMethodIconUrl constructor.
      *
@@ -55,7 +44,6 @@ class PaymentMethodsIconUrl
         $this->pluginUrl = $pluginUrl;
         $this->pluginPath = $pluginPath;
     }
-
     /**
      * Method that returns the url to the svg icon url
      * In case of credit cards, if the settings is enabled, the svg has to be
@@ -70,71 +58,48 @@ class PaymentMethodsIconUrl
         if ($paymentMethodName === PaymentMethod::CREDITCARD && !is_admin()) {
             return $this->getCreditcardIcon();
         }
-
-        $svgPath = false;
-        $svgUrl = false;
-        $gatewaySettings = get_option(sprintf('mollie_wc_gateway_%s_settings', $paymentMethodName), false);
-
+        $svgPath = \false;
+        $svgUrl = \false;
+        $gatewaySettings = get_option(sprintf('mollie_wc_gateway_%s_settings', $paymentMethodName), \false);
         if ($gatewaySettings) {
-            $svgPath = isset($gatewaySettings["iconFilePath"]) ? $gatewaySettings["iconFilePath"] : false;
-            $svgUrl =  isset($gatewaySettings["iconFileUrl"]) ? $gatewaySettings["iconFileUrl"] : false;
+            $svgPath = isset($gatewaySettings["iconFilePath"]) ? $gatewaySettings["iconFilePath"] : \false;
+            $svgUrl = isset($gatewaySettings["iconFileUrl"]) ? $gatewaySettings["iconFileUrl"] : \false;
         }
-
         if ($svgPath && !file_exists($svgPath) || !$svgUrl) {
             $svgUrl = $this->pluginUrl . '/' . sprintf('public/images/%s', $paymentMethodName) . self::SVG_FILE_EXTENSION;
         }
-
         return $this->generateIconHtml($svgUrl);
     }
-
-    public function generateIconHtml($svgUrl)
+    public function generateIconHtml(string $svgUrl): string
     {
-
-        return '<img src="' . esc_url($svgUrl)
-            . '" class="mollie-gateway-icon" />';
+        return '<img src="' . esc_url($svgUrl) . '" class="mollie-gateway-icon" alt=""/>';
     }
-
     public function getCreditcardIcon()
     {
-        if (
-            $this->enabledCreditcards()
-            && !is_admin()
-        ) {
+        if ($this->enabledCreditcards() && !is_admin()) {
             return $this->buildSvgComposed() ?: '';
         }
-        $gatewaySettings = get_option('mollie_wc_gateway_creditcard_settings', false);
+        $gatewaySettings = get_option('mollie_wc_gateway_creditcard_settings', \false);
         if ($this->canShowCustomLogo($gatewaySettings)) {
-            $url =  $gatewaySettings["iconFileUrl"];
-            return '<img src="' . esc_url($url)
-                . '" class="mollie-gateway-icon" />';
+            $url = $gatewaySettings["iconFileUrl"];
+            return '<img src="' . esc_url($url) . '" class="mollie-gateway-icon" alt=""/>';
         }
         $svgUrl = $this->pluginUrl . sprintf('public/images/%ss.svg', PaymentMethod::CREDITCARD);
-        return
-            '<img src="' . esc_url($svgUrl)
-            . '" class="mollie-gateway-icon" />';
+        return '<img src="' . esc_url($svgUrl) . '" class="mollie-gateway-icon" alt=""/>';
     }
-
     protected function canShowCustomLogo($gatewaySettings): bool
     {
         if (!$gatewaySettings) {
-            return false;
+            return \false;
         }
-        if (
-            !isset($gatewaySettings['enable_custom_logo'])
-            || $gatewaySettings['enable_custom_logo'] !== 'yes'
-        ) {
-            return false;
+        if (!isset($gatewaySettings['enable_custom_logo']) || $gatewaySettings['enable_custom_logo'] !== 'yes') {
+            return \false;
         }
-        if (
-            !isset($gatewaySettings['iconFileUrl'])
-            && !is_string(
-                $gatewaySettings['iconFileUrl']
-            )
-        ) {
-            return false;
+        if (!isset($gatewaySettings['iconFileUrl']) && !is_string($gatewaySettings['iconFileUrl'])) {
+            return \false;
         }
         if (!isset($gatewaySettings["iconFilePath"])) {
-            return false;
+            return \false;
         }
         $svgPath = $gatewaySettings["iconFilePath"];
         return file_exists($svgPath);
@@ -145,28 +110,22 @@ class PaymentMethodsIconUrl
      */
     protected function enabledCreditcards(): array
     {
-        $optionLexem = PaymentMethodsIconUrl::MOLLIE_CREDITCARD_ICONS;
-        $creditcardsAvailable = PaymentMethodsIconUrl::AVAILABLE_CREDITCARD_ICONS;
-        $svgFileName = PaymentMethodsIconUrl::SVG_FILE_EXTENSION;
-        $iconEnabledOption = PaymentMethodsIconUrl::MOLLIE_CREDITCARD_ICONS_ENABLER;
-        $creditCardSettings = get_option('mollie_wc_gateway_creditcard_settings', false) ?: [];
-        $enabled = isset($creditCardSettings[$iconEnabledOption])
-            ? mollieWooCommerceStringToBoolOption($creditCardSettings[$iconEnabledOption])
-            : false;
-
+        $optionLexem = \Mollie\WooCommerce\PaymentMethods\PaymentMethodsIconUrl::MOLLIE_CREDITCARD_ICONS;
+        $creditcardsAvailable = \Mollie\WooCommerce\PaymentMethods\PaymentMethodsIconUrl::AVAILABLE_CREDITCARD_ICONS;
+        $svgFileName = \Mollie\WooCommerce\PaymentMethods\PaymentMethodsIconUrl::SVG_FILE_EXTENSION;
+        $iconEnabledOption = \Mollie\WooCommerce\PaymentMethods\PaymentMethodsIconUrl::MOLLIE_CREDITCARD_ICONS_ENABLER;
+        $creditCardSettings = get_option('mollie_wc_gateway_creditcard_settings', \false) ?: [];
+        $enabled = isset($creditCardSettings[$iconEnabledOption]) ? mollieWooCommerceStringToBoolOption($creditCardSettings[$iconEnabledOption]) : \false;
         if (!$enabled) {
             return [];
         }
-
         $enabledCreditcards = [];
-
         $creditcardSettings = get_option('mollie_wc_gateway_creditcard_settings', []);
         foreach ($creditcardsAvailable as $card) {
             if (isset($creditcardSettings[$optionLexem . $card]) && mollieWooCommerceStringToBoolOption($creditcardSettings[$optionLexem . $card])) {
                 $enabledCreditcards[] = $card . $svgFileName;
             }
         }
-
         return $enabledCreditcards;
     }
     /**
@@ -176,37 +135,27 @@ class PaymentMethodsIconUrl
     public function buildSvgComposed()
     {
         $enabledCreditCards = $this->enabledCreditcards();
-
         $assetsImagesPath = $this->pluginPath . '/' . 'public/images/';
-        $cardWidth = PaymentMethodsIconUrl::CREDIT_CARD_ICON_WIDTH;
+        $cardWidth = \Mollie\WooCommerce\PaymentMethods\PaymentMethodsIconUrl::CREDIT_CARD_ICON_WIDTH;
         $cardsNumber = count($enabledCreditCards);
         $cardsWidth = $cardWidth * $cardsNumber;
         $cardPositionX = 0;
         $actual = get_transient('svg_creditcards_string');
         if (!$actual) {
-            $actual = sprintf(
-                '<svg width="%s" height="24" class="mollie-gateway-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">',
-                $cardsWidth
-            );
+            $actual = sprintf('<svg width="%s" height="24" class="mollie-gateway-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">', $cardsWidth);
             foreach ($enabledCreditCards as $creditCard) {
                 // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Reading local file is OK.
-                $svgString = file_get_contents(
-                    $assetsImagesPath . $creditCard
-                );
+                $svgString = file_get_contents($assetsImagesPath . $creditCard);
                 if ($svgString) {
-                    $actual .= $this->positionSvgOnX(
-                        $cardPositionX,
-                        $svgString
-                    );
+                    $actual .= $this->positionSvgOnX($cardPositionX, $svgString);
                     $cardPositionX += $cardWidth;
                 }
             }
             $actual .= "</svg>";
-            set_transient('svg_creditcards_string', $actual, DAY_IN_SECONDS);
+            set_transient('svg_creditcards_string', $actual, \DAY_IN_SECONDS);
         }
         return $actual;
     }
-
     /**
      * Method to add the x parameter to the svg string so that the icon can
      * be positioned related to other icons.
@@ -220,7 +169,6 @@ class PaymentMethodsIconUrl
     {
         $positionString = sprintf(' x="%s"', $xPosition);
         $positionAfterSvgWord = 4;
-
         return substr_replace($svgString, $positionString, $positionAfterSvgWord, 0);
     }
 }

@@ -1,11 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Mollie\WooCommerce\PaymentMethods;
 
 use Mollie\WooCommerce\Payment\PaymentFieldsService;
-
 interface PaymentMethodI
 {
     public function getProperty(string $propertyName);

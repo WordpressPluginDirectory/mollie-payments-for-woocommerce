@@ -1,58 +1,60 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Mollie\WooCommerce\PaymentMethods\PaymentFieldsStrategies;
 
-class BancomatpayFieldsStrategy implements PaymentFieldsStrategyI
+class BancomatpayFieldsStrategy implements \Mollie\WooCommerce\PaymentMethods\PaymentFieldsStrategies\PaymentFieldsStrategyI
 {
     const FIELD_PHONE = "billing_phone_bancomatpay";
-
     public function execute($gateway, $dataHelper)
     {
-        $showPhoneField = false;
+        $showPhoneField = \false;
         $isPhoneRequired = get_option('mollie_wc_is_phone_required_flag');
-        $phoneValue = false;
-
+        $phoneValue = \false;
         if (is_checkout_pay_page()) {
             $order = $this->getOrderIdOnPayForOrderPage();
             $phoneValue = $order->get_billing_phone();
-            $showPhoneField = true;
+            $showPhoneField = \true;
         }
-
         if (is_checkout() && !is_checkout_pay_page() && !$isPhoneRequired) {
-            $showPhoneField = true;
+            $showPhoneField = \true;
         }
-
         if ($showPhoneField) {
             $this->phoneNumber($phoneValue);
         }
     }
-
     protected function getOrderIdOnPayForOrderPage()
     {
         global $wp;
         $orderId = absint($wp->query_vars['order-pay']);
         return wc_get_order($orderId);
     }
-
     protected function phoneNumber($phoneValue)
     {
         $phoneValue = $phoneValue ?: '';
         ?>
         <p class="form-row form-row-wide" id="billing_phone_field">
-            <label for="<?php echo esc_attr(self::FIELD_PHONE); ?>" class=""><?php echo esc_html__('Phone', 'mollie-payments-for-woocommerce'); ?>
+            <label for="<?php 
+        echo esc_attr(self::FIELD_PHONE);
+        ?>" class=""><?php 
+        echo esc_html__('Phone', 'mollie-payments-for-woocommerce');
+        ?>
                 <abbr class="required" title="required">*</abbr>
             </label>
             <span class="woocommerce-input-wrapper">
-        <input type="tel" class="input-text " name="<?php echo esc_attr(self::FIELD_PHONE); ?>" id="<?php echo esc_attr(self::FIELD_PHONE); ?>"
+        <input type="tel" class="input-text " name="<?php 
+        echo esc_attr(self::FIELD_PHONE);
+        ?>" id="<?php 
+        echo esc_attr(self::FIELD_PHONE);
+        ?>"
                placeholder="+39xxxxxxxxx"
-               value="<?php echo esc_attr($phoneValue); ?>" autocomplete="phone">
+               value="<?php 
+        echo esc_attr($phoneValue);
+        ?>" autocomplete="phone">
         </span>
         </p>
-        <?php
+        <?php 
     }
-
     public function getFieldMarkup($gateway, $dataHelper)
     {
         return "";

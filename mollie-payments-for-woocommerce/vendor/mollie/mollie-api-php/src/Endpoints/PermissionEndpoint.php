@@ -5,11 +5,9 @@ namespace Mollie\Api\Endpoints;
 use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\Resources\Permission;
 use Mollie\Api\Resources\PermissionCollection;
-
-class PermissionEndpoint extends CollectionEndpointAbstract
+class PermissionEndpoint extends \Mollie\Api\Endpoints\CollectionEndpointAbstract
 {
     protected $resourcePath = "permissions";
-
     /**
      * Get the object that is used by this API endpoint. Every API endpoint uses one
      * type of object.
@@ -20,7 +18,6 @@ class PermissionEndpoint extends CollectionEndpointAbstract
     {
         return new Permission($this->client);
     }
-
     /**
      * Get the collection object that is used by this API endpoint. Every API
      * endpoint uses one type of collection object.
@@ -34,7 +31,6 @@ class PermissionEndpoint extends CollectionEndpointAbstract
     {
         return new PermissionCollection($count, $_links);
     }
-
     /**
      * Retrieve a single Permission from Mollie.
      *
@@ -49,7 +45,6 @@ class PermissionEndpoint extends CollectionEndpointAbstract
     {
         return $this->rest_read($permissionId, $parameters);
     }
-
     /**
      * Retrieve all permissions.
      *

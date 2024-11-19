@@ -1,21 +1,16 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Mollie\Api\Endpoints;
 
 use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\Resources\Payment;
 use Mollie\Api\Resources\PaymentCollection;
-
-class SubscriptionPaymentEndpoint extends CollectionEndpointAbstract
+class SubscriptionPaymentEndpoint extends \Mollie\Api\Endpoints\CollectionEndpointAbstract
 {
     protected $resourcePath = "customers_subscriptions_payments";
-
     protected $customerId = null;
-
     protected $subscriptionId = null;
-
     /**
      * Retrieves a paginated collection of Subscription Payments from Mollie.
      *
@@ -28,19 +23,12 @@ class SubscriptionPaymentEndpoint extends CollectionEndpointAbstract
      * @return PaymentCollection
      * @throws \Mollie\Api\Exceptions\ApiException
      */
-    public function pageForIds(
-        string $customerId,
-        string $subscriptionId,
-        ?string $from = null,
-        ?int $limit = null,
-        array $parameters = []
-    ) {
+    public function pageForIds(string $customerId, string $subscriptionId, ?string $from = null, ?int $limit = null, array $parameters = [])
+    {
         $this->customerId = $customerId;
         $this->subscriptionId = $subscriptionId;
-
         return $this->rest_list($from, $limit, $parameters);
     }
-
     /**
      * Get the object that is used by this API endpoint. Every API endpoint uses one type of object.
      *
@@ -50,7 +38,6 @@ class SubscriptionPaymentEndpoint extends CollectionEndpointAbstract
     {
         return new Payment($this->client);
     }
-
     /**
      * Get the collection object that is used by this API endpoint. Every API endpoint uses one type of collection object.
      *
@@ -63,17 +50,14 @@ class SubscriptionPaymentEndpoint extends CollectionEndpointAbstract
     {
         return new PaymentCollection($this->client, $count, $_links);
     }
-
     public function getResourcePath()
     {
         if (is_null($this->customerId)) {
             throw new ApiException('No customerId provided.');
         }
-
         if (is_null($this->subscriptionId)) {
             throw new ApiException('No subscriptionId provided.');
         }
-
         return "customers/{$this->customerId}/subscriptions/{$this->subscriptionId}/payments";
     }
 }

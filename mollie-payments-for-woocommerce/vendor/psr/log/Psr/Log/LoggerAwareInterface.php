@@ -1,6 +1,6 @@
 <?php
 
-namespace Psr\Log;
+namespace Mollie\Psr\Log;
 
 /**
  * Describes a logger-aware instance.

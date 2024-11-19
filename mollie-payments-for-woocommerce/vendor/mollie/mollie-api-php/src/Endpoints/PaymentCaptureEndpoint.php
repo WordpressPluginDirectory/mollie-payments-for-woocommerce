@@ -6,11 +6,9 @@ use Mollie\Api\Resources\Capture;
 use Mollie\Api\Resources\CaptureCollection;
 use Mollie\Api\Resources\LazyCollection;
 use Mollie\Api\Resources\Payment;
-
-class PaymentCaptureEndpoint extends CollectionEndpointAbstract
+class PaymentCaptureEndpoint extends \Mollie\Api\Endpoints\CollectionEndpointAbstract
 {
     protected $resourcePath = "payments_captures";
-
     /**
      * Get the object that is used by this API endpoint. Every API endpoint uses one type of object.
      *
@@ -20,7 +18,6 @@ class PaymentCaptureEndpoint extends CollectionEndpointAbstract
     {
         return new Capture($this->client);
     }
-
     /**
      * Get the collection object that is used by this API endpoint. Every API endpoint uses one type of collection object.
      *
@@ -33,7 +30,6 @@ class PaymentCaptureEndpoint extends CollectionEndpointAbstract
     {
         return new CaptureCollection($this->client, $count, $_links);
     }
-
     /**
      * Creates a payment capture in Mollie.
      *
@@ -48,7 +44,6 @@ class PaymentCaptureEndpoint extends CollectionEndpointAbstract
     {
         return $this->createForId($payment->id, $data, $filters);
     }
-
     /**
      * Creates a payment capture in Mollie.
      *
@@ -62,10 +57,8 @@ class PaymentCaptureEndpoint extends CollectionEndpointAbstract
     public function createForId($paymentId, array $data = [], array $filters = [])
     {
         $this->parentId = $paymentId;
-
         return $this->rest_create($data, $filters);
     }
-
     /**
      * @param Payment $payment
      * @param string $captureId
@@ -78,7 +71,6 @@ class PaymentCaptureEndpoint extends CollectionEndpointAbstract
     {
         return $this->getForId($payment->id, $captureId, $parameters);
     }
-
     /**
      * @param string $paymentId
      * @param string $captureId
@@ -90,10 +82,8 @@ class PaymentCaptureEndpoint extends CollectionEndpointAbstract
     public function getForId($paymentId, $captureId, array $parameters = [])
     {
         $this->parentId = $paymentId;
-
         return parent::rest_read($captureId, $parameters);
     }
-
     /**
      * @param Payment $payment
      * @param array $parameters
@@ -105,7 +95,6 @@ class PaymentCaptureEndpoint extends CollectionEndpointAbstract
     {
         return $this->listForId($payment->id, $parameters);
     }
-
     /**
      * Create an iterator for iterating over captures for the given payment, retrieved from Mollie.
      *
@@ -117,11 +106,10 @@ class PaymentCaptureEndpoint extends CollectionEndpointAbstract
      *
      * @return LazyCollection
      */
-    public function iteratorFor(Payment $payment, ?string $from = null, ?int $limit = null, array $parameters = [], bool $iterateBackwards = false): LazyCollection
+    public function iteratorFor(Payment $payment, ?string $from = null, ?int $limit = null, array $parameters = [], bool $iterateBackwards = \false): LazyCollection
     {
         return $this->iteratorForId($payment->id, $from, $limit, $parameters, $iterateBackwards);
     }
-
     /**
      * @param string $paymentId
      * @param array $parameters
@@ -132,10 +120,8 @@ class PaymentCaptureEndpoint extends CollectionEndpointAbstract
     public function listForId($paymentId, array $parameters = [])
     {
         $this->parentId = $paymentId;
-
         return parent::rest_list(null, null, $parameters);
     }
-
     /**
      * Create an iterator for iterating over captures for the given payment id, retrieved from Mollie.
      *
@@ -147,10 +133,9 @@ class PaymentCaptureEndpoint extends CollectionEndpointAbstract
      *
      * @return LazyCollection
      */
-    public function iteratorForId(string $paymentId, ?string $from = null, ?int $limit = null, array $parameters = [], bool $iterateBackwards = false): LazyCollection
+    public function iteratorForId(string $paymentId, ?string $from = null, ?int $limit = null, array $parameters = [], bool $iterateBackwards = \false): LazyCollection
     {
         $this->parentId = $paymentId;
-
         return $this->rest_iterator($from, $limit, $parameters, $iterateBackwards);
     }
 }

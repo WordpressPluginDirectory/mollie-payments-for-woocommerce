@@ -6,10 +6,11 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
-    'Mollie\\WooCommerce\\Vendor\\' => array($baseDir . '/lib/packages'),
     'Mollie\\WooCommerce\\' => array($baseDir . '/src'),
+    'Mollie\\Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
+    'Mollie\\Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
+    'Mollie\\Inpsyde\\Modularity\\' => array($vendorDir . '/inpsyde/modularity/src'),
+    'Mollie\\Inpsyde\\EnvironmentChecker\\' => array($baseDir . '/pluginEnvironmentChecker'),
     'Mollie\\Api\\' => array($vendorDir . '/mollie/mollie-api-php/src'),
-    'Inpsyde\\EnvironmentChecker\\' => array($baseDir . '/pluginEnvironmentChecker'),
     'Composer\\CaBundle\\' => array($vendorDir . '/composer/ca-bundle/src'),
 );

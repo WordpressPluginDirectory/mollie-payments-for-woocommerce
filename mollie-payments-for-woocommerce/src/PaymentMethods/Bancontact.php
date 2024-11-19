@@ -1,30 +1,14 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Mollie\WooCommerce\PaymentMethods;
 
-class Bancontact extends AbstractPaymentMethod implements PaymentMethodI
+class Bancontact extends \Mollie\WooCommerce\PaymentMethods\AbstractPaymentMethod implements \Mollie\WooCommerce\PaymentMethods\PaymentMethodI
 {
     protected function getConfig(): array
     {
-        return [
-            'id' => 'bancontact',
-            'defaultTitle' => __('Bancontact', 'mollie-payments-for-woocommerce'),
-            'settingsDescription' => '',
-            'defaultDescription' => '',
-            'paymentFields' => false,
-            'instructions' => false,
-            'supports' => [
-                'products',
-                'refunds',
-            ],
-            'filtersOnBuild' => false,
-            'confirmationDelayed' => true,
-            'SEPA' => true,
-        ];
+        return ['id' => 'bancontact', 'defaultTitle' => __('Bancontact', 'mollie-payments-for-woocommerce'), 'settingsDescription' => '', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \false, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \true, 'SEPA' => \true, 'docs' => 'https://www.mollie.com/gb/payments/bancontact'];
     }
-
     public function getFormFields($generalFormFields): array
     {
         return $generalFormFields;

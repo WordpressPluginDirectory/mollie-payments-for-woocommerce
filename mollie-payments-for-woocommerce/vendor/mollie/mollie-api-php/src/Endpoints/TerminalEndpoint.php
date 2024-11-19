@@ -6,16 +6,13 @@ use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\Resources\LazyCollection;
 use Mollie\Api\Resources\Terminal;
 use Mollie\Api\Resources\TerminalCollection;
-
-class TerminalEndpoint extends CollectionEndpointAbstract
+class TerminalEndpoint extends \Mollie\Api\Endpoints\CollectionEndpointAbstract
 {
     protected $resourcePath = "terminals";
-
     /**
      * @var string
      */
     public const RESOURCE_ID_PREFIX = 'term_';
-
     /**
      * @return Terminal
      */
@@ -23,7 +20,6 @@ class TerminalEndpoint extends CollectionEndpointAbstract
     {
         return new Terminal($this->client);
     }
-
     /**
      * Get the collection object that is used by this API endpoint. Every API endpoint uses one type of collection object.
      *
@@ -36,7 +32,6 @@ class TerminalEndpoint extends CollectionEndpointAbstract
     {
         return new TerminalCollection($this->client, $count, $_links);
     }
-
     /**
      * Retrieve terminal from Mollie.
      *
@@ -52,10 +47,8 @@ class TerminalEndpoint extends CollectionEndpointAbstract
         if (empty($terminalId) || strpos($terminalId, self::RESOURCE_ID_PREFIX) !== 0) {
             throw new ApiException("Invalid terminal ID: '{$terminalId}'. A terminal ID should start with '" . self::RESOURCE_ID_PREFIX . "'.");
         }
-
         return parent::rest_read($terminalId, $parameters);
     }
-
     /**
      * Retrieves a collection of Terminals from Mollie for the current organization / profile, ordered from newest to oldest.
      *
@@ -70,7 +63,6 @@ class TerminalEndpoint extends CollectionEndpointAbstract
     {
         return $this->rest_list($from, $limit, $parameters);
     }
-
     /**
      * Create an iterator for iterating over terminals retrieved from Mollie.
      *
@@ -81,7 +73,7 @@ class TerminalEndpoint extends CollectionEndpointAbstract
      *
      * @return LazyCollection
      */
-    public function iterator(?string $from = null, ?int $limit = null, array $parameters = [], bool $iterateBackwards = false): LazyCollection
+    public function iterator(?string $from = null, ?int $limit = null, array $parameters = [], bool $iterateBackwards = \false): LazyCollection
     {
         return $this->rest_iterator($from, $limit, $parameters, $iterateBackwards);
     }

@@ -5,11 +5,9 @@ namespace Mollie\Api\Endpoints;
 use Mollie\Api\Resources\LazyCollection;
 use Mollie\Api\Resources\Payment;
 use Mollie\Api\Resources\PaymentCollection;
-
-class SettlementPaymentEndpoint extends CollectionEndpointAbstract
+class SettlementPaymentEndpoint extends \Mollie\Api\Endpoints\CollectionEndpointAbstract
 {
     protected $resourcePath = "settlements_payments";
-
     /**
      * @inheritDoc
      */
@@ -17,7 +15,6 @@ class SettlementPaymentEndpoint extends CollectionEndpointAbstract
     {
         return new Payment($this->client);
     }
-
     /**
      * @inheritDoc
      */
@@ -25,7 +22,6 @@ class SettlementPaymentEndpoint extends CollectionEndpointAbstract
     {
         return new PaymentCollection($this->client, $count, $_links);
     }
-
     /**
      * Retrieves a collection of Payments from Mollie.
      *
@@ -40,10 +36,8 @@ class SettlementPaymentEndpoint extends CollectionEndpointAbstract
     public function pageForId($settlementId, $from = null, $limit = null, array $parameters = [])
     {
         $this->parentId = $settlementId;
-
         return $this->rest_list($from, $limit, $parameters);
     }
-
     /**
      * Create an iterator for iterating over payments for the given settlement id, retrieved from Mollie.
      *
@@ -55,10 +49,9 @@ class SettlementPaymentEndpoint extends CollectionEndpointAbstract
      *
      * @return LazyCollection
      */
-    public function iteratorForId(string $settlementId, ?string $from = null, ?int $limit = null, array $parameters = [], bool $iterateBackwards = false): LazyCollection
+    public function iteratorForId(string $settlementId, ?string $from = null, ?int $limit = null, array $parameters = [], bool $iterateBackwards = \false): LazyCollection
     {
         $this->parentId = $settlementId;
-
         return $this->rest_iterator($from, $limit, $parameters, $iterateBackwards);
     }
 }

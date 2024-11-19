@@ -1,27 +1,22 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Mollie\WooCommerce\PaymentMethods\PaymentFieldsStrategies;
 
-class GiftcardFieldsStrategy implements PaymentFieldsStrategyI
+class GiftcardFieldsStrategy implements \Mollie\WooCommerce\PaymentMethods\PaymentFieldsStrategies\PaymentFieldsStrategyI
 {
-    use IssuersDropdownBehavior;
-
+    use \Mollie\WooCommerce\PaymentMethods\PaymentFieldsStrategies\IssuersDropdownBehavior;
     public function execute($gateway, $dataHelper)
     {
         if (!$this->dropDownEnabled($gateway)) {
             return;
         }
-
         $issuers = $this->getIssuers($gateway, $dataHelper);
         if (empty($issuers)) {
             return;
         }
         $selectedIssuer = $gateway->getSelectedIssuer();
-
         $html = '';
-
         // If only one gift card issuers is available, show it without a dropdown
         if (count($issuers) === 1) {
             $issuer = $issuers[0];
@@ -33,13 +28,10 @@ class GiftcardFieldsStrategy implements PaymentFieldsStrategyI
             }
             //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             echo wpautop(wptexturize($html));
-
             return;
         }
-
         $this->renderIssuers($gateway, $issuers, $selectedIssuer);
     }
-
     public function getFieldMarkup($gateway, $dataHelper)
     {
         if (!$this->dropDownEnabled($gateway)) {
@@ -50,13 +42,12 @@ class GiftcardFieldsStrategy implements PaymentFieldsStrategyI
         $markup = $this->dropdownOptions($gateway, $issuers, $selectedIssuer);
         return $markup;
     }
-
     /**
      * @param $issuers
      */
     protected function checkSvgIssuers($issuers): string
     {
-        if (!isset($issuers[0]) || ! is_object($issuers[0])) {
+        if (!isset($issuers[0]) || !is_object($issuers[0])) {
             return '';
         }
         $image = property_exists($issuers[0], 'image') && $issuers[0]->image !== null ? $issuers[0]->image : null;

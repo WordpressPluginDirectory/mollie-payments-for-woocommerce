@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Mollie\WooCommerce\Payment;
 
 use Mollie\Api\Exceptions\ApiException;
@@ -9,7 +8,6 @@ use Mollie\Api\Resources\Order;
 use Mollie\WooCommerce\SDK\Api;
 use Mollie\WooCommerce\Settings\Settings;
 use Mollie\WooCommerce\Shared\Data;
-
 class PaymentFactory
 {
     /**
@@ -30,11 +28,10 @@ class PaymentFactory
      * @var OrderLines
      */
     protected $orderLines;
-
     /**
      * PaymentFactory constructor.
      */
-    public function __construct(Data $dataHelper, Api $apiHelper, Settings $settingsHelper, string $pluginId, $logger, OrderLines $orderLines)
+    public function __construct(Data $dataHelper, Api $apiHelper, Settings $settingsHelper, string $pluginId, $logger, \Mollie\WooCommerce\Payment\OrderLines $orderLines)
     {
         $this->dataHelper = $dataHelper;
         $this->apiHelper = $apiHelper;
@@ -43,7 +40,6 @@ class PaymentFactory
         $this->logger = $logger;
         $this->orderLines = $orderLines;
     }
-
     /**
      * @param $data
      * @return bool|MollieOrder|MolliePayment
@@ -51,47 +47,15 @@ class PaymentFactory
      */
     public function getPaymentObject($data)
     {
-
-        if (
-            (!is_object($data) && $data === 'order')
-            || (is_string($data) && strpos($data, 'ord_') !== false)
-            || (is_object($data) && $data->resource === 'order')
-        ) {
-            $refundLineItemsBuilder = new RefundLineItemsBuilder($this->dataHelper);
+        if (!is_object($data) && $data === 'order' || is_string($data) && strpos($data, 'ord_') !== \false || is_object($data) && $data->resource === 'order') {
+            $refundLineItemsBuilder = new \Mollie\WooCommerce\Payment\RefundLineItemsBuilder($this->dataHelper);
             $apiKey = $this->settingsHelper->getApiKey();
-            $orderItemsRefunded = new OrderItemsRefunder(
-                $refundLineItemsBuilder,
-                $this->dataHelper,
-                $this->apiHelper->getApiClient($apiKey)->orders
-            );
-
-            return new MollieOrder(
-                $orderItemsRefunded,
-                $data,
-                $this->pluginId,
-                $this->apiHelper,
-                $this->settingsHelper,
-                $this->dataHelper,
-                $this->logger,
-                $this->orderLines
-            );
+            $orderItemsRefunded = new \Mollie\WooCommerce\Payment\OrderItemsRefunder($refundLineItemsBuilder, $this->dataHelper, $this->apiHelper->getApiClient($apiKey)->orders);
+            return new \Mollie\WooCommerce\Payment\MollieOrder($orderItemsRefunded, $data, $this->pluginId, $this->apiHelper, $this->settingsHelper, $this->dataHelper, $this->logger, $this->orderLines);
         }
-
-        if (
-            (!is_object($data) && $data === 'payment')
-            || (!is_object($data) && strpos($data, 'tr_') !== false)
-            || (is_object($data) && $data->resource === 'payment')
-        ) {
-            return new MolliePayment(
-                $data,
-                $this->pluginId,
-                $this->apiHelper,
-                $this->settingsHelper,
-                $this->dataHelper,
-                $this->logger
-            );
+        if (!is_object($data) && $data === 'payment' || !is_object($data) && strpos($data, 'tr_') !== \false || is_object($data) && $data->resource === 'payment') {
+            return new \Mollie\WooCommerce\Payment\MolliePayment($data, $this->pluginId, $this->apiHelper, $this->settingsHelper, $this->dataHelper, $this->logger);
         }
-
-        return false;
+        return \false;
     }
 }
