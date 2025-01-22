@@ -54,7 +54,7 @@ class Guzzle6And7RetryMiddlewareFactory
      */
     private function newRetryDecider()
     {
-        return function ($retries, Request $request, Response $response = null, TransferException $exception = null) {
+        return function ($retries, Request $request, ?Response $response = null, ?TransferException $exception = null) {
             if ($retries >= static::MAX_RETRIES) {
                 return \false;
             }

@@ -140,7 +140,7 @@ class PaymentLink extends \Mollie\Api\Resources\BaseResource
      * @param array $filters
      * @return mixed|\Mollie\Api\Resources\BaseCollection
      */
-    public function payments(string $from = null, int $limit = null, array $filters = [])
+    public function payments(?string $from = null, ?int $limit = null, array $filters = [])
     {
         return $this->client->paymentLinkPayments->pageFor($this, $from, $limit, $this->withPresetOptions($filters));
     }

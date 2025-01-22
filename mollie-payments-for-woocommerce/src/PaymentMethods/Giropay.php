@@ -7,7 +7,16 @@ class Giropay extends \Mollie\WooCommerce\PaymentMethods\AbstractPaymentMethod i
 {
     protected function getConfig(): array
     {
-        return ['id' => 'giropay', 'defaultTitle' => __('Giropay', 'mollie-payments-for-woocommerce'), 'settingsDescription' => '', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \false, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \true, 'SEPA' => \true, 'docs' => 'https://help.mollie.com/hc/en-gb/articles/19745480480786-Giropay-Depreciation-FAQ'];
+        return ['id' => 'giropay', 'defaultTitle' => 'Giropay', 'settingsDescription' => '', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \false, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \true, 'SEPA' => \true, 'docs' => 'https://help.mollie.com/hc/en-gb/articles/19745480480786-Giropay-Depreciation-FAQ'];
+    }
+    // Replace translatable strings after the 'after_setup_theme' hook
+    public function initializeTranslations(): void
+    {
+        if ($this->translationsInitialized) {
+            return;
+        }
+        $this->config['defaultTitle'] = __('Giropay', 'mollie-payments-for-woocommerce');
+        $this->translationsInitialized = \true;
     }
     public function getFormFields($generalFormFields): array
     {

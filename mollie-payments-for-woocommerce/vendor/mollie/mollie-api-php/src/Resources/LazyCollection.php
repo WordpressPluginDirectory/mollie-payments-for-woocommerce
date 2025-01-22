@@ -69,7 +69,7 @@ class LazyCollection implements IteratorAggregate
      * @param (callable(TValue, TKey): bool)|null  $callback
      * @return TValue|null
      */
-    public function first(callable $callback = null)
+    public function first(?callable $callback = null)
     {
         $iterator = $this->getIterator();
         if (is_null($callback)) {

@@ -102,7 +102,7 @@ class Customer extends \Mollie\Api\Resources\BaseResource
     /**
      * @param string $subscriptionId
      *
-     * @return null
+     * @return \Mollie\Api\Resources\Subscription
      * @throws ApiException
      */
     public function cancelSubscription($subscriptionId)

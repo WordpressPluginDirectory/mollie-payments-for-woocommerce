@@ -27,7 +27,15 @@ class Voucher extends \Mollie\WooCommerce\PaymentMethods\AbstractPaymentMethod i
     public const MOLLIE_VOUCHER_CATEGORY_OPTION = '_mollie_voucher_category';
     protected function getConfig(): array
     {
-        return ['id' => 'voucher', 'defaultTitle' => __('Voucher', 'mollie-payments-for-woocommerce'), 'settingsDescription' => '', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \false, 'supports' => ['products'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'SEPA' => \false, 'orderMandatory' => \true, 'docs' => 'https://www.mollie.com/gb/payments/meal-eco-gift-vouchers'];
+        return ['id' => 'voucher', 'defaultTitle' => 'Voucher', 'settingsDescription' => '', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \false, 'supports' => ['products'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'SEPA' => \false, 'orderMandatory' => \true, 'docs' => 'https://www.mollie.com/gb/payments/meal-eco-gift-vouchers'];
+    }
+    public function initializeTranslations(): void
+    {
+        if ($this->translationsInitialized) {
+            return;
+        }
+        $this->config['defaultTitle'] = __('Voucher', 'mollie-payments-for-woocommerce');
+        $this->translationsInitialized = \true;
     }
     public function getFormFields($generalFormFields): array
     {

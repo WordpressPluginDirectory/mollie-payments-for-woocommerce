@@ -56,7 +56,9 @@ class ConstraintsChecker
             foreach ($mainException as $error) {
                 $errors[] = $error->getMessage();
             }
-            $this->showNotice($errors);
+            add_action('after_setup_theme', function () use ($errors) {
+                $this->showNotice($errors);
+            });
             $disabler = new \Mollie\WooCommerce\Activation\PluginDisabler('mollie-payments-for-woocommerce', 'mollie_wc_plugin_init');
             $disabler->disableAll();
             return \false;
@@ -92,7 +94,7 @@ class ConstraintsChecker
         }
         $message .= sprintf(
             /* translators: Placeholder 1: opening tags Placeholder 2: closing tags */
-            __('%1$sCorrect the above errors to use Mollie Payments for Woocommerce%2$s', 'mollie-payments-for-woocommerce'),
+            __('%1$sCorrect the above errors to use Mollie Payments for WooCommerce%2$s', 'mollie-payments-for-woocommerce'),
             '<p>',
             '</p>'
         );

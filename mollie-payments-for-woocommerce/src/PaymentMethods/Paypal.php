@@ -7,11 +7,19 @@ class Paypal extends \Mollie\WooCommerce\PaymentMethods\AbstractPaymentMethod im
 {
     protected function getConfig(): array
     {
-        return ['id' => 'paypal', 'defaultTitle' => __('PayPal', 'mollie-payments-for-woocommerce'), 'settingsDescription' => '', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \true, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'SEPA' => \false, 'docs' => 'https://www.mollie.com/gb/payments/paypal'];
+        return ['id' => 'paypal', 'defaultTitle' => 'PayPal', 'settingsDescription' => '', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \true, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'SEPA' => \false, 'docs' => 'https://www.mollie.com/gb/payments/paypal'];
+    }
+    public function initializeTranslations(): void
+    {
+        if ($this->translationsInitialized) {
+            return;
+        }
+        $this->config['defaultTitle'] = __('PayPal', 'mollie-payments-for-woocommerce');
+        $this->translationsInitialized = \true;
     }
     public function getFormFields($generalFormFields): array
     {
-        $paymentMethodFormFieds = ['mollie_paypal_button_enabled_cart' => ['type' => 'checkbox', 'title' => __('Display on cart page', 'mollie-payments-for-woocommerce'), 'description' => __('Enable the PayPal button to be used in the cart page.', 'mollie-payments-for-woocommerce'), 'default' => 'no'], 'mollie_paypal_button_enabled_product' => ['type' => 'checkbox', 'title' => __('Display on product page', 'mollie-payments-for-woocommerce'), 'description' => __('Enable the PayPal button to be used in the product page.', 'mollie-payments-for-woocommerce'), 'default' => 'no'], 'color' => ['type' => 'select', 'id' => 'mollie_paypal_buttton_color', 'title' => _x('Button text language and color', 'Mollie PayPal Button Settings', 'mollie-payments-for-woocommerce'), 'description' => _x('Select the text and the colour of the button.', 'Mollie PayPal Button Settings', 'mollie-payments-for-woocommerce'), 'default' => 'buy-gold', 'options' => $this->buttonOptions()], 'mollie_paypal_button_minimum_amount' => ['type' => 'number', 'title' => __('Minimum amount to display button', 'mollie-payments-for-woocommerce'), 'description' => __('If the product or the cart total amount is under this number, then the button will not show up.', 'mollie-payments-for-woocommerce'), 'custom_attributes' => ['step' => '0.01', 'min' => '0', 'max' => '100000000'], 'default' => 0, 'desc_tip' => \true]];
+        $paymentMethodFormFieds = ['mollie_paypal_button_enabled_cart' => ['type' => 'checkbox', 'title' => __('Display on cart page', 'mollie-payments-for-woocommerce'), 'description' => __('Enable the PayPal button to be used in the cart page.', 'mollie-payments-for-woocommerce'), 'default' => 'no'], 'mollie_paypal_button_enabled_product' => ['type' => 'checkbox', 'title' => __('Display on product page', 'mollie-payments-for-woocommerce'), 'description' => __('Enable the PayPal button to be used in the product page.', 'mollie-payments-for-woocommerce'), 'default' => 'no'], 'color' => ['type' => 'select', 'id' => 'mollie_paypal_button_color', 'title' => _x('Button text language and color', 'Mollie PayPal Button Settings', 'mollie-payments-for-woocommerce'), 'description' => _x('Select the text and the colour of the button.', 'Mollie PayPal Button Settings', 'mollie-payments-for-woocommerce'), 'default' => 'buy-gold', 'options' => $this->buttonOptions()], 'mollie_paypal_button_minimum_amount' => ['type' => 'number', 'title' => __('Minimum amount to display button', 'mollie-payments-for-woocommerce'), 'description' => __('If the product or the cart total amount is under this number, then the button will not show up.', 'mollie-payments-for-woocommerce'), 'custom_attributes' => ['step' => '0.01', 'min' => '0', 'max' => '100000000'], 'default' => 0, 'desc_tip' => \true]];
         return array_merge($generalFormFields, $paymentMethodFormFieds);
     }
     private function buttonOptions(): array

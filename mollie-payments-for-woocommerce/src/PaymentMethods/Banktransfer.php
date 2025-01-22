@@ -24,7 +24,16 @@ class Banktransfer extends \Mollie\WooCommerce\PaymentMethods\AbstractPaymentMet
     public const EXPIRY_DAYS_OPTION = 'order_dueDate';
     protected function getConfig(): array
     {
-        return ['id' => 'banktransfer', 'defaultTitle' => __('Bank Transfer', 'mollie-payments-for-woocommerce'), 'settingsDescription' => '', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \true, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \true, 'confirmationDelayed' => \true, 'SEPA' => \false, 'customRedirect' => \true, 'docs' => 'https://www.mollie.com/gb/payments/bank-transfer'];
+        return ['id' => 'banktransfer', 'defaultTitle' => 'Bank Transfer', 'settingsDescription' => '', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \true, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \true, 'confirmationDelayed' => \true, 'SEPA' => \false, 'customRedirect' => \true, 'docs' => 'https://www.mollie.com/gb/payments/bank-transfer'];
+    }
+    // Replace translatable strings after the 'after_setup_theme' hook
+    public function initializeTranslations(): void
+    {
+        if ($this->translationsInitialized) {
+            return;
+        }
+        $this->config['defaultTitle'] = __('Bank Transfer', 'mollie-payments-for-woocommerce');
+        $this->translationsInitialized = \true;
     }
     public function getFormFields($generalFormFields): array
     {

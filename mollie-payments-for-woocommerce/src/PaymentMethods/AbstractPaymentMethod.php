@@ -42,6 +42,10 @@ abstract class AbstractPaymentMethod implements \Mollie\WooCommerce\PaymentMetho
      * @var array
      */
     private $apiPaymentMethod;
+    /**
+     * @var bool
+     */
+    protected bool $translationsInitialized = \false;
     public function __construct(\Mollie\WooCommerce\PaymentMethods\IconFactory $iconFactory, Settings $settingsHelper, PaymentFieldsService $paymentFieldsService, Surcharge $surcharge, array $apiPaymentMethod)
     {
         $this->id = $this->getIdFromConfig();
@@ -52,6 +56,8 @@ abstract class AbstractPaymentMethod implements \Mollie\WooCommerce\PaymentMetho
         $this->config = $this->getConfig();
         $this->settings = $this->getSettings();
         $this->apiPaymentMethod = $apiPaymentMethod;
+        add_action('init', [$this, 'initializeTranslations']);
+        add_action('init', [$this, 'updateSettingsWithDefaults']);
     }
     public function title(): string
     {
@@ -186,6 +192,19 @@ abstract class AbstractPaymentMethod implements \Mollie\WooCommerce\PaymentMetho
      * @return array
      */
     public function getSettings(): array
+    {
+        $optionName = 'mollie_wc_gateway_' . $this->id . '_settings';
+        $settings = get_option($optionName, \false);
+        if (!$settings) {
+            $settings = [];
+        }
+        return $settings;
+    }
+    /**
+     * Update the payment method's settings with defaults if not exist
+     * @return array
+     */
+    public function updateSettingsWithDefaults(): array
     {
         $optionName = 'mollie_wc_gateway_' . $this->id . '_settings';
         $settings = get_option($optionName, \false);

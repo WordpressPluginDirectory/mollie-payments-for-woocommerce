@@ -2,8 +2,8 @@
 Contributors: daanvm, danielhuesken, davdebcom, dinamiko, syde, l.vangunst, ndijkstra, robin-mollie, wido, carmen222, inpsyde-maticluznar
 Tags: mollie, payments, payment gateway, woocommerce, credit card, apple pay, ideal, bancontact, klarna, sofort, woocommerce subscriptions 
 Requires at least: 3.8
-Tested up to: 6.6
-Stable tag: 7.9.0
+Tested up to: 6.7
+Stable tag: 7.9.1
 Requires PHP: 7.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -14,7 +14,9 @@ Accept all major payment methods in WooCommerce today. Credit cards, iDEAL and m
 
 https://www.youtube.com/watch?v=33sQNKelKW4
 
-> **Special limited time offer:** Pay ZERO processing fees for your first month. [Sign-up to Mollie today](https://my.mollie.com/campaigns/signup/molliewoocommerce2024?utm_campaign=GLO_Q4_2024_Woo-Campaign&utm_medium=company_profile&utm_source=partner&utm_content=pagebannerwordpress&utm_partner=woocommerce&campaign_name=GLO_Q4_2024_Woo-Campaign)
+> **Special limited time offer:** Pay ZERO processing fees for your first month.* [Sign-up to Mollie today](https://my.mollie.com/campaigns/signup/molliewoocommerce2024?utm_campaign=GLO_Q4_2024_Woo-Campaign&utm_medium=company_profile&utm_source=partner&utm_content=pagebannerwordpress&utm_partner=woocommerce&campaign_name=GLO_Q4_2024_Woo-Campaign)
+
+\***To qualify for this offer, you must sign up through the specific link above. Offer subject to terms and conditions**
 
 Quickly integrate all major payment methods in WooCommerce, wherever you need them. Mollie Payments for WooCommerce adds the critical success factor: an easy-to-install, easy-to-use, customizable payments gateway that is as flexible as WooCommerce itself.
 
@@ -71,7 +73,7 @@ Pay after delivery payment methods:
 
 = Get started with Mollie =
 
-1. [Create a Mollie account](https://my.mollie.com/dashboard/signup)
+1. [Create a Mollie account](https://my.mollie.com/campaigns/signup/molliewoocommerce2024?utm_campaign=GLO_Q4_2024_Woo-Campaign&utm_medium=company_profile&utm_source=partner&utm_content=pagebannerwordpress&utm_partner=woocommerce&campaign_name=GLO_Q4_2024_Woo-Campaign)
 2. Install **Mollie Payments for WooCommerce** on your WordPress website
 3. Activate Mollie in your WooCommerce webshop and enter your Mollie API key
 4. In your Mollie Dashboard, go to Settings > Website profiles and select the payment methods you want to offer
@@ -102,7 +104,7 @@ Become part of Mollie's growing community and gain access to our comprehensive s
 
 > **Your success is our mission. With Mollie, simplify your payments and focus on growing your business.**
 
-[Sign up today](https://my.mollie.com/dashboard/signup) and start enhancing your WooCommerce store with Mollie's advanced payment solutions.
+[Sign up today](https://my.mollie.com/campaigns/signup/molliewoocommerce2024?utm_campaign=GLO_Q4_2024_Woo-Campaign&utm_medium=company_profile&utm_source=partner&utm_content=pagebannerwordpress&utm_partner=woocommerce&campaign_name=GLO_Q4_2024_Woo-Campaign) and start enhancing your WooCommerce store with Mollie's advanced payment solutions.
 
 Feel free to contact info@mollie.com if you have any questions or comments about this plugin.
 
@@ -223,6 +225,15 @@ Automatic updates should work like a charm; as always though, ensure you backup 
 
 
 == Changelog ==
+
+= 7.9.1 - 22-01-2025 =
+
+* Feature: Style Apple Pay express button via Checkout block
+* Fixed: Notice `_load_textdomain_just_in_time` due to early translation loading
+* Fixed: Company Name input field not saved in Order when Billie was enabled
+* Fixed: Mollie Payment methods may not load on Checkout block
+* Fixed: Mollie Payment methods may disappear from Checkout block when changing billing country
+* Fixed: Mollie Components are not enabled by default on new installations
 
 = 7.9.0 - 18-11-2024 =
 

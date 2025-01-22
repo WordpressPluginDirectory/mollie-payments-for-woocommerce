@@ -108,8 +108,8 @@ class MolliePaymentGateway extends WC_Payment_Gateway implements \Mollie\WooComm
         $this->method_title = 'Mollie - ' . $this->paymentMethod->title();
         $this->method_description = $this->paymentMethod->getProperty('settingsDescription');
         $this->supports = $this->paymentMethod->getProperty('supports');
-        // Load the settings.
-        $this->init_form_fields();
+        // Load the settings when translations are ready
+        add_action('init', [$this, 'init_form_fields']);
         $this->init_settings();
         $this->title = $this->paymentMethod->title();
         $this->initDescription();

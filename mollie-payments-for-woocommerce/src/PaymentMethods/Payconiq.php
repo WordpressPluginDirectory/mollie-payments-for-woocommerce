@@ -7,7 +7,15 @@ class Payconiq extends \Mollie\WooCommerce\PaymentMethods\AbstractPaymentMethod 
 {
     protected function getConfig(): array
     {
-        return ['id' => 'payconiq', 'defaultTitle' => __('payconiq', 'mollie-payments-for-woocommerce'), 'settingsDescription' => '', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \false, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'SEPA' => \false, 'docs' => ''];
+        return ['id' => 'payconiq', 'defaultTitle' => 'payconiq', 'settingsDescription' => '', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \false, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'SEPA' => \false, 'docs' => ''];
+    }
+    public function initializeTranslations(): void
+    {
+        if ($this->translationsInitialized) {
+            return;
+        }
+        $this->config['defaultTitle'] = __('payconiq', 'mollie-payments-for-woocommerce');
+        $this->translationsInitialized = \true;
     }
     public function getFormFields($generalFormFields): array
     {
