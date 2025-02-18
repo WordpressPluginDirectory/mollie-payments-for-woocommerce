@@ -68,7 +68,7 @@ class RefundLineItemsBuilder
      */
     private function buildLineItem(WC_Order_Item $toRefundItem, stdClass $toRefundRemoteItem, $currency)
     {
-        $toRefundItemQuantity = abs($toRefundItem->get_quantity());
+        $toRefundItemQuantity = abs((int) $toRefundItem->get_quantity());
         $toRefundItemAmount = number_format(abs($toRefundItem->get_total() + $toRefundItem->get_total_tax()), 2);
         $toRefundRemoteItemPrice = property_exists($toRefundRemoteItem->unitPrice, 'value') && $toRefundRemoteItem->unitPrice->value !== null ? $toRefundRemoteItem->unitPrice->value : 0;
         //as in Woo if the quantity is 0 but there is an amount, then quantity is 1

@@ -29,10 +29,10 @@ class PaymentMethods extends \Mollie\WooCommerce\Settings\Page\Section\AbstractS
     {
         $this->refreshIfRequested();
         $titleActivePaymentMethods = __('Currently Active Payment Methods', 'mollie-payments-for-woocommerce');
-        $descriptionActivePaymentMethods = __('These payment methods are active in your Mollie profile. 
+        $descriptionActivePaymentMethods = __('These payment methods are active in your Mollie profile.
         You can enable these payment methods in their settings to make them available for your customers.', 'mollie-payments-for-woocommerce');
         $titleInactivePaymentMethods = __('Inactive Payment Methods', 'mollie-payments-for-woocommerce');
-        $descriptionInactivePaymentMethods = __('These payment methods are available in your Mollie profile but are 
+        $descriptionInactivePaymentMethods = __('These payment methods are available in your Mollie profile but are
         not currently active. Activate them to offer more payment options to your customers.', 'mollie-payments-for-woocommerce');
         $activatedGateways = '';
         $deactivatedGateways = '';
@@ -41,6 +41,12 @@ class PaymentMethods extends \Mollie\WooCommerce\Settings\Page\Section\AbstractS
             $paymentMethodId = $paymentMethod->getProperty('id');
             $gatewayKey = 'mollie_wc_gateway_' . $paymentMethodId;
             $enabledInMollie = array_key_exists($gatewayKey, $this->mollieGateways);
+            //don't display old klarna GWs
+            if (isset($this->paymentMethods['klarna']) && in_array($paymentMethodId, ['klarnasliceit', 'klarnapaylater', 'klarnapaynow'], \true)) {
+                if (!$enabledInMollie) {
+                    continue;
+                }
+            }
             $paymentGatewayButton = $this->paymentGatewayButton($paymentMethod, $enabledInMollie);
             if ($enabledInMollie) {
                 $activatedGateways .= $paymentGatewayButton;
@@ -64,7 +70,7 @@ class PaymentMethods extends \Mollie\WooCommerce\Settings\Page\Section\AbstractS
             <div class="mollie-settings-pm__list">
                 <?php 
         echo $html;
-        // WPCS: XSS ok. 
+        // phpcs:ignore XSS ok. 
         ?>
             </div>
         </div>
@@ -180,18 +186,18 @@ class PaymentMethods extends \Mollie\WooCommerce\Settings\Page\Section\AbstractS
         <div class="mollie-settings-pm__single">
             <?php 
         echo $paymentMethod->getIconUrl();
-        // WPCS: XSS ok.
+        // phpcs:ignore XSS ok.
         ?>
             <?php 
         echo esc_html($paymentMethod->title());
         ?>
             <?php 
         echo $messageOrLink;
-        // WPCS: XSS ok.
+        // phpcs:ignore XSS ok.
         ?>
             <?php 
         echo $button;
-        // WPCS: XSS ok.
+        // phpcs:ignore XSS ok.
         ?>
         </div>
         <?php 
