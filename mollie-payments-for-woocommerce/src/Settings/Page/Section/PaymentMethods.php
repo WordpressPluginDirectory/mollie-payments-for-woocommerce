@@ -181,15 +181,17 @@ class PaymentMethods extends \Mollie\WooCommerce\Settings\Page\Section\AbstractS
             }
             $button = '<a class="button-secondary" href="https://my.mollie.com/dashboard/settings/profiles?utm_source=woocommerce&utm_medium=plugin&utm_campaign=partner" target="_blank">' . esc_html(__('Activate Payment Method', 'mollie-payments-for-woocommerce')) . '</a>';
         }
+        $iconProvider = $paymentMethod->paymentMethodIconProvider($this->container);
+        $icon = $iconProvider->provideIcons()[0];
         ob_start();
         ?>
         <div class="mollie-settings-pm__single">
             <?php 
-        echo $paymentMethod->getIconUrl();
+        echo $icon->src();
         // phpcs:ignore XSS ok.
         ?>
             <?php 
-        echo esc_html($paymentMethod->title());
+        echo esc_html($paymentMethod->title($this->container));
         ?>
             <?php 
         echo $messageOrLink;

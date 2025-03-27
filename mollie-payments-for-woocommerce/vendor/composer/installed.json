@@ -2,17 +2,17 @@
     "packages": [
         {
             "name": "composer\/ca-bundle",
-            "version": "1.5.4",
-            "version_normalized": "1.5.4.0",
+            "version": "1.5.5",
+            "version_normalized": "1.5.5.0",
             "source": {
                 "type": "git",
                 "url": "https:\/\/github.com\/composer\/ca-bundle.git",
-                "reference": "bc0593537a463e55cadf45fd938d23b75095b7e1"
+                "reference": "08c50d5ec4c6ced7d0271d2862dec8c1033283e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https:\/\/api.github.com\/repos\/composer\/ca-bundle\/zipball\/bc0593537a463e55cadf45fd938d23b75095b7e1",
-                "reference": "bc0593537a463e55cadf45fd938d23b75095b7e1",
+                "url": "https:\/\/api.github.com\/repos\/composer\/ca-bundle\/zipball\/08c50d5ec4c6ced7d0271d2862dec8c1033283e6",
+                "reference": "08c50d5ec4c6ced7d0271d2862dec8c1033283e6",
                 "shasum": ""
             },
             "require": {
@@ -26,7 +26,7 @@
                 "psr\/log": "^1.0 || ^2.0 || ^3.0",
                 "symfony\/process": "^4.0 || ^5.0 || ^6.0 || ^7.0"
             },
-            "time": "2024-11-27T15:35:25+00:00",
+            "time": "2025-01-08T16:17:16+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -61,7 +61,7 @@
             "support": {
                 "irc": "irc:\/\/irc.freenode.org\/composer",
                 "issues": "https:\/\/github.com\/composer\/ca-bundle\/issues",
-                "source": "https:\/\/github.com\/composer\/ca-bundle\/tree\/1.5.4"
+                "source": "https:\/\/github.com\/composer\/ca-bundle\/tree\/1.5.5"
             },
             "funding": [
                 {
@@ -78,6 +78,56 @@
                 }
             ],
             "install-path": ".\/ca-bundle"
+        },
+        {
+            "name": "dhii\/services",
+            "version": "v0.1.0",
+            "version_normalized": "0.1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https:\/\/github.com\/Dhii\/services.git",
+                "reference": "09cad8199a59d2003ad19126213075aefecaf17b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https:\/\/api.github.com\/repos\/Dhii\/services\/zipball\/09cad8199a59d2003ad19126213075aefecaf17b",
+                "reference": "09cad8199a59d2003ad19126213075aefecaf17b",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1 | ^8.0",
+                "psr\/container": "^1.0"
+            },
+            "require-dev": {
+                "codeclimate\/php-test-reporter": "<=0.3.2",
+                "phpunit\/phpunit": "^7.0 | ^8.0 | ^9.0",
+                "slevomat\/coding-standard": "^6.0",
+                "vimeo\/psalm": "^4.0"
+            },
+            "time": "2022-01-06T14:57:20+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Mollie\\Dhii\\Services\\": "src"
+                }
+            },
+            "notification-url": "https:\/\/packagist.org\/downloads\/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dhii Team",
+                    "email": "development@dhii.co"
+                }
+            ],
+            "description": "A collection of useful DI service implementations.",
+            "support": {
+                "issues": "https:\/\/github.com\/Dhii\/services\/issues",
+                "source": "https:\/\/github.com\/Dhii\/services\/tree\/v0.1.0"
+            },
+            "install-path": "..\/dhii\/services"
         },
         {
             "name": "inpsyde\/modularity",
@@ -142,17 +192,17 @@
         },
         {
             "name": "mollie\/mollie-api-php",
-            "version": "v2.76.0",
-            "version_normalized": "2.76.0.0",
+            "version": "v2.76.1",
+            "version_normalized": "2.76.1.0",
             "source": {
                 "type": "git",
                 "url": "https:\/\/github.com\/mollie\/mollie-api-php.git",
-                "reference": "b6e9848e4893d1d306fba54da3ac6f4a31a40368"
+                "reference": "2a90a9224e6dcc25569e572edfe57ba75455e435"
             },
             "dist": {
                 "type": "zip",
-                "url": "https:\/\/api.github.com\/repos\/mollie\/mollie-api-php\/zipball\/b6e9848e4893d1d306fba54da3ac6f4a31a40368",
-                "reference": "b6e9848e4893d1d306fba54da3ac6f4a31a40368",
+                "url": "https:\/\/api.github.com\/repos\/mollie\/mollie-api-php\/zipball\/2a90a9224e6dcc25569e572edfe57ba75455e435",
+                "reference": "2a90a9224e6dcc25569e572edfe57ba75455e435",
                 "shasum": ""
             },
             "require": {
@@ -172,7 +222,7 @@
             "suggest": {
                 "mollie\/oauth2-mollie-php": "Use OAuth to authenticate with the Mollie API. This is needed for some endpoints. Visit https:\/\/docs.mollie.com\/ for more information."
             },
-            "time": "2024-12-18T12:26:03+00:00",
+            "time": "2025-01-24T14:59:44+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -231,7 +281,7 @@
             ],
             "support": {
                 "issues": "https:\/\/github.com\/mollie\/mollie-api-php\/issues",
-                "source": "https:\/\/github.com\/mollie\/mollie-api-php\/tree\/v2.76.0"
+                "source": "https:\/\/github.com\/mollie\/mollie-api-php\/tree\/v2.76.1"
             },
             "install-path": "..\/mollie\/mollie-api-php"
         },

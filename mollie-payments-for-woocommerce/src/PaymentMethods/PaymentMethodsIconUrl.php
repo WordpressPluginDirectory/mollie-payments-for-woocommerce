@@ -95,7 +95,7 @@ class PaymentMethodsIconUrl
         if (!isset($gatewaySettings['enable_custom_logo']) || $gatewaySettings['enable_custom_logo'] !== 'yes') {
             return \false;
         }
-        if (!isset($gatewaySettings['iconFileUrl']) && !is_string($gatewaySettings['iconFileUrl'])) {
+        if (!isset($gatewaySettings['iconFileUrl']) || !is_string($gatewaySettings['iconFileUrl'])) {
             return \false;
         }
         if (!isset($gatewaySettings["iconFilePath"])) {

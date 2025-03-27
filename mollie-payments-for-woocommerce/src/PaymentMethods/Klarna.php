@@ -7,7 +7,7 @@ class Klarna extends \Mollie\WooCommerce\PaymentMethods\AbstractPaymentMethod im
 {
     protected function getConfig(): array
     {
-        return ['id' => 'klarna', 'defaultTitle' => 'Pay with Klarna', 'settingsDescription' => 'To accept payments via Klarna, all default WooCommerce checkout fields should be enabled and required.', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \false, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'SEPA' => \false, 'orderMandatory' => \true, 'docs' => 'https://www.mollie.com/gb/payments/klarna'];
+        return ['id' => 'klarna', 'defaultTitle' => 'Pay with Klarna', 'settingsDescription' => 'To accept payments via Klarna, all default WooCommerce checkout fields should be enabled and required.', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \false, 'supports' => ['products', 'refunds'], 'confirmationDelayed' => \false, 'SEPA' => \false, 'orderMandatory' => !apply_filters('inpsyde.feature-flags.mollie-woocommerce.klarna_payments_api', \true), 'paymentCaptureMode' => 'manual', 'docs' => 'https://www.mollie.com/gb/payments/klarna'];
     }
     public function initializeTranslations(): void
     {

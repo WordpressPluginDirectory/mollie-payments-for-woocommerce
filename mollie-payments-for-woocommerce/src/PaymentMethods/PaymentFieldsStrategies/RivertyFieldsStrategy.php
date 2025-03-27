@@ -3,18 +3,20 @@
 declare (strict_types=1);
 namespace Mollie\WooCommerce\PaymentMethods\PaymentFieldsStrategies;
 
-class RivertyFieldsStrategy implements \Mollie\WooCommerce\PaymentMethods\PaymentFieldsStrategies\PaymentFieldsStrategyI
+use Mollie\Inpsyde\PaymentGateway\PaymentFieldsRendererInterface;
+class RivertyFieldsStrategy extends \Mollie\WooCommerce\PaymentMethods\PaymentFieldsStrategies\AbstractPaymentFieldsRenderer implements PaymentFieldsRendererInterface
 {
     use \Mollie\WooCommerce\PaymentMethods\PaymentFieldsStrategies\PaymentFieldsStrategiesTrait;
     const FIELD_BIRTHDATE = "billing_birthdate_riverty";
     const FIELD_PHONE = "billing_phone_riverty";
-    public function execute($gateway, $dataHelper)
+    public function renderFields(): string
     {
         $showBirthdateField = \false;
         $showPhoneField = \false;
         $isPhoneRequired = get_option('mollie_wc_is_phone_required_flag');
         $phoneValue = \false;
         $birthValue = \false;
+        $html = $this->gatewayDescription;
         if (is_checkout_pay_page()) {
             $showBirthdateField = \true;
             $showPhoneField = \true;
@@ -29,11 +31,12 @@ class RivertyFieldsStrategy implements \Mollie\WooCommerce\PaymentMethods\Paymen
             $showBirthdateField = \true;
         }
         if ($showPhoneField) {
-            $this->phoneNumber($phoneValue);
+            $html .= $this->phoneNumber($phoneValue);
         }
         if ($showBirthdateField) {
-            $this->dateOfBirth($birthValue);
+            $html .= $this->dateOfBirth($birthValue);
         }
+        return $html;
     }
     protected function phoneNumber($phoneValue)
     {
@@ -41,29 +44,12 @@ class RivertyFieldsStrategy implements \Mollie\WooCommerce\PaymentMethods\Paymen
         $country = WC()->customer->get_billing_country();
         $countryCodes = ['BE' => '+32xxxxxxxxx', 'NL' => '+316xxxxxxxx', 'DE' => '+49xxxxxxxxx', 'AT' => '+43xxxxxxxxx'];
         $placeholder = in_array($country, array_keys($countryCodes)) ? $countryCodes[$country] : $countryCodes['NL'];
-        ?>
-        <p class="form-row form-row-wide" id="billing_phone_field">
-            <label for="<?php 
-        echo esc_attr(self::FIELD_PHONE);
-        ?>" class=""><?php 
-        echo esc_html__('Phone', 'mollie-payments-for-woocommerce');
-        ?>
-            </label>
-            <span class="woocommerce-input-wrapper">
-        <input type="tel" class="input-text " name="<?php 
-        echo esc_attr(self::FIELD_PHONE);
-        ?>" id="<?php 
-        echo esc_attr(self::FIELD_PHONE);
-        ?>"
-               placeholder="<?php 
-        echo esc_attr($placeholder);
-        ?>"
-               value="<?php 
-        echo esc_attr($phoneValue);
-        ?>" autocomplete="phone">
-        </span>
-        </p>
-        <?php 
+        $html = '<p class="form-row form-row-wide" id="billing_phone_field">';
+        $html .= '<label for="' . esc_attr(self::FIELD_PHONE) . '" class="">' . esc_html__('Phone', 'mollie-payments-for-woocommerce') . '</label>';
+        $html .= '<span class="woocommerce-input-wrapper">';
+        $html .= '<input type="tel" class="input-text " name="' . esc_attr(self::FIELD_PHONE) . '" id="' . esc_attr(self::FIELD_PHONE) . '" placeholder="' . esc_attr($placeholder) . '" value="' . esc_attr($phoneValue) . '" autocomplete="phone">';
+        $html .= '</span></p>';
+        return $html;
     }
     public function getFieldMarkup($gateway, $dataHelper)
     {

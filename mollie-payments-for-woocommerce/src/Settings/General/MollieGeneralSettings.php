@@ -2,7 +2,7 @@
 
 namespace Mollie\WooCommerce\Settings\General;
 
-use Mollie\WooCommerce\Gateway\MolliePaymentGateway;
+use Mollie\WooCommerce\Gateway\MolliePaymentGatewayHandler;
 use Mollie\WooCommerce\Gateway\Surcharge;
 use Mollie\WooCommerce\Shared\SharedDataDictionary;
 class MollieGeneralSettings
@@ -25,7 +25,9 @@ class MollieGeneralSettings
             /* translators: Placeholder 1: Gateway description */
             __('Payment method description that the customer will see on your checkout. Default <code>%s</code>', 'mollie-payments-for-woocommerce'),
             $defaultDescription
-        ), 'default' => $defaultDescription, 'desc_tip' => \true], 'sales' => ['id' => $defaultTitle . '_' . 'title', 'title' => __('Sales countries', 'mollie-payments-for-woocommerce'), 'type' => 'title'], 'allowed_countries' => ['title' => __('Sell to specific countries', 'mollie-payments-for-woocommerce'), 'desc' => '', 'css' => 'min-width: 350px;', 'default' => [], 'type' => 'multi_select_countries'], 'surcharge' => ['id' => $defaultTitle . '_' . 'surcharge', 'title' => sprintf(
+        ), 'default' => $defaultDescription, 'desc_tip' => \true], 'sales' => ['id' => $defaultTitle . '_' . 'title', 'title' => __('Sales countries', 'mollie-payments-for-woocommerce'), 'type' => 'title'], 'allowed_countries' => ['title' => __('Sell to specific countries', 'mollie-payments-for-woocommerce'), 'desc' => '', 'css' => 'min-width: 350px;', 'default' => [], 'type' => 'multi_select_countries', 'sanitize_callback' => static function ($value) {
+            return is_array($value) ? array_map('wc_clean', array_map('stripslashes', $value)) : '';
+        }], 'surcharge' => ['id' => $defaultTitle . '_' . 'surcharge', 'title' => sprintf(
             /* translators: Placeholder 1: Gateway title */
             __('%s surcharge', 'mollie-payments-for-woocommerce'),
             $defaultTitle

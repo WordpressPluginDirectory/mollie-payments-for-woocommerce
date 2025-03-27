@@ -3,19 +3,20 @@
 declare (strict_types=1);
 namespace Mollie\WooCommerce\PaymentMethods\PaymentFieldsStrategies;
 
-class GiftcardFieldsStrategy implements \Mollie\WooCommerce\PaymentMethods\PaymentFieldsStrategies\PaymentFieldsStrategyI
+use Mollie\Inpsyde\PaymentGateway\PaymentFieldsRendererInterface;
+class GiftcardFieldsStrategy extends \Mollie\WooCommerce\PaymentMethods\PaymentFieldsStrategies\AbstractPaymentFieldsRenderer implements PaymentFieldsRendererInterface
 {
     use \Mollie\WooCommerce\PaymentMethods\PaymentFieldsStrategies\IssuersDropdownBehavior;
-    public function execute($gateway, $dataHelper)
+    public function renderFields(): string
     {
-        if (!$this->dropDownEnabled($gateway)) {
-            return;
+        if (!$this->dropDownEnabled($this->deprecatedHelperGateway)) {
+            return $this->gatewayDescription;
         }
-        $issuers = $this->getIssuers($gateway, $dataHelper);
+        $issuers = $this->getIssuers($this->deprecatedHelperGateway, $this->dataHelper);
         if (empty($issuers)) {
-            return;
+            return $this->gatewayDescription;
         }
-        $selectedIssuer = $gateway->getSelectedIssuer();
+        $selectedIssuer = $this->getSelectedIssuer($this->deprecatedHelperGateway);
         $html = '';
         // If only one gift card issuers is available, show it without a dropdown
         if (count($issuers) === 1) {
@@ -27,10 +28,9 @@ class GiftcardFieldsStrategy implements \Mollie\WooCommerce\PaymentMethods\Payme
                 $html .= '<img src="' . $issuerImageSvg . '" style="vertical-align:middle" />' . $issuerName;
             }
             //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-            echo wpautop(wptexturize($html));
-            return;
+            return $this->gatewayDescription . wpautop(wptexturize($html));
         }
-        $this->renderIssuers($gateway, $issuers, $selectedIssuer);
+        return $this->gatewayDescription . $this->renderIssuers($this->deprecatedHelperGateway, $issuers, $selectedIssuer);
     }
     public function getFieldMarkup($gateway, $dataHelper)
     {
@@ -38,7 +38,7 @@ class GiftcardFieldsStrategy implements \Mollie\WooCommerce\PaymentMethods\Payme
             return "";
         }
         $issuers = $this->getIssuers($gateway, $dataHelper);
-        $selectedIssuer = $gateway->getSelectedIssuer();
+        $selectedIssuer = $this->getSelectedIssuer($gateway);
         $markup = $this->dropdownOptions($gateway, $issuers, $selectedIssuer);
         return $markup;
     }

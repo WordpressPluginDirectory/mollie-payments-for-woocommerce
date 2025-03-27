@@ -103,10 +103,6 @@ class Data
     {
         $this->settingsHelper->processSettings($gateway);
     }
-    public function processAdminOptions($gateway)
-    {
-        $this->settingsHelper->adminOptions($gateway);
-    }
     public function getPaymentLocale()
     {
         return $this->settingsHelper->getPaymentLocale();

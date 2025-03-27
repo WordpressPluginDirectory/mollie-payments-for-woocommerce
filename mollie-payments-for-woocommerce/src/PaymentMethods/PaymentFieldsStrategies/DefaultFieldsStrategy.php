@@ -3,12 +3,15 @@
 declare (strict_types=1);
 namespace Mollie\WooCommerce\PaymentMethods\PaymentFieldsStrategies;
 
-class DefaultFieldsStrategy implements \Mollie\WooCommerce\PaymentMethods\PaymentFieldsStrategies\PaymentFieldsStrategyI
+use Mollie\Inpsyde\PaymentGateway\PaymentFieldsRendererInterface;
+class DefaultFieldsStrategy extends \Mollie\WooCommerce\PaymentMethods\PaymentFieldsStrategies\AbstractPaymentFieldsRenderer implements PaymentFieldsRendererInterface
 {
-    public function execute($gateway, $dataHelper)
+    public function renderFields(): string
     {
+        return $this->gatewayDescription;
     }
     public function getFieldMarkup($gateway, $dataHelper)
     {
+        return '';
     }
 }

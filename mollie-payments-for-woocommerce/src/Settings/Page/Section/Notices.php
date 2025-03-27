@@ -3,6 +3,7 @@
 declare (strict_types=1);
 namespace Mollie\WooCommerce\Settings\Page\Section;
 
+use Mollie\WooCommerce\PaymentMethods\AbstractPaymentMethod;
 use Mollie\WooCommerce\PaymentMethods\Constants;
 use WC_Gateway_BACS;
 class Notices extends \Mollie\WooCommerce\Settings\Page\Section\AbstractSection
@@ -38,6 +39,9 @@ class Notices extends \Mollie\WooCommerce\Settings\Page\Section\AbstractSection
     }
     protected function warnDirectDebitStatus(): string
     {
+        if (!$this->paymentMethods["directdebit"] instanceof AbstractPaymentMethod) {
+            return '';
+        }
         $hasCustomSepaSettings = $this->paymentMethods["directdebit"]->getProperty('enabled') !== \false;
         $isSepaEnabled = !$hasCustomSepaSettings || $this->paymentMethods["directdebit"]->getProperty('enabled') === 'yes';
         $sepaGatewayAllowed = !empty($this->mollieGateways["mollie_wc_gateway_directdebit"]);

@@ -17,7 +17,7 @@ class Billie extends \Mollie\WooCommerce\PaymentMethods\AbstractPaymentMethod im
      */
     protected function getConfig(): array
     {
-        return ['id' => 'billie', 'defaultTitle' => 'Billie', 'settingsDescription' => 'To accept payments via Billie, all default WooCommerce checkout fields should be enabled and required.', 'defaultDescription' => '', 'paymentFields' => \true, 'instructions' => \false, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \true, 'confirmationDelayed' => \false, 'SEPA' => \false, 'orderMandatory' => \true, 'errorMessage' => 'Company field is empty. The company field is required.', 'companyPlaceholder' => 'Please enter your company name here.', 'docs' => 'https://www.mollie.com/gb/payments/billie'];
+        return ['id' => 'billie', 'defaultTitle' => 'Billie', 'settingsDescription' => 'To accept payments via Billie, all default WooCommerce checkout fields should be enabled and required.', 'defaultDescription' => '', 'paymentFields' => \true, 'instructions' => \false, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \true, 'confirmationDelayed' => \false, 'SEPA' => \false, 'orderMandatory' => !apply_filters('inpsyde.feature-flags.mollie-woocommerce.billie_payments_api', \true), 'paymentCaptureMode' => 'manual', 'errorMessage' => 'Company field is empty. The company field is required.', 'companyPlaceholder' => 'Please enter your company name here.', 'docs' => 'https://www.mollie.com/gb/payments/billie'];
     }
     // Replace translatable strings after the 'after_setup_theme' hook
     public function initializeTranslations(): void

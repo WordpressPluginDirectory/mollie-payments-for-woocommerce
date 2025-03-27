@@ -1,10 +1,10 @@
 === Mollie Payments for WooCommerce ===
 Contributors: daanvm, danielhuesken, davdebcom, dinamiko, syde, l.vangunst, ndijkstra, robin-mollie, wido, carmen222, inpsyde-maticluznar
-Tags: mollie, payments, payment gateway, woocommerce, credit card, apple pay, ideal, bancontact, klarna, sofort, woocommerce subscriptions 
-Requires at least: 3.8
+Tags: mollie, woocommerce, payments, ecommerce, credit card
+Requires at least: 5.0
 Tested up to: 6.7
-Stable tag: 7.10.0
-Requires PHP: 7.2
+Stable tag: 8.0.0
+Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -196,9 +196,9 @@ Where possible, also include the Mollie log file. You can find the Mollie log fi
 
 = Minimum Requirements =
 
-* PHP version 7.2 or greater
+* PHP version 7.4 or greater
 * PHP extensions enabled: cURL, JSON
-* WordPress 3.8 or greater
+* WordPress 5.0 or greater
 * WooCommerce 3.9 or greater
 * Mollie account
 
@@ -226,6 +226,14 @@ Automatic updates should work like a charm; as always though, ensure you backup 
 
 == Changelog ==
 
+= 8.0.0 - 27-03-2025 =
+
+* Feature Flag - Klarna, Riverty and Billie can be used with Payments API
+* Feature - Added support for Mollie's new Payments API features
+* Fixed - Notice for missing value of cardToken
+* Fixed - ltrim error on Apple Pay notice with php 8.2 (author @kylwes)
+* Fixed - Logged URL should be same as used in future logic (author @tombroucke)
+
 = 7.10.0 - 18-02-2025 =
 
 * Added - PaybyBank payment method
@@ -240,12 +248,12 @@ Automatic updates should work like a charm; as always though, ensure you backup 
 
 = 7.9.1 - 22-01-2025 =
 
-* Feature: Style Apple Pay express button via Checkout block
-* Fixed: Notice `_load_textdomain_just_in_time` due to early translation loading
-* Fixed: Company Name input field not saved in Order when Billie was enabled
-* Fixed: Mollie Payment methods may not load on Checkout block
-* Fixed: Mollie Payment methods may disappear from Checkout block when changing billing country
-* Fixed: Mollie Components are not enabled by default on new installations
+* Feature - Style Apple Pay express button via Checkout block
+* Fixed - Notice `_load_textdomain_just_in_time` due to early translation loading
+* Fixed - Company Name input field not saved in Order when Billie was enabled
+* Fixed - Mollie Payment methods may not load on Checkout block
+* Fixed - Mollie Payment methods may disappear from Checkout block when changing billing country
+* Fixed - Mollie Components are not enabled by default on new installations
 
 = 7.9.0 - 18-11-2024 =
 
@@ -256,11 +264,9 @@ Automatic updates should work like a charm; as always though, ensure you backup 
 * Fixed - Translation Update Loop in Mollie Payments for WooCommerce
 * Fixed - Bank Transfer payment details displayed in one line on order-received page
 
-
 = 7.8.2 - 08-09-2024 =
 
 * Fixed - Subscription renewal status on-hold instead of active
-
 
 = 7.8.1 - 07-09-2024 =
 

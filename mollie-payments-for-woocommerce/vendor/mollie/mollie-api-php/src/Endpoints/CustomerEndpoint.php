@@ -75,7 +75,7 @@ class CustomerEndpoint extends \Mollie\Api\Endpoints\CollectionEndpointAbstract
     public function update($customerId, array $data = [])
     {
         if (empty($customerId) || strpos($customerId, self::RESOURCE_ID_PREFIX) !== 0) {
-            throw new ApiException("Invalid order ID: '{$customerId}'. An order ID should start with '" . self::RESOURCE_ID_PREFIX . "'.");
+            throw new ApiException("Invalid customer ID: '{$customerId}'. A customer ID should start with '" . self::RESOURCE_ID_PREFIX . "'.");
         }
         return parent::rest_update($customerId, $data);
     }

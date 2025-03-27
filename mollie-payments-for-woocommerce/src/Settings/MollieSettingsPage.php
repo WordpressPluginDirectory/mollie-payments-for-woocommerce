@@ -9,6 +9,7 @@ use Mollie\WooCommerce\Settings\Page\PageApiKeys;
 use Mollie\WooCommerce\Settings\Page\PageNoApiKey;
 use Mollie\WooCommerce\Settings\Page\PagePaymentMethods;
 use Mollie\WooCommerce\Shared\Data;
+use Mollie\Psr\Container\ContainerInterface;
 use WC_Admin_Settings;
 use WC_Settings_Page;
 class MollieSettingsPage extends WC_Settings_Page
@@ -20,7 +21,8 @@ class MollieSettingsPage extends WC_Settings_Page
     protected array $paymentMethods;
     protected bool $isTestModeEnabled;
     protected Data $dataHelper;
-    public function __construct(\Mollie\WooCommerce\Settings\Settings $settings, string $pluginPath, string $pluginUrl, array $mollieGateways, array $paymentMethods, bool $isTestModeEnabled, Data $dataHelper)
+    protected ContainerInterface $container;
+    public function __construct(\Mollie\WooCommerce\Settings\Settings $settings, string $pluginPath, string $pluginUrl, array $mollieGateways, array $paymentMethods, bool $isTestModeEnabled, Data $dataHelper, ContainerInterface $container)
     {
         $this->id = 'mollie_settings';
         $this->label = __('Mollie Settings', 'mollie-payments-for-woocommerce');
@@ -31,6 +33,7 @@ class MollieSettingsPage extends WC_Settings_Page
         $this->isTestModeEnabled = $isTestModeEnabled;
         $this->dataHelper = $dataHelper;
         $this->paymentMethods = $paymentMethods;
+        $this->container = $container;
         $this->registerContentFieldType();
         $this->outputSections();
         parent::__construct();
@@ -104,7 +107,7 @@ class MollieSettingsPage extends WC_Settings_Page
         $mollieSettings = null;
         foreach ($this->pages() as $pageClass) {
             /** @var AbstractPage $page */
-            $page = new $pageClass($this->settings, $this->pluginUrl, $this->pages(), $defaultSection, $connectionStatus, $this->isTestModeEnabled, $this->mollieGateways, $this->paymentMethods, $this->dataHelper);
+            $page = new $pageClass($this->settings, $this->pluginUrl, $this->pages(), $defaultSection, $connectionStatus, $this->isTestModeEnabled, $this->mollieGateways, $this->paymentMethods, $this->dataHelper, $this->container);
             if ($page::slug() === $defaultSection) {
                 $mollieSettings = $this->hideKeysIntoStars($page->settings());
                 break;

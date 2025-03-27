@@ -6,6 +6,7 @@ namespace Mollie\WooCommerce\Settings\Page;
 use Mollie\WooCommerce\Settings\Page\Section\AbstractSection;
 use Mollie\WooCommerce\Settings\Settings;
 use Mollie\WooCommerce\Shared\Data;
+use Mollie\Psr\Container\ContainerInterface;
 abstract class AbstractPage
 {
     protected Settings $settings;
@@ -17,7 +18,8 @@ abstract class AbstractPage
     protected array $mollieGateways;
     protected array $paymentMethods;
     protected Data $dataHelper;
-    public function __construct(Settings $settings, string $pluginUrl, array $pages, string $currentSection, bool $connectionStatus, bool $testModeEnabled, array $mollieGateways, array $paymentMethods, Data $dataHelper)
+    protected ContainerInterface $container;
+    public function __construct(Settings $settings, string $pluginUrl, array $pages, string $currentSection, bool $connectionStatus, bool $testModeEnabled, array $mollieGateways, array $paymentMethods, Data $dataHelper, ContainerInterface $container)
     {
         $this->settings = $settings;
         $this->pluginUrl = $pluginUrl;
@@ -28,6 +30,7 @@ abstract class AbstractPage
         $this->mollieGateways = $mollieGateways;
         $this->paymentMethods = $paymentMethods;
         $this->dataHelper = $dataHelper;
+        $this->container = $container;
     }
     abstract public static function isTab(): bool;
     abstract public static function slug(): string;
@@ -45,7 +48,7 @@ abstract class AbstractPage
         $styles = [];
         foreach ($this->sections() as $sectionClass) {
             /** @var AbstractSection $section */
-            $section = new $sectionClass($this->settings, $this->pluginUrl, $this->pages, $this->currentSection, $this->connectionStatus, $this->testModeEnabled, $this->mollieGateways, $this->paymentMethods, $this->dataHelper);
+            $section = new $sectionClass($this->settings, $this->pluginUrl, $this->pages, $this->currentSection, $this->connectionStatus, $this->testModeEnabled, $this->mollieGateways, $this->paymentMethods, $this->dataHelper, $this->container);
             foreach ($section->config() as $field) {
                 $settings[] = $field;
             }

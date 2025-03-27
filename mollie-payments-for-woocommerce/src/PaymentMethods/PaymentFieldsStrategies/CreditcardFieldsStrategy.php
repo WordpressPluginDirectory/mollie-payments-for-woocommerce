@@ -3,29 +3,22 @@
 declare (strict_types=1);
 namespace Mollie\WooCommerce\PaymentMethods\PaymentFieldsStrategies;
 
+use Mollie\Inpsyde\PaymentGateway\PaymentFieldsRendererInterface;
 use Mollie\WooCommerce\PaymentMethods\PaymentMethodI;
-class CreditcardFieldsStrategy implements \Mollie\WooCommerce\PaymentMethods\PaymentFieldsStrategies\PaymentFieldsStrategyI
+class CreditcardFieldsStrategy extends \Mollie\WooCommerce\PaymentMethods\PaymentFieldsStrategies\AbstractPaymentFieldsRenderer implements PaymentFieldsRendererInterface
 {
-    public function execute($gateway, $dataHelper)
+    public function renderFields(): string
     {
-        if (!$this->isMollieComponentsEnabled($gateway->paymentMethod())) {
-            return;
+        if (!$this->isMollieComponentsEnabled($this->deprecatedHelperGateway->paymentMethod())) {
+            return $this->gatewayDescription;
         }
-        $gateway->has_fields = \true;
         $allowedHtml = $this->svgAllowedHtml();
-        ?>
-        <div class="mollie-components"></div>
-        <p class="mollie-components-description">
-            <?php 
-        printf(
-            /* translators: Placeholder 1: Lock icon. Placeholder 2: Mollie logo. */
-            esc_html(__('%1$s Secure payments provided by %2$s', 'mollie-payments-for-woocommerce')),
-            wp_kses($this->lockIcon($dataHelper), $allowedHtml),
-            wp_kses($this->mollieLogo($dataHelper), $allowedHtml)
-        );
-        ?>
-        </p>
-        <?php 
+        $output = $this->gatewayDescription;
+        $output .= '<div class="mollie-components"></div>';
+        $output .= '<p class="mollie-components-description">';
+        $output .= sprintf(esc_html__('%1$s Secure payments provided by %2$s', 'mollie-payments-for-woocommerce'), wp_kses($this->lockIcon($this->dataHelper), $allowedHtml), wp_kses($this->mollieLogo($this->dataHelper), $allowedHtml));
+        $output .= '</p>';
+        return $output;
     }
     public function getFieldMarkup($gateway, $dataHelper)
     {
@@ -39,7 +32,8 @@ class CreditcardFieldsStrategy implements \Mollie\WooCommerce\PaymentMethods\Pay
     }
     protected function isMollieComponentsEnabled(PaymentMethodI $paymentMethod): bool
     {
-        return $paymentMethod->hasPaymentFields();
+        $hasComponentsEnabled = $paymentMethod->getProperty('mollie_components_enabled');
+        return $hasComponentsEnabled === 'yes';
     }
     protected function lockIcon($dataHelper)
     {

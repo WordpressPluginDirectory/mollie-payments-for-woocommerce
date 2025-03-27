@@ -20,10 +20,20 @@ trait IssuersDropdownBehavior
         $apiKey = $dataHelper->getApiKey();
         return $dataHelper->getMethodIssuers($apiKey, $testMode, $gateway->paymentMethod()->getProperty('id'));
     }
+    /**
+     * @return string|NULL
+     */
+    public function getSelectedIssuer($gateway): ?string
+    {
+        $issuer_id = 'mollie-payments-for-woocommerce' . '_issuer_' . $gateway->paymentMethod()->getIdFromConfig();
+        //phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+        $postedIssuer = wc_clean(wp_unslash($_POST[$issuer_id] ?? ''));
+        return !empty($postedIssuer) ? $postedIssuer : null;
+    }
     public function renderIssuers($gateway, $issuers, $selectedIssuer)
     {
         $html = $this->issuersDropdownMarkup($gateway, $issuers, $selectedIssuer);
-        echo wp_kses($html, ['select' => ['name' => [], 'id' => [], 'class' => []], 'option' => ['value' => [], 'selected' => []]]);
+        return wp_kses($html, ['select' => ['name' => [], 'id' => [], 'class' => []], 'option' => ['value' => [], 'selected' => []]]);
     }
     /**
      * @param $gateway
