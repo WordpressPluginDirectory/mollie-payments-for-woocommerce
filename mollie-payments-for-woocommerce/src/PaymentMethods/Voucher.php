@@ -20,6 +20,10 @@ class Voucher extends \Mollie\WooCommerce\PaymentMethods\AbstractPaymentMethod i
     /**
      * @var string
      */
+    public const SPORT_CULTURE = 'sport_culture';
+    /**
+     * @var string
+     */
     public const NO_CATEGORY = 'no_category';
     /**
      * @var string
@@ -27,7 +31,7 @@ class Voucher extends \Mollie\WooCommerce\PaymentMethods\AbstractPaymentMethod i
     public const MOLLIE_VOUCHER_CATEGORY_OPTION = '_mollie_voucher_category';
     protected function getConfig(): array
     {
-        return ['id' => 'voucher', 'defaultTitle' => 'Voucher', 'settingsDescription' => '', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \false, 'supports' => ['products'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'SEPA' => \false, 'orderMandatory' => \true, 'docs' => 'https://www.mollie.com/gb/payments/meal-eco-gift-vouchers'];
+        return ['id' => 'voucher', 'defaultTitle' => 'Voucher', 'settingsDescription' => '', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \false, 'supports' => ['products'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'docs' => 'https://www.mollie.com/gb/payments/meal-eco-gift-vouchers'];
     }
     public function initializeTranslations(): void
     {
@@ -42,7 +46,7 @@ class Voucher extends \Mollie\WooCommerce\PaymentMethods\AbstractPaymentMethod i
         $paymentMethodFormFieds = ['mealvoucher_category_default' => [
             'title' => __('Select the default products category', 'mollie-payments-for-woocommerce'),
             'type' => 'select',
-            'options' => [self::NO_CATEGORY => __('No category', 'mollie-payments-for-woocommerce'), self::MEAL => __('Meal', 'mollie-payments-for-woocommerce'), self::ECO => __('Eco', 'mollie-payments-for-woocommerce'), self::GIFT => __('Gift', 'mollie-payments-for-woocommerce')],
+            'options' => [self::NO_CATEGORY => __('No category', 'mollie-payments-for-woocommerce'), self::MEAL => __('Meal', 'mollie-payments-for-woocommerce'), self::ECO => __('Eco', 'mollie-payments-for-woocommerce'), self::GIFT => __('Gift', 'mollie-payments-for-woocommerce'), self::SPORT_CULTURE => __('Sport & Culture', 'mollie-payments-for-woocommerce')],
             'default' => self::NO_CATEGORY,
             /* translators: Placeholder 1: Default order status, placeholder 2: Link to 'Hold Stock' setting */
             'description' => __('In order to process it, all products in the order must have a category. This selector will assign the default category for the shop products', 'mollie-payments-for-woocommerce'),

@@ -7,7 +7,7 @@ class Paysafecard extends \Mollie\WooCommerce\PaymentMethods\AbstractPaymentMeth
 {
     protected function getConfig(): array
     {
-        return ['id' => 'paysafecard', 'defaultTitle' => 'paysafecard', 'settingsDescription' => '', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \false, 'supports' => ['products'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'SEPA' => \false, 'docs' => 'https://www.mollie.com/gb/payments/paysafecard'];
+        return ['id' => 'paysafecard', 'defaultTitle' => 'paysafecard', 'settingsDescription' => '', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \false, 'supports' => ['products'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'docs' => 'https://www.mollie.com/gb/payments/paysafecard'];
     }
     public function initializeTranslations(): void
     {

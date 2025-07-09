@@ -33,7 +33,7 @@ class MollieSepaRecurringGatewayHandler extends \Mollie\WooCommerce\Subscription
     {
         parent::__construct($paymentMethod, $orderInstructionsService, $mollieOrderService, $dataService, $logger, $notice, $httpResponse, $settingsHelper, $mollieObject, $paymentFactory, $pluginId, $apiHelper);
         $directDebitSettings = get_option('mollie_wc_gateway_directdebit_settings');
-        if ($directDebitSettings['enabled'] === 'yes') {
+        if (isset($directDebitSettings['enabled']) && $directDebitSettings['enabled'] === 'yes') {
             $this->recurringMollieMethod = $directDebitPaymentMethod;
         }
         return $this;
@@ -101,7 +101,7 @@ class MollieSepaRecurringGatewayHandler extends \Mollie\WooCommerce\Subscription
      */
     protected function getPaymentMethodTitle($payment)
     {
-        $payment_method_title = $this->method_title;
+        $payment_method_title = $this->paymentMethod->getProperty('title');
         $orderId = isset($payment->metadata) ? $payment->metadata->order_id : \false;
         if ($orderId && $this->dataService->isWcSubscription($orderId) && $payment->method === $this->getRecurringMollieMethodId()) {
             $payment_method_title = $this->getRecurringMollieMethodTitle();

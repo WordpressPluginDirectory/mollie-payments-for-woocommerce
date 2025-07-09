@@ -77,8 +77,7 @@ class CheckoutBlockService
             if ($key !== 'mollie_wc_gateway_voucher') {
                 continue;
             }
-            $shouldRemoveVoucher = $this->voucherDisabler->shouldRemoveVoucher();
-            if ($shouldRemoveVoucher) {
+            if (!$this->voucherDisabler->haveCartProductsCategories()) {
                 unset($availableGateways[$key]);
             }
         }

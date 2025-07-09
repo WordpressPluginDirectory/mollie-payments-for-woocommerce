@@ -7,7 +7,7 @@ class Blik extends \Mollie\WooCommerce\PaymentMethods\AbstractPaymentMethod impl
 {
     protected function getConfig(): array
     {
-        return ['id' => 'blik', 'defaultTitle' => 'BLIK', 'settingsDescription' => '', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \false, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'SEPA' => \false, 'docs' => 'https://www.mollie.com/gb/payments/blik'];
+        return ['id' => 'blik', 'defaultTitle' => 'BLIK', 'settingsDescription' => '', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \false, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'docs' => 'https://www.mollie.com/gb/payments/blik'];
     }
     // Replace translatable strings after the 'after_setup_theme' hook
     public function initializeTranslations(): void

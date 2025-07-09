@@ -7,7 +7,7 @@ class Satispay extends \Mollie\WooCommerce\PaymentMethods\AbstractPaymentMethod 
 {
     protected function getConfig(): array
     {
-        return ['id' => 'satispay', 'defaultTitle' => 'Satispay', 'settingsDescription' => '', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \false, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'SEPA' => \false, 'docs' => 'https://www.mollie.com/gb/payments/satispay'];
+        return ['id' => 'satispay', 'defaultTitle' => 'Satispay', 'settingsDescription' => '', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \false, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'docs' => 'https://www.mollie.com/gb/payments/satispay'];
     }
     public function initializeTranslations(): void
     {

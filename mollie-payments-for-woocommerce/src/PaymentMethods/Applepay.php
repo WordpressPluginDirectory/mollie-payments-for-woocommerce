@@ -7,7 +7,7 @@ class Applepay extends \Mollie\WooCommerce\PaymentMethods\AbstractPaymentMethod 
 {
     protected function getConfig(): array
     {
-        return ['id' => 'applepay', 'defaultTitle' => 'Apple Pay', 'settingsDescription' => 'To accept payments via Apple Pay', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \true, 'supports' => ['products', 'refunds', 'subscriptions'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'SEPA' => \false, 'Subscription' => \true, 'docs' => 'https://www.mollie.com/gb/payments/apple-pay'];
+        return ['id' => 'applepay', 'defaultTitle' => 'Apple Pay', 'settingsDescription' => 'To accept payments via Apple Pay', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \true, 'supports' => ['products', 'refunds', 'subscriptions'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'Subscription' => \true, 'docs' => 'https://www.mollie.com/gb/payments/apple-pay'];
     }
     // Replace translatable strings after the 'after_setup_theme' hook
     public function initializeTranslations(): void

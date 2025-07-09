@@ -17,22 +17,18 @@ class MollieSettingsPage extends WC_Settings_Page
     protected \Mollie\WooCommerce\Settings\Settings $settings;
     protected string $pluginPath;
     protected string $pluginUrl;
-    protected array $mollieGateways;
-    protected array $paymentMethods;
     protected bool $isTestModeEnabled;
     protected Data $dataHelper;
     protected ContainerInterface $container;
-    public function __construct(\Mollie\WooCommerce\Settings\Settings $settings, string $pluginPath, string $pluginUrl, array $mollieGateways, array $paymentMethods, bool $isTestModeEnabled, Data $dataHelper, ContainerInterface $container)
+    public function __construct(\Mollie\WooCommerce\Settings\Settings $settings, string $pluginPath, string $pluginUrl, bool $isTestModeEnabled, Data $dataHelper, ContainerInterface $container)
     {
         $this->id = 'mollie_settings';
         $this->label = __('Mollie Settings', 'mollie-payments-for-woocommerce');
         $this->settings = $settings;
         $this->pluginPath = $pluginPath;
         $this->pluginUrl = $pluginUrl;
-        $this->mollieGateways = $mollieGateways;
         $this->isTestModeEnabled = $isTestModeEnabled;
         $this->dataHelper = $dataHelper;
-        $this->paymentMethods = $paymentMethods;
         $this->container = $container;
         $this->registerContentFieldType();
         $this->outputSections();
@@ -107,7 +103,7 @@ class MollieSettingsPage extends WC_Settings_Page
         $mollieSettings = null;
         foreach ($this->pages() as $pageClass) {
             /** @var AbstractPage $page */
-            $page = new $pageClass($this->settings, $this->pluginUrl, $this->pages(), $defaultSection, $connectionStatus, $this->isTestModeEnabled, $this->mollieGateways, $this->paymentMethods, $this->dataHelper, $this->container);
+            $page = new $pageClass($this->settings, $this->pluginUrl, $this->pages(), $defaultSection, $connectionStatus, $this->isTestModeEnabled, $this->dataHelper, $this->container);
             if ($page::slug() === $defaultSection) {
                 $mollieSettings = $this->hideKeysIntoStars($page->settings());
                 break;

@@ -28,7 +28,6 @@ class GatewayModule implements ServiceModule, ExecutableModule, ExtendingModule
     use ModuleClassNameIdTrait;
     use PaymentMethodServiceProviderTrait;
     public const APPLE_PAY_METHOD_ALLOWED_KEY = 'mollie_apple_pay_method_allowed';
-    public const POST_DATA_KEY = 'post_data';
     /**
      * @var mixed
      */
@@ -37,8 +36,6 @@ class GatewayModule implements ServiceModule, ExecutableModule, ExtendingModule
      * @var mixed
      */
     protected $pluginId;
-    const FIELD_IN3_BIRTHDATE = 'billing_birthdate';
-    const GATEWAY_NAME_IN3 = "mollie_wc_gateway_in3";
     public function run(ContainerInterface $container): bool
     {
         $this->pluginId = $container->get('shared.plugin_id');
@@ -46,14 +43,24 @@ class GatewayModule implements ServiceModule, ExecutableModule, ExtendingModule
         add_filter($this->pluginId . '_retrieve_payment_gateways', function () {
             return $this->gatewayClassnames;
         });
+        //filter out old klarna on payments api
         add_filter('woocommerce_payment_gateways', static function ($gateways) use ($container) {
-            $orderMandatoryGatewayDisabler = $container->get(\Mollie\WooCommerce\Gateway\OrderMandatoryGatewayDisabler::class);
-            assert($orderMandatoryGatewayDisabler instanceof \Mollie\WooCommerce\Gateway\OrderMandatoryGatewayDisabler);
-            return $orderMandatoryGatewayDisabler->processGateways($gateways);
+            if ($container->get('settings.settings_helper')->isOrderApiSetting()) {
+                return $gateways;
+            }
+            if ((is_wc_endpoint_url('wc-api') || !wp_doing_ajax() && !is_wc_endpoint_url('order-pay') || is_admin()) && !has_block('woocommerce/checkout')) {
+                return $gateways;
+            }
+            $orderMandatoryPaymentMethods = ['mollie_wc_gateway_' . Constants::KLARNAPAYLATER, 'mollie_wc_gateway_' . Constants::KLARNAPAYNOW, 'mollie_wc_gateway_' . Constants::KLARNASLICEIT];
+            foreach ($gateways as $key => $gateway) {
+                if (mollieWooCommerceIsMollieGateway($gateway) && in_array($gateway->id, $orderMandatoryPaymentMethods, \true)) {
+                    unset($gateways[$key]);
+                }
+            }
+            return $gateways;
         });
-        add_filter('woocommerce_payment_gateways', static function ($gateways) {
+        add_filter('woocommerce_available_payment_gateways', static function ($gateways) {
             $maybeEnablegatewayHelper = new MaybeDisableGateway();
-            $gateways = $maybeEnablegatewayHelper->maybeDisableBankTransferGateway($gateways);
             return $maybeEnablegatewayHelper->maybeDisableMealVoucherGateway($gateways);
         });
         add_filter('woocommerce_payment_gateways', static function ($gateways) use ($container) {
@@ -63,9 +70,10 @@ class GatewayModule implements ServiceModule, ExecutableModule, ExtendingModule
                 if (!$isMolliegateway) {
                     continue;
                 }
+                assert($gateway instanceof \Mollie\Inpsyde\PaymentGateway\PaymentGateway);
                 // Add subscription filters after payment gateways are loaded
                 $isSubscriptiongateway = $gateway->supports('subscriptions');
-                if ($isSubscriptiongateway) {
+                if ($isSubscriptiongateway && method_exists($deprecatedGatewayHelpers[$gateway->id], 'addSubscriptionFilters')) {
                     $deprecatedGatewayHelpers[$gateway->id]->addSubscriptionFilters($gateway);
                 }
                 // Add payment instructions
@@ -93,9 +101,12 @@ class GatewayModule implements ServiceModule, ExecutableModule, ExtendingModule
             }
         });
         $isIn3Enabled = mollieWooCommerceIsGatewayEnabled('mollie_wc_gateway_in3_settings', 'enabled');
+        $isRivertyEnabled = mollieWooCommerceIsGatewayEnabled('mollie_wc_gateway_riverty_settings', 'enabled');
         if ($isIn3Enabled) {
             add_filter('woocommerce_after_checkout_validation', [$this, 'in3FieldsMandatory'], 11, 2);
-            add_action('woocommerce_before_pay_action', [$this, 'in3FieldsMandatoryPayForOrder'], 11);
+        }
+        if ($isIn3Enabled || $isRivertyEnabled) {
+            add_action('woocommerce_before_pay_action', [$this, 'fieldsMandatoryPayForOrder'], 11);
             add_action('woocommerce_checkout_posted_data', [$this, 'switchFields'], 11);
             add_action('woocommerce_rest_checkout_process_payment_with_context', [$this, 'addPhoneWhenRest'], 11);
             add_action('woocommerce_rest_checkout_process_payment_with_context', [$this, 'addBirthdateWhenRest'], 11);
@@ -234,7 +245,7 @@ class GatewayModule implements ServiceModule, ExecutableModule, ExtendingModule
     public function setOrderPaidByOtherGateway($order_id)
     {
         $order = wc_get_order($order_id);
-        $mollie_payment_id = $order->get_meta('_mollie_payment_id', $single = \true);
+        $mollie_payment_id = $order->get_meta('_mollie_payment_id', \true);
         $order_payment_method = $order->get_payment_method();
         if ($mollie_payment_id !== '' && strpos($order_payment_method, 'mollie') === \false) {
             $order->update_meta_data('_mollie_paid_by_other_gateway', '1');
@@ -314,17 +325,19 @@ class GatewayModule implements ServiceModule, ExecutableModule, ExtendingModule
     /**
      * @param $order
      */
-    public function in3FieldsMandatoryPayForOrder($order)
+    public function fieldsMandatoryPayForOrder($order)
     {
         $paymentMethod = filter_input(\INPUT_POST, 'payment_method', \FILTER_SANITIZE_SPECIAL_CHARS) ?? \false;
-        if ($paymentMethod !== self::GATEWAY_NAME_IN3) {
-            return;
-        }
-        $phoneValue = filter_input(\INPUT_POST, 'billing_phone_in3', \FILTER_SANITIZE_SPECIAL_CHARS) ?? \false;
-        $phoneValue = transformPhoneToNLFormat($phoneValue);
-        $phoneValid = $phoneValue && $this->isPhoneValid($phoneValue) ? $phoneValue : null;
-        if ($phoneValid) {
-            $order->set_billing_phone($phoneValue);
+        $methods = [Constants::RIVERTY, Constants::IN3];
+        foreach ($methods as $method) {
+            if ($paymentMethod !== $method) {
+                continue;
+            }
+            $phoneValue = filter_input(\INPUT_POST, 'billing_phone_' . $method, \FILTER_SANITIZE_SPECIAL_CHARS) ?? \false;
+            $phoneValid = $phoneValue && $this->isPhoneValid($phoneValue) ? $phoneValue : null;
+            if ($phoneValid) {
+                $order->set_billing_phone($phoneValue);
+            }
         }
     }
     /**
@@ -376,10 +389,13 @@ class GatewayModule implements ServiceModule, ExecutableModule, ExtendingModule
     }
     public function switchFields($data)
     {
-        if (isset($data['payment_method']) && $data['payment_method'] === 'mollie_wc_gateway_in3') {
-            $fieldPosted = filter_input(\INPUT_POST, 'billing_phone_in3', \FILTER_SANITIZE_SPECIAL_CHARS) ?? \false;
-            if ($fieldPosted) {
-                $data['billing_phone'] = !empty($fieldPosted) ? $fieldPosted : $data['billing_phone'];
+        $methods = [Constants::RIVERTY, Constants::IN3];
+        foreach ($methods as $method) {
+            if (isset($data['payment_method']) && $data['payment_method'] === 'mollie_wc_gateway_' . $method) {
+                $fieldPosted = filter_input(\INPUT_POST, 'billing_phone_' . $method, \FILTER_SANITIZE_SPECIAL_CHARS) ?? \false;
+                if ($fieldPosted) {
+                    $data['billing_phone'] = !empty($fieldPosted) ? $fieldPosted : $data['billing_phone'];
+                }
             }
         }
         return $data;
@@ -395,7 +411,7 @@ class GatewayModule implements ServiceModule, ExecutableModule, ExtendingModule
     public function addPhoneWhenRest($arrayContext)
     {
         $context = $arrayContext;
-        $phoneMandatoryGateways = ['mollie_wc_gateway_in3'];
+        $phoneMandatoryGateways = ['mollie_wc_gateway_in3', 'mollie_wc_gateway_riverty'];
         $paymentMethod = $context->payment_data['payment_method'] ?? null;
         if ($paymentMethod && in_array($paymentMethod, $phoneMandatoryGateways)) {
             $billingPhone = $context->order->get_billing_phone();
@@ -417,7 +433,7 @@ class GatewayModule implements ServiceModule, ExecutableModule, ExtendingModule
     public function addBirthdateWhenRest($arrayContext)
     {
         $context = $arrayContext;
-        $birthMandatoryGateways = ['mollie_wc_gateway_in3'];
+        $birthMandatoryGateways = ['mollie_wc_gateway_in3', 'mollie_wc_gateway_riverty'];
         $paymentMethod = $context->payment_data['payment_method'] ?? null;
         if ($paymentMethod && in_array($paymentMethod, $birthMandatoryGateways)) {
             $billingBirthdate = $context->payment_data['billing_birthdate'] ?? null;

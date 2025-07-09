@@ -7,7 +7,7 @@ class Klarnapaynow extends \Mollie\WooCommerce\PaymentMethods\AbstractPaymentMet
 {
     protected function getConfig(): array
     {
-        return ['id' => 'klarnapaynow', 'defaultTitle' => 'Klarna Pay Now', 'settingsDescription' => 'To accept payments via Klarna, all default WooCommerce checkout fields should be enabled and required.', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \false, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'SEPA' => \false, 'orderMandatory' => \true, 'docs' => 'https://www.mollie.com/gb/payments/klarna'];
+        return ['id' => 'klarnapaynow', 'defaultTitle' => 'Klarna Pay Now', 'settingsDescription' => 'To accept payments via Klarna, all default WooCommerce checkout fields should be enabled and required.', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \false, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'docs' => 'https://www.mollie.com/gb/payments/klarna'];
     }
     public function initializeTranslations(): void
     {

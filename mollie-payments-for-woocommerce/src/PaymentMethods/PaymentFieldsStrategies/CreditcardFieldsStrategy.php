@@ -25,7 +25,6 @@ class CreditcardFieldsStrategy extends \Mollie\WooCommerce\PaymentMethods\Paymen
         if (!$this->isMollieComponentsEnabled($gateway->paymentMethod())) {
             return \false;
         }
-        $gateway->has_fields = \true;
         $descriptionTranslated = __('Secure payments provided by', 'mollie-payments-for-woocommerce');
         $componentsDescription = "{$this->lockIcon($dataHelper)} {$descriptionTranslated} {$this->mollieLogo($dataHelper)}";
         return "<div class='payment_method_mollie_wc_gateway_creditcard'><div class='mollie-components'></div><p class='mollie-components-description'>{$componentsDescription}</p></div>";

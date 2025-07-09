@@ -14,11 +14,9 @@ abstract class AbstractSection
     protected bool $connectionStatus;
     protected bool $testModeEnabled;
     protected array $pages;
-    protected array $mollieGateways;
-    protected array $paymentMethods;
     protected Data $dataHelper;
     protected ContainerInterface $container;
-    public function __construct(Settings $settings, string $pluginUrl, array $pages, string $currentSection, bool $connectionStatus, bool $testModeEnabled, array $mollieGateways, array $paymentMethods, Data $dataHelper, ContainerInterface $container)
+    public function __construct(Settings $settings, string $pluginUrl, array $pages, string $currentSection, bool $connectionStatus, bool $testModeEnabled, Data $dataHelper, ContainerInterface $container)
     {
         $this->settings = $settings;
         $this->pluginUrl = $pluginUrl;
@@ -26,8 +24,6 @@ abstract class AbstractSection
         $this->connectionStatus = $connectionStatus;
         $this->testModeEnabled = $testModeEnabled;
         $this->pages = $pages;
-        $this->mollieGateways = $mollieGateways;
-        $this->paymentMethods = $paymentMethods;
         $this->dataHelper = $dataHelper;
         $this->container = $container;
     }

@@ -9,7 +9,7 @@ class Creditcard extends \Mollie\WooCommerce\PaymentMethods\AbstractPaymentMetho
 {
     protected function getConfig(): array
     {
-        return ['id' => 'creditcard', 'defaultTitle' => 'Credit card', 'settingsDescription' => '', 'defaultDescription' => '', 'paymentFields' => $this->hasPaymentFields(), 'instructions' => \true, 'supports' => ['products', 'refunds', 'subscriptions'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'SEPA' => \false, 'Subscription' => \true, 'docs' => 'https://www.mollie.com/gb/payments/credit-card'];
+        return ['id' => 'creditcard', 'defaultTitle' => 'Credit card', 'settingsDescription' => '', 'defaultDescription' => '', 'paymentFields' => $this->hasPaymentFields(), 'instructions' => \true, 'supports' => ['products', 'refunds', 'subscriptions'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'Subscription' => \true, 'docs' => 'https://www.mollie.com/gb/payments/credit-card'];
     }
     public function initializeTranslations(): void
     {

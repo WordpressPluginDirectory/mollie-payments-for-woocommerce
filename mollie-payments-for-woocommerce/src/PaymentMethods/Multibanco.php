@@ -7,7 +7,7 @@ class Multibanco extends \Mollie\WooCommerce\PaymentMethods\AbstractPaymentMetho
 {
     protected function getConfig(): array
     {
-        return ['id' => 'multibanco', 'defaultTitle' => 'Multibanco', 'settingsDescription' => 'To accept payments via Multibanco', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \false, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \true, 'SEPA' => \false, 'docs' => ''];
+        return ['id' => 'multibanco', 'defaultTitle' => 'Multibanco', 'settingsDescription' => 'To accept payments via Multibanco', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \false, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \true, 'docs' => ''];
     }
     public function initializeTranslations(): void
     {

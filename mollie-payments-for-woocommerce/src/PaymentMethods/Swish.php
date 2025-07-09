@@ -7,7 +7,7 @@ class Swish extends \Mollie\WooCommerce\PaymentMethods\AbstractPaymentMethod imp
 {
     public function getConfig(): array
     {
-        return ['id' => 'swish', 'defaultTitle' => 'Swish', 'settingsDescription' => '', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \false, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'SEPA' => \false];
+        return ['id' => 'swish', 'defaultTitle' => 'Swish', 'settingsDescription' => '', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \false, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false];
     }
     public function initializeTranslations(): void
     {

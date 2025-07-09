@@ -15,11 +15,9 @@ abstract class AbstractPage
     protected bool $connectionStatus;
     protected bool $testModeEnabled;
     protected array $pages;
-    protected array $mollieGateways;
-    protected array $paymentMethods;
     protected Data $dataHelper;
     protected ContainerInterface $container;
-    public function __construct(Settings $settings, string $pluginUrl, array $pages, string $currentSection, bool $connectionStatus, bool $testModeEnabled, array $mollieGateways, array $paymentMethods, Data $dataHelper, ContainerInterface $container)
+    public function __construct(Settings $settings, string $pluginUrl, array $pages, string $currentSection, bool $connectionStatus, bool $testModeEnabled, Data $dataHelper, ContainerInterface $container)
     {
         $this->settings = $settings;
         $this->pluginUrl = $pluginUrl;
@@ -27,8 +25,6 @@ abstract class AbstractPage
         $this->connectionStatus = $connectionStatus;
         $this->testModeEnabled = $testModeEnabled;
         $this->pages = $pages;
-        $this->mollieGateways = $mollieGateways;
-        $this->paymentMethods = $paymentMethods;
         $this->dataHelper = $dataHelper;
         $this->container = $container;
     }
@@ -48,7 +44,7 @@ abstract class AbstractPage
         $styles = [];
         foreach ($this->sections() as $sectionClass) {
             /** @var AbstractSection $section */
-            $section = new $sectionClass($this->settings, $this->pluginUrl, $this->pages, $this->currentSection, $this->connectionStatus, $this->testModeEnabled, $this->mollieGateways, $this->paymentMethods, $this->dataHelper, $this->container);
+            $section = new $sectionClass($this->settings, $this->pluginUrl, $this->pages, $this->currentSection, $this->connectionStatus, $this->testModeEnabled, $this->dataHelper, $this->container);
             foreach ($section->config() as $field) {
                 $settings[] = $field;
             }

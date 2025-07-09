@@ -7,7 +7,7 @@ class Przelewy24 extends \Mollie\WooCommerce\PaymentMethods\AbstractPaymentMetho
 {
     protected function getConfig(): array
     {
-        return ['id' => 'przelewy24', 'defaultTitle' => 'Przelewy24', 'settingsDescription' => 'To accept payments via Przelewy24, a customer email is required for every payment.', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \true, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'SEPA' => \false, 'docs' => 'https://www.mollie.com/gb/payments/przelewy24'];
+        return ['id' => 'przelewy24', 'defaultTitle' => 'Przelewy24', 'settingsDescription' => 'To accept payments via Przelewy24, a customer email is required for every payment.', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \true, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'docs' => 'https://www.mollie.com/gb/payments/przelewy24'];
     }
     public function initializeTranslations(): void
     {

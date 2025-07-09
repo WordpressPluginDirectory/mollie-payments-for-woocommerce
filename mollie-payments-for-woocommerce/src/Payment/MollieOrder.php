@@ -141,6 +141,10 @@ class MollieOrder extends \Mollie\WooCommerce\Payment\MollieObject
             if ($payment->method === 'paypal') {
                 $this->addPaypalTransactionIdToOrder($order);
             }
+            if (!empty($payment->amountChargedBack)) {
+                $this->logger->debug(__METHOD__ . ' payment at Mollie has a chargeback, so no processing for order ' . $orderId);
+                return;
+            }
             $order->payment_complete($payment->id);
             // Add messages to log
             $this->logger->debug(__METHOD__ . ' WooCommerce payment_complete() processed and returned to ' . __METHOD__ . " for order {$orderId}");

@@ -143,19 +143,6 @@ function mollieWooCommerceIsDropdownEnabled($gatewaySettingsName)
     return $optionValue == 'yes';
 }
 
-/**
- * Check if the Voucher gateway is enabled.
- *
- * @return bool
- */
-function mollieWooCommerceIsVoucherEnabled()
-{
-    $voucherSettings = get_option('mollie_wc_gateway_voucher_settings');
-    if (!$voucherSettings) {
-        $voucherSettings = get_option('mollie_wc_gateway_mealvoucher_settings');
-    }
-    return $voucherSettings ? ($voucherSettings['enabled'] == 'yes') : false;
-}
 
 /**
  * Check if is a Mollie gateway
@@ -191,20 +178,6 @@ function mollieWooCommerceFormatCurrencyValue($value, $currency)
     }
 
     return number_format($value, 2, '.', '');
-}
-
-function transformPhoneToNLFormat($phone)
-{
-    $startsWith06 = preg_match('/^06/', $phone);
-    if ($startsWith06) {
-        $prefix = '+316';
-        $phone = substr($phone, 2);
-        if (!$phone) {
-            return null;
-        }
-        $phone = $prefix . $phone;
-    }
-    return $phone;
 }
 
 function isMollieBirthValid($billing_birthdate)

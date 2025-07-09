@@ -70,10 +70,11 @@ class Advanced extends \Mollie\WooCommerce\Settings\Page\Section\AbstractSection
     protected function cleanDbIfRequested()
     {
         if (isset($_GET['cleanDB-mollie']) && wp_verify_nonce(filter_input(\INPUT_GET, 'nonce_mollie_cleanDb', \FILTER_SANITIZE_SPECIAL_CHARS), 'nonce_mollie_cleanDb')) {
+            $paymentMethods = $this->container->get('gateway.paymentMethods');
             $cleaner = $this->settings->cleanDb();
             $cleaner->cleanAll();
             //set default settings
-            foreach ($this->paymentMethods as $paymentMethod) {
+            foreach ($paymentMethods as $paymentMethod) {
                 $paymentMethod->getSettings();
             }
         }

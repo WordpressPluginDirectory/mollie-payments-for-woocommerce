@@ -7,7 +7,7 @@ class Paypal extends \Mollie\WooCommerce\PaymentMethods\AbstractPaymentMethod im
 {
     protected function getConfig(): array
     {
-        return ['id' => 'paypal', 'defaultTitle' => 'PayPal', 'settingsDescription' => '', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \true, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'SEPA' => \false, 'docs' => 'https://www.mollie.com/gb/payments/paypal'];
+        return ['id' => 'paypal', 'defaultTitle' => 'PayPal', 'settingsDescription' => '', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \true, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'docs' => 'https://www.mollie.com/gb/payments/paypal'];
     }
     public function initializeTranslations(): void
     {

@@ -7,7 +7,7 @@ class Klarnapaylater extends \Mollie\WooCommerce\PaymentMethods\AbstractPaymentM
 {
     protected function getConfig(): array
     {
-        return ['id' => 'klarnapaylater', 'defaultTitle' => 'Klarna Pay later', 'settingsDescription' => 'To accept payments via Klarna, all default WooCommerce checkout fields should be enabled and required.', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \false, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'SEPA' => \false, 'orderMandatory' => \true, 'docs' => 'https://www.mollie.com/gb/payments/klarna'];
+        return ['id' => 'klarnapaylater', 'defaultTitle' => 'Klarna Pay later', 'settingsDescription' => 'To accept payments via Klarna, all default WooCommerce checkout fields should be enabled and required.', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \false, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'docs' => 'https://www.mollie.com/gb/payments/klarna'];
     }
     public function initializeTranslations(): void
     {

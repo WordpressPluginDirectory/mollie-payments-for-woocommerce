@@ -267,7 +267,8 @@ abstract class AbstractPaymentMethod implements \Mollie\WooCommerce\PaymentMetho
     public function supports(ContainerInterface $container): array
     {
         $supports = $this->getProperty('supports');
-        $isSepa = $this->getProperty('SEPA') === \true;
+        $paymentMethodsEnabledAtMollie = $container->get('gateway.paymentMethodsEnabledAtMollie');
+        $isSepa = $this->getProperty('SEPA') === \true && in_array(\Mollie\WooCommerce\PaymentMethods\Constants::DIRECTDEBIT, $paymentMethodsEnabledAtMollie, \true);
         $isSubscription = $this->getProperty('Subscription') === \true;
         $subscriptionHooks = $container->get('gateway.subscriptionsSupports');
         if ($isSepa || $isSubscription) {

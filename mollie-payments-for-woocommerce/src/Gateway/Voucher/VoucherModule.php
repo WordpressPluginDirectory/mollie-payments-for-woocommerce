@@ -96,14 +96,25 @@ class VoucherModule implements ExecutableModule, ServiceModule
                    <option value="no_category"> <?php 
         esc_html_e('No Category', 'mollie-payments-for-woocommerce');
         ?></option>
-                   <option value="meal"><?php 
+                   <option value="<?php 
+        echo esc_attr(Voucher::MEAL);
+        ?>"><?php 
         esc_html_e('Meal', 'mollie-payments-for-woocommerce');
         ?></option>
-                   <option value="eco"><?php 
+                   <option value="<?php 
+        echo esc_attr(Voucher::ECO);
+        ?>"><?php 
         esc_html_e('Eco', 'mollie-payments-for-woocommerce');
         ?></option>
-                   <option value="gift"><?php 
+                   <option value="<?php 
+        echo esc_attr(Voucher::GIFT);
+        ?>"><?php 
         esc_html_e('Gift', 'mollie-payments-for-woocommerce');
+        ?></option>
+                   <option value="<?php 
+        echo esc_attr(Voucher::SPORT_CULTURE);
+        ?>"><?php 
+        esc_html_e('Sport & Culture', 'mollie-payments-for-woocommerce');
         ?></option>
                 </select>
          </span>
@@ -143,14 +154,25 @@ class VoucherModule implements ExecutableModule, ServiceModule
                 <option value="no_category"> <?php 
         esc_html_e('No Category', 'mollie-payments-for-woocommerce');
         ?></option>
-                <option value="meal"><?php 
+                <option value="<?php 
+        echo esc_attr(Voucher::MEAL);
+        ?>"><?php 
         esc_html_e('Meal', 'mollie-payments-for-woocommerce');
         ?></option>
-                <option value="eco"><?php 
+                <option value="<?php 
+        echo esc_attr(Voucher::ECO);
+        ?>"><?php 
         esc_html_e('Eco', 'mollie-payments-for-woocommerce');
         ?></option>
-                <option value="gift"><?php 
+                <option value="<?php 
+        echo esc_attr(Voucher::GIFT);
+        ?>"><?php 
         esc_html_e('Gift', 'mollie-payments-for-woocommerce');
+        ?></option>
+                <option value="<?php 
+        echo esc_attr(Voucher::SPORT_CULTURE);
+        ?>"><?php 
+        esc_html_e('Sport & Culture', 'mollie-payments-for-woocommerce');
         ?></option>
             </select>
             <p class="description"><?php 
@@ -184,25 +206,40 @@ class VoucherModule implements ExecutableModule, ServiceModule
         esc_html_e('No Category', 'mollie-payments-for-woocommerce');
         ?>
                     </option>
-                    <option value="meal" <?php 
-        selected($savedCategory, 'meal');
+                    <option value="<?php 
+        echo esc_attr(Voucher::MEAL);
+        ?>" <?php 
+        selected($savedCategory, Voucher::MEAL);
         ?>>
                         <?php 
         esc_html_e('Meal', 'mollie-payments-for-woocommerce');
         ?>
                     </option>
-                    <option value="eco" <?php 
-        selected($savedCategory, 'eco');
+                    <option value="<?php 
+        echo esc_attr(Voucher::ECO);
+        ?>" <?php 
+        selected($savedCategory, Voucher::ECO);
         ?>>
                         <?php 
         esc_html_e('Eco', 'mollie-payments-for-woocommerce');
         ?>
                     </option>
-                    <option value="gift" <?php 
-        selected($savedCategory, 'gift');
+                    <option value="<?php 
+        echo esc_attr(Voucher::GIFT);
+        ?>" <?php 
+        selected($savedCategory, Voucher::GIFT);
         ?>>
                         <?php 
         esc_html_e('Gift', 'mollie-payments-for-woocommerce');
+        ?>
+                    </option>
+                    <option value="<?php 
+        echo esc_attr(Voucher::SPORT_CULTURE);
+        ?>" <?php 
+        selected($savedCategory, Voucher::SPORT_CULTURE);
+        ?>>
+                        <?php 
+        esc_html_e('Sport & Culture', 'mollie-payments-for-woocommerce');
         ?>
                     </option>
                 </select>
@@ -238,7 +275,7 @@ class VoucherModule implements ExecutableModule, ServiceModule
             'title' => __('Select the default products category', 'mollie-payments-for-woocommerce'),
             'label' => __('Products voucher category', 'mollie-payments-for-woocommerce'),
             'type' => 'select',
-            'options' => [$defaultCategory => __('Same as default category', 'mollie-payments-for-woocommerce'), Voucher::NO_CATEGORY => __('No Category', 'mollie-payments-for-woocommerce'), Voucher::MEAL => __('Meal', 'mollie-payments-for-woocommerce'), Voucher::ECO => __('Eco', 'mollie-payments-for-woocommerce'), Voucher::GIFT => __('Gift', 'mollie-payments-for-woocommerce')],
+            'options' => [$defaultCategory => __('Same as default category', 'mollie-payments-for-woocommerce'), Voucher::NO_CATEGORY => __('No Category', 'mollie-payments-for-woocommerce'), Voucher::MEAL => __('Meal', 'mollie-payments-for-woocommerce'), Voucher::ECO => __('Eco', 'mollie-payments-for-woocommerce'), Voucher::GIFT => __('Gift', 'mollie-payments-for-woocommerce'), Voucher::SPORT_CULTURE => __('Sport & Culture', 'mollie-payments-for-woocommerce')],
             'default' => $defaultCategory,
             /* translators: Placeholder 1: Default order status, placeholder 2: Link to 'Hold Stock' setting */
             'description' => __("In order to process it, all products in the order must have a category. To disable the product from voucher selection select 'No category' option.", 'mollie-payments-for-woocommerce'),
@@ -270,7 +307,7 @@ class VoucherModule implements ExecutableModule, ServiceModule
     public function voucherFieldInVariations($loop, $variation_data, $variation)
     {
         $defaultCategory = $this->voucherDefaultCategory;
-        woocommerce_wp_select(['id' => 'voucher[' . $variation->ID . ']', 'label' => __('Mollie Voucher category', 'mollie-payments-for-woocommerce'), 'value' => get_post_meta($variation->ID, 'voucher', \true), 'options' => [$defaultCategory => __('Same as default category', 'mollie-payments-for-woocommerce'), Voucher::NO_CATEGORY => __('No Category', 'mollie-payments-for-woocommerce'), Voucher::MEAL => __('Meal', 'mollie-payments-for-woocommerce'), Voucher::ECO => __('Eco', 'mollie-payments-for-woocommerce'), Voucher::GIFT => __('Gift', 'mollie-payments-for-woocommerce')]]);
+        woocommerce_wp_select(['id' => 'voucher[' . $variation->ID . ']', 'label' => __('Mollie Voucher category', 'mollie-payments-for-woocommerce'), 'value' => get_post_meta($variation->ID, 'voucher', \true), 'options' => [$defaultCategory => __('Same as default category', 'mollie-payments-for-woocommerce'), Voucher::NO_CATEGORY => __('No Category', 'mollie-payments-for-woocommerce'), Voucher::MEAL => __('Meal', 'mollie-payments-for-woocommerce'), Voucher::ECO => __('Eco', 'mollie-payments-for-woocommerce'), Voucher::GIFT => __('Gift', 'mollie-payments-for-woocommerce'), Voucher::SPORT_CULTURE => __('Sport & Culture', 'mollie-payments-for-woocommerce')]]);
     }
     /**
      * Save the voucher option in the variation product

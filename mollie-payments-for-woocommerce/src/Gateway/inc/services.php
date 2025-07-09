@@ -12,7 +12,6 @@ use Mollie\WooCommerce\Buttons\PayPalButton\DataToPayPal;
 use Mollie\WooCommerce\Buttons\PayPalButton\PayPalAjaxRequests;
 use Mollie\WooCommerce\Buttons\PayPalButton\PayPalButtonHandler;
 use Mollie\WooCommerce\Gateway\DeprecatedGatewayBuilder;
-use Mollie\WooCommerce\Gateway\OrderMandatoryGatewayDisabler;
 use Mollie\WooCommerce\Gateway\Refund\OrderItemsRefunder;
 use Mollie\WooCommerce\Gateway\Refund\RefundLineItemsBuilder;
 use Mollie\WooCommerce\Gateway\Refund\RefundProcessor;
@@ -100,9 +99,6 @@ return static function (): array {
             });
         }
         return $availablePaymentMethods;
-    }, 'gateway.isSDDGatewayEnabled' => static function (ContainerInterface $container): bool {
-        $enabledMethods = $container->get('gateway.paymentMethodsEnabledAtMollie');
-        return \in_array(Constants::DIRECTDEBIT, $enabledMethods, \true);
     }, IconFactory::class => static function (ContainerInterface $container): IconFactory {
         $pluginUrl = $container->get('shared.plugin_url');
         $pluginPath = $container->get('shared.plugin_path');
@@ -155,12 +151,6 @@ return static function (): array {
         \assert($data instanceof Data);
         $pluginId = $container->get('shared.plugin_id');
         return new MollieOrderService($HttpResponseService, $logger, $paymentFactory, $data, $pluginId, $container);
-    }, OrderMandatoryGatewayDisabler::class => static function (ContainerInterface $container): OrderMandatoryGatewayDisabler {
-        $settings = $container->get('settings.settings_helper');
-        \assert($settings instanceof Settings);
-        $isSettingsOrderApi = $settings->isOrderApiSetting();
-        $paymentMethods = $container->get('gateway.paymentMethods');
-        return new OrderMandatoryGatewayDisabler($isSettingsOrderApi, $paymentMethods);
     }, ApplePayDirectHandler::class => static function (ContainerInterface $container) {
         $appleGateway = isset($container->get('__deprecated.gateway_helpers')['mollie_wc_gateway_applepay']) ? $container->get('__deprecated.gateway_helpers')['mollie_wc_gateway_applepay'] : \false;
         if (!$appleGateway) {
