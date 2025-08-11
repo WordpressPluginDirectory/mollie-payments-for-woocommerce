@@ -47,16 +47,12 @@ class PaymentProcessor implements PaymentProcessorInterface
      * @var PaymentCheckoutRedirectService
      */
     protected $paymentCheckoutRedirectService;
-    /**
-     * @var string
-     */
-    protected $voucherDefaultCategory;
     private PaymentGateway $gateway;
     private array $deprecatedGatewayInstances;
     /**
      * PaymentProcessor constructor.
      */
-    public function __construct(NoticeInterface $notice, Logger $logger, \Mollie\WooCommerce\Payment\PaymentFactory $paymentFactory, Data $dataHelper, Api $apiHelper, Settings $settingsHelper, string $pluginId, \Mollie\WooCommerce\Payment\PaymentCheckoutRedirectService $paymentCheckoutRedirectService, string $voucherDefaultCategory, array $deprecatedGatewayInstances)
+    public function __construct(NoticeInterface $notice, Logger $logger, \Mollie\WooCommerce\Payment\PaymentFactory $paymentFactory, Data $dataHelper, Api $apiHelper, Settings $settingsHelper, string $pluginId, \Mollie\WooCommerce\Payment\PaymentCheckoutRedirectService $paymentCheckoutRedirectService, array $deprecatedGatewayInstances)
     {
         $this->notice = $notice;
         $this->logger = $logger;
@@ -66,7 +62,6 @@ class PaymentProcessor implements PaymentProcessorInterface
         $this->settingsHelper = $settingsHelper;
         $this->pluginId = $pluginId;
         $this->paymentCheckoutRedirectService = $paymentCheckoutRedirectService;
-        $this->voucherDefaultCategory = $voucherDefaultCategory;
         $this->deprecatedGatewayInstances = $deprecatedGatewayInstances;
     }
     public function setGatewayHelper(string $paymentGatewayId)
@@ -143,8 +138,8 @@ class PaymentProcessor implements PaymentProcessorInterface
     {
         $optionName = $this->pluginId . '_' . 'api_switch';
         $apiSwitchOption = get_option($optionName);
-        $paymentType = $apiSwitchOption ?: self::PAYMENT_METHOD_TYPE_ORDER;
-        $isBankTransferGateway = $paymentMethod->getProperty('id') === Constants::BANKTRANSFER;
+        $paymentType = $apiSwitchOption ?: self::PAYMENT_METHOD_TYPE_PAYMENT;
+        $isBankTransferGateway = $paymentMethod->getProperty('id') === Constants::BANKTRANSFER || $paymentMethod->getProperty('id') === Constants::PAYBYBANK;
         if ($isBankTransferGateway && $paymentMethod->isExpiredDateSettingActivated()) {
             $paymentType = self::PAYMENT_METHOD_TYPE_PAYMENT;
         }
@@ -194,7 +189,7 @@ class PaymentProcessor implements PaymentProcessorInterface
     protected function processAsMollieOrder(\Mollie\WooCommerce\Payment\MollieOrder $paymentObject, $order, $customer_id, $apiKey)
     {
         $molliePaymentType = self::PAYMENT_METHOD_TYPE_ORDER;
-        $paymentRequestData = $paymentObject->getPaymentRequestData($order, $customer_id, $this->voucherDefaultCategory);
+        $paymentRequestData = $paymentObject->getPaymentRequestData($order, $customer_id);
         $data = array_filter($paymentRequestData);
         $data = apply_filters('woocommerce_' . $this->gateway->id . '_args', $data, $order);
         do_action($this->pluginId . '_create_payment', $data, $order);

@@ -19,6 +19,7 @@ use Mollie\WooCommerce\Shared\Data;
 use Mollie\WooCommerce\Shared\SharedDataDictionary;
 use Mollie\Psr\Log\LoggerInterface as Logger;
 use Mollie\Psr\Log\LogLevel;
+use UnexpectedValueException;
 use WC_Order;
 use WP_Error;
 class MollieOrder extends \Mollie\WooCommerce\Payment\MollieObject
@@ -69,7 +70,7 @@ class MollieOrder extends \Mollie\WooCommerce\Payment\MollieObject
      *
      * @return array
      */
-    public function getPaymentRequestData($order, $customerId, $voucherDefaultCategory = Voucher::NO_CATEGORY)
+    public function getPaymentRequestData($order, $customerId)
     {
         return $this->requestFactory->createRequest('order', $order, $customerId);
     }
@@ -307,17 +308,22 @@ class MollieOrder extends \Mollie\WooCommerce\Payment\MollieObject
         $orderId = $order->get_id();
         // Add messages to log
         $this->logger->debug(__METHOD__ . ' called for order ' . $orderId);
+        // Get current gateway
+        $gateway = wc_get_payment_gateway_by_order($order);
         // New order status
         $newOrderStatus = SharedDataDictionary::STATUS_FAILED;
         // Overwrite plugin-wide
         $newOrderStatus = apply_filters($this->pluginId . '_order_status_failed', $newOrderStatus);
         // Overwrite gateway-wide
-        $newOrderStatus = apply_filters($this->pluginId . '_order_status_failed_' . $payment->method, $newOrderStatus);
-        $gateway = wc_get_payment_gateway_by_order($order);
+        $newOrderStatus = apply_filters($this->pluginId . '_order_status_failed_' . $gateway->id, $newOrderStatus);
         // If WooCommerce Subscriptions is installed, process this failure as a subscription, otherwise as a regular order
         // Update order status for order with failed payment, don't restore stock
         $this->failedSubscriptionProcess($orderId, $gateway, $order, $newOrderStatus, $paymentMethodTitle, $payment);
-        $this->logger->debug(__METHOD__ . ' called for order ' . $orderId . ' and payment ' . $payment->id . ', regular order payment failed.');
+        if (isset($payment->details->failureReason)) {
+            $this->logger->debug(__METHOD__ . ' called for order ' . $orderId . ' and payment ' . $payment->id . ', regular payment failed because of ' . esc_attr($payment->details->failureReason) . '.');
+        } else {
+            $this->logger->debug(__METHOD__ . ' called for order ' . $orderId . ' and payment ' . $payment->id . ', regular payment failed.');
+        }
     }
     /**
      * @param WC_Order                   $order
@@ -417,6 +423,10 @@ class MollieOrder extends \Mollie\WooCommerce\Payment\MollieObject
             try {
                 return $this->orderItemsRefunder->refund($order, $items, $paymentObject, $reason);
             } catch (PartialRefundException $exception) {
+                $this->logger->debug(__METHOD__ . ' - ' . $exception->getMessage());
+                return $this->refund_amount($order, $amount, $paymentObject, $reason);
+            } catch (UnexpectedValueException $exception) {
+                $order->add_order_note($exception->getMessage());
                 $this->logger->debug(__METHOD__ . ' - ' . $exception->getMessage());
                 return $this->refund_amount($order, $amount, $paymentObject, $reason);
             }

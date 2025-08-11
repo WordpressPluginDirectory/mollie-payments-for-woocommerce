@@ -3,6 +3,7 @@
 declare (strict_types=1);
 namespace Mollie\WooCommerce\Payment;
 
+use Mollie\WooCommerce\PaymentMethods\Constants;
 use Mollie\WooCommerce\PaymentMethods\Voucher;
 use Mollie\WooCommerce\Shared\Data;
 use WC_Order;
@@ -46,15 +47,14 @@ class OrderLines
      * Gets formatted order lines from WooCommerce order.
      *
      * @param WC_Order $order WooCommerce Order
-     * @param string $voucherDefaultCategory Voucher gaetway default category
      *
      * @return array
      */
-    public function order_lines($order, $voucherDefaultCategory)
+    public function order_lines($order)
     {
         $this->order = $order;
         $this->currency = $this->dataHelper->getOrderCurrency($this->order);
-        $this->process_items($voucherDefaultCategory);
+        $this->process_items();
         $this->process_shipping();
         $this->process_fees();
         $this->process_gift_cards();
@@ -91,13 +91,8 @@ class OrderLines
      *
      * @access private
      */
-    private function process_items($voucherDefaultCategory)
+    private function process_items()
     {
-        $voucherSettings = get_option('mollie_wc_gateway_voucher_settings') ?: get_option('mollie_wc_gateway_mealvoucher_settings');
-        $isVoucherEnabled = $voucherSettings ? $voucherSettings['enabled'] == 'yes' : \false;
-        if (!$voucherSettings) {
-            $isVoucherEnabled = $this->dataHelper->getPaymentMethod('voucher') ? \true : \false;
-        }
         foreach ($this->order->get_items() as $cart_item) {
             if ($cart_item['quantity']) {
                 do_action($this->pluginId . '_orderlines_process_items_before_getting_product_id', $cart_item);
@@ -108,16 +103,22 @@ class OrderLines
                 }
                 $this->currency = $this->dataHelper->getOrderCurrency($this->order);
                 $mollie_order_item = ['sku' => $this->get_item_reference($product), 'type' => $product instanceof \WC_Product && $product->is_virtual() ? 'digital' : 'physical', 'name' => $this->get_item_name($cart_item), 'quantity' => $this->get_item_quantity($cart_item), 'vatRate' => round($this->get_item_vatRate($cart_item, $product), 2), 'unitPrice' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue($this->get_item_price($cart_item), $this->currency)], 'totalAmount' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue($this->get_item_total_amount($cart_item), $this->currency)], 'vatAmount' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue($this->get_item_tax_amount($cart_item), $this->currency)], 'discountAmount' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue($this->get_item_discount_amount($cart_item), $this->currency)], 'metadata' => ['order_item_id' => $cart_item->get_id()], 'productUrl' => $product instanceof \WC_Product ? $product->get_permalink() : null];
+                if ($this->get_item_total_amount($cart_item) < 0) {
+                    $mollie_order_item['type'] = 'discount';
+                    unset($mollie_order_item['discountAmount']);
+                    $mollie_order_item['vatAmount']['value'] = $this->dataHelper->formatCurrencyValue(0, $this->currency);
+                }
                 if ($product instanceof \WC_Product && $product->get_image_id()) {
                     $productImage = wp_get_attachment_image_src($product->get_image_id(), 'full');
                     if (isset($productImage[0]) && wc_is_valid_url($productImage[0])) {
                         $mollie_order_item['imageUrl'] = $productImage[0];
                     }
                 }
-                if ($isVoucherEnabled) {
-                    $category = $this->get_item_category($product, $voucherDefaultCategory);
-                    if ($category) {
-                        $mollie_order_item['category'] = $category;
+                $paymentMethod = $this->order->get_payment_method();
+                if ($paymentMethod === 'mollie_wc_gateway_' . Constants::VOUCHER && $product instanceof \WC_Product) {
+                    $categories = Voucher::getCategoriesForProduct($product);
+                    if ($categories) {
+                        $mollie_order_item['category'] = array_shift($categories);
                     }
                 }
                 $this->order_lines[] = $mollie_order_item;
@@ -139,7 +140,7 @@ class OrderLines
                 if ($shipping_method->get_total_tax() > 0 && $shipping_method->get_total() > 0) {
                     $vatRate = round($shipping_method->get_total_tax() / $shipping_method->get_total(), 4) * 100;
                 }
-                $shipping = ['type' => 'shipping_fee', 'name' => $shipping_method->get_name() ?: __('Shipping', 'mollie-payments-for-woocommerce'), 'quantity' => 1, 'vatRate' => $vatRate, 'unitPrice' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue($shipping_method->get_total() + $shipping_method->get_total_tax(), $this->currency)], 'totalAmount' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue($shipping_method->get_total() + $shipping_method->get_total_tax(), $this->currency)], 'vatAmount' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue($shipping_method->get_total_tax(), $this->currency)]];
+                $shipping = ['type' => 'shipping_fee', 'name' => $shipping_method->get_name() ?: __('Shipping', 'mollie-payments-for-woocommerce'), 'quantity' => 1, 'vatRate' => $vatRate, 'unitPrice' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue($shipping_method->get_total() + $shipping_method->get_total_tax(), $this->currency)], 'totalAmount' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue($shipping_method->get_total() + $shipping_method->get_total_tax(), $this->currency)], 'vatAmount' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue($shipping_method->get_total_tax(), $this->currency)], 'metadata' => ['order_item_id' => $shipping_method->get_id()]];
                 $this->order_lines[] = $shipping;
             }
         }
@@ -344,52 +345,5 @@ class OrderLines
     private function get_item_total_amount($cart_item)
     {
         return $cart_item['line_total'] + $cart_item['line_tax'];
-    }
-    /**
-     * Get cart item Category.
-     *
-     * Returns selected or default product category.
-     *
-     * @since  5.6
-     * @access private
-     *
-     * @param  null|false|\WC_Product $product Product object.
-     * @param  string $voucherDefaultCategory Voucher default category.
-     *
-     * @return string $category Product voucher category.
-     */
-    private function get_item_category($product, $voucherDefaultCategory)
-    {
-        $category = '';
-        if ($voucherDefaultCategory !== Voucher::NO_CATEGORY) {
-            $category = $voucherDefaultCategory;
-        }
-        if (!$product instanceof \WC_Product) {
-            return $category;
-        }
-        //if product has taxonomy associated, retrieve voucher cat from there.
-        $catTermIds = $product->get_category_ids();
-        if (!$catTermIds && $product->is_type('variation')) {
-            $parentProduct = wc_get_product($product->get_parent_id());
-            if ($parentProduct) {
-                $catTermIds = $parentProduct->get_category_ids();
-            }
-        }
-        if ($catTermIds) {
-            $term_id = end($catTermIds);
-            $metaVoucher = '';
-            if ($term_id) {
-                $metaVoucher = get_term_meta($term_id, '_mollie_voucher_category', \true);
-            }
-            if ($metaVoucher && $metaVoucher !== Voucher::NO_CATEGORY) {
-                $category = $metaVoucher;
-            }
-        }
-        //local product or product variation voucher category
-        $localCategory = $product->get_meta($product->is_type('variation') ? 'voucher' : Voucher::MOLLIE_VOUCHER_CATEGORY_OPTION, \true);
-        if ($localCategory && $localCategory !== Voucher::NO_CATEGORY) {
-            return $localCategory;
-        }
-        return $category;
     }
 }

@@ -110,7 +110,7 @@ class OrderItemsRefunder
     {
         $relatedRemoteItems = [];
         foreach ($remoteItems as $remoteItem) {
-            $orderItemId = property_exists($remoteItem->metadata, 'order_item_id') && $remoteItem->metadata->order_item_id !== null ? $remoteItem->metadata->order_item_id : 0;
+            $orderItemId = $remoteItem->metadata !== null && property_exists($remoteItem->metadata, 'order_item_id') && $remoteItem->metadata->order_item_id !== null ? $remoteItem->metadata->order_item_id : 0;
             if (!$orderItemId) {
                 throw new UnexpectedValueException(sprintf(
                     /* translators: Placeholder 1: item id. */

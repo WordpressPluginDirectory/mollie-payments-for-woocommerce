@@ -80,8 +80,7 @@ return static function (): array {
     }, OrderLinesMiddleware::class => static function (ContainerInterface $container): OrderLinesMiddleware {
         $orderLines = $container->get(OrderLines::class);
         $paymentLines = $container->get(PaymentLines::class);
-        $voucherDefaultCategory = $container->get('voucher.defaultCategory');
-        return new OrderLinesMiddleware($orderLines, $paymentLines, $voucherDefaultCategory);
+        return new OrderLinesMiddleware($orderLines, $paymentLines);
     }, AddressMiddleware::class => static function (): AddressMiddleware {
         return new AddressMiddleware();
     }, UrlMiddleware::class => static function (ContainerInterface $container): UrlMiddleware {

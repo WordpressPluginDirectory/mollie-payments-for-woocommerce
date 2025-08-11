@@ -5,7 +5,7 @@ namespace Mollie\Inpsyde\Modularity\Module;
 
 use Mollie\Psr\Container\ContainerInterface;
 /**
- * @psalm-type Service = callable(ContainerInterface $container):mixed
+ * @phpstan-type Service callable(ContainerInterface $container): mixed
  */
 interface ServiceModule extends Module
 {

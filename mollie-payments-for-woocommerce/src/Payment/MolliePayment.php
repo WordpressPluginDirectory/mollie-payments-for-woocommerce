@@ -52,7 +52,7 @@ class MolliePayment extends \Mollie\WooCommerce\Payment\MollieObject
      *
      * @return array
      */
-    public function getPaymentRequestData($order, $customerId, $voucherDefaultCategory = Voucher::NO_CATEGORY)
+    public function getPaymentRequestData($order, $customerId)
     {
         return $this->requestFactory->createRequest('payment', $order, $customerId);
     }
@@ -149,6 +149,7 @@ class MolliePayment extends \Mollie\WooCommerce\Payment\MollieObject
             // Add messages to log
             $this->logger->debug(__METHOD__ . ' processing paid payment via Mollie plugin fully completed for order ' . $orderId);
             // Subscription processing
+            $this->addMandateIdMetaToFirstPaymentSubscriptionOrder($order, $payment);
             if (class_exists('WC_Subscriptions') && class_exists('WC_Subscriptions_Admin')) {
                 if ($this->dataHelper->isWcSubscription($orderId)) {
                     $this->deleteSubscriptionOrderFromPendingPaymentQueue($order);
@@ -268,7 +269,11 @@ class MolliePayment extends \Mollie\WooCommerce\Payment\MollieObject
         // If WooCommerce Subscriptions is installed, process this failure as a subscription, otherwise as a regular order
         // Update order status for order with failed payment, don't restore stock
         $this->failedSubscriptionProcess($orderId, $gateway, $order, $newOrderStatus, $paymentMethodTitle, $payment);
-        $this->logger->debug(__METHOD__ . ' called for order ' . $orderId . ' and payment ' . $payment->id . ', regular payment failed.');
+        if (isset($payment->details->failureReason)) {
+            $this->logger->debug(__METHOD__ . ' called for order ' . $orderId . ' and payment ' . $payment->id . ', regular payment failed because of ' . esc_attr($payment->details->failureReason) . '.');
+        } else {
+            $this->logger->debug(__METHOD__ . ' called for order ' . $orderId . ' and payment ' . $payment->id . ', regular payment failed.');
+        }
     }
     /**
      * @param WC_Order                     $order

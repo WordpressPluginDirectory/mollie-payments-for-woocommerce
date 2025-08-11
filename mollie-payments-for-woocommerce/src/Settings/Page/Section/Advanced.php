@@ -20,10 +20,10 @@ class Advanced extends \Mollie\WooCommerce\Settings\Page\Section\AbstractSection
             __('Should Mollie store customers name and email address for Single Click Payments? Default <code>%1$s</code>. Required if WooCommerce Subscriptions is being used! Read more about <a href=\'https://help.mollie.com/hc/en-us/articles/115000671249-What-are-single-click-payments-and-how-does-it-work-\'>%2$s</a> and how it improves your conversion.', 'mollie-payments-for-woocommerce'),
             strtolower(__('Enabled', 'mollie-payments-for-woocommerce')),
             __('Single Click Payments', 'mollie-payments-for-woocommerce')
-        ), 'type' => 'checkbox', 'default' => 'yes'], ['id' => $this->settings->getSettingId('api_switch'), 'title' => __('Select API Method', 'mollie-payments-for-woocommerce'), 'type' => 'select', 'options' => [PaymentProcessor::PAYMENT_METHOD_TYPE_ORDER => ucfirst(PaymentProcessor::PAYMENT_METHOD_TYPE_ORDER) . ' (' . __('default', 'mollie-payments-for-woocommerce') . ')', PaymentProcessor::PAYMENT_METHOD_TYPE_PAYMENT => ucfirst(PaymentProcessor::PAYMENT_METHOD_TYPE_PAYMENT)], 'default' => PaymentProcessor::PAYMENT_METHOD_TYPE_ORDER, 'desc' => sprintf(
+        ), 'type' => 'checkbox', 'default' => 'yes'], ['id' => $this->settings->getSettingId('api_switch'), 'title' => __('Select API Method', 'mollie-payments-for-woocommerce'), 'type' => 'select', 'options' => [PaymentProcessor::PAYMENT_METHOD_TYPE_ORDER => ucfirst(PaymentProcessor::PAYMENT_METHOD_TYPE_ORDER), PaymentProcessor::PAYMENT_METHOD_TYPE_PAYMENT => ucfirst(PaymentProcessor::PAYMENT_METHOD_TYPE_PAYMENT) . ' (' . __('default', 'mollie-payments-for-woocommerce') . ')'], 'default' => PaymentProcessor::PAYMENT_METHOD_TYPE_PAYMENT, 'desc' => sprintf(
             /* translators: Placeholder 1: opening link tag, placeholder 2: closing link tag */
-            __('Click %1$shere%2$s to read more about the differences between the Payments and Orders API', 'mollie-payments-for-woocommerce'),
-            '<a href="https://docs.mollie.com/orders/why-use-orders" target="_blank">',
+            __('Payments API is the recommended option since Orders API will be deprecated. Click %1$shere%2$s to read more about the differences between the Payments and Orders API', 'mollie-payments-for-woocommerce'),
+            '<a href="https://docs.mollie.com/reference/payments-api" target="_blank">',
             '</a>'
         )], ['id' => $this->settings->getSettingId('api_payment_description'), 'title' => __('API Payment Description', 'mollie-payments-for-woocommerce'), 'type' => 'text', 'default' => '{orderNumber}', 'desc' => sprintf('</p>
             <div class="available-payment-description-labels hide-if-no-js">
