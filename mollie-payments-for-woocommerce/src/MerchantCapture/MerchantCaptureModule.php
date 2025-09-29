@@ -116,7 +116,6 @@ class MerchantCaptureModule implements ExecutableModule, ServiceModule
                     }
                     $order->set_status(SharedDataDictionary::STATUS_ON_HOLD);
                     $order->update_meta_data(self::ORDER_PAYMENT_STATUS_META_KEY, \Mollie\WooCommerce\MerchantCapture\ManualCaptureStatus::STATUS_AUTHORIZED);
-                    $order->set_transaction_id($payment->id);
                     $order->save();
                 } elseif ($payment->isPaid() && ($container->get('merchant.manual_capture.is_waiting')($order) || $container->get('merchant.manual_capture.is_authorized')($order))) {
                     $order->update_meta_data(self::ORDER_PAYMENT_STATUS_META_KEY, \Mollie\WooCommerce\MerchantCapture\ManualCaptureStatus::STATUS_CAPTURED);

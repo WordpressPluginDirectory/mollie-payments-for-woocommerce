@@ -52,6 +52,7 @@ class OrderLines
      */
     public function order_lines($order)
     {
+        $this->order_lines = [];
         $this->order = $order;
         $this->currency = $this->dataHelper->getOrderCurrency($this->order);
         $this->process_items();
@@ -173,7 +174,7 @@ class OrderLines
                     $cart_fee_tax_amount = 0;
                     $cart_fee_total = $cart_fee['total'];
                 }
-                if (empty(round($cart_fee_total, 2))) {
+                if (empty(round(floatval($cart_fee_total), 2))) {
                     continue;
                 }
                 $fee = ['type' => $cart_fee_total > 0 ? 'surcharge' : 'discount', 'name' => $cart_fee['name'], 'quantity' => 1, 'vatRate' => $this->dataHelper->formatCurrencyValue($cart_fee_vat_rate, $this->currency), 'unitPrice' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue($cart_fee_total, $this->currency)], 'totalAmount' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue($cart_fee_total, $this->currency)], 'vatAmount' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue($cart_fee_tax_amount, $this->currency)], 'metadata' => ['order_item_id' => $cart_fee->get_id()]];

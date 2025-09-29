@@ -116,5 +116,7 @@ return static function (): array {
         $middlewares = [$container->get(CaptureModeMiddleware::class), $issuer, $url, $address, $lines, $sequenceType, $cardToken, $applePayToken, $storeCustomer, $paymentDescription, $addCustomRequestFields];
         $middlewareHandler = new MiddlewareHandler($middlewares);
         return new PaymentRequestStrategy($dataHelper, $settingsHelper, $middlewareHandler);
+    }, \Mollie\WooCommerce\Payment\Webhooks\RestApi::class => static function (ContainerInterface $container): \Mollie\WooCommerce\Payment\Webhooks\RestApi {
+        return new \Mollie\WooCommerce\Payment\Webhooks\RestApi($container->get(\Mollie\WooCommerce\Payment\MollieOrderService::class), $container->get(Logger::class));
     }];
 };

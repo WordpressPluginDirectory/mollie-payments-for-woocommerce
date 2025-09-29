@@ -4,11 +4,10 @@ declare (strict_types=1);
 namespace Mollie\WooCommerce\PaymentMethods\PaymentFieldsStrategies;
 
 use Mollie\Inpsyde\PaymentGateway\PaymentFieldsRendererInterface;
+use Mollie\WooCommerce\Shared\FieldConstants;
 class RivertyFieldsStrategy extends \Mollie\WooCommerce\PaymentMethods\PaymentFieldsStrategies\AbstractPaymentFieldsRenderer implements PaymentFieldsRendererInterface
 {
     use \Mollie\WooCommerce\PaymentMethods\PaymentFieldsStrategies\PaymentFieldsStrategiesTrait;
-    const FIELD_BIRTHDATE = "billing_birthdate_riverty";
-    const FIELD_PHONE = "billing_phone_riverty";
     public function renderFields(): string
     {
         $showBirthdateField = \false;
@@ -34,7 +33,7 @@ class RivertyFieldsStrategy extends \Mollie\WooCommerce\PaymentMethods\PaymentFi
             $html .= $this->phoneNumber($phoneValue);
         }
         if ($showBirthdateField) {
-            $html .= $this->dateOfBirth($birthValue);
+            $html .= $this->dateOfBirth($birthValue, FieldConstants::RIVERTY_BIRTHDATE);
         }
         return $html;
     }
@@ -45,9 +44,9 @@ class RivertyFieldsStrategy extends \Mollie\WooCommerce\PaymentMethods\PaymentFi
         $countryCodes = ['BE' => '+32xxxxxxxxx', 'NL' => '+316xxxxxxxx', 'DE' => '+49xxxxxxxxx', 'AT' => '+43xxxxxxxxx'];
         $placeholder = in_array($country, array_keys($countryCodes)) ? $countryCodes[$country] : $countryCodes['NL'];
         $html = '<p class="form-row form-row-wide" id="billing_phone_field">';
-        $html .= '<label for="' . esc_attr(self::FIELD_PHONE) . '" class="">' . esc_html__('Phone', 'mollie-payments-for-woocommerce') . '</label>';
+        $html .= '<label for="' . esc_attr(FieldConstants::RIVERTY_PHONE) . '" class="">' . esc_html__('Phone', 'mollie-payments-for-woocommerce') . '</label>';
         $html .= '<span class="woocommerce-input-wrapper">';
-        $html .= '<input type="tel" class="input-text " name="' . esc_attr(self::FIELD_PHONE) . '" id="' . esc_attr(self::FIELD_PHONE) . '" placeholder="' . esc_attr($placeholder) . '" value="' . esc_attr($phoneValue) . '" autocomplete="phone">';
+        $html .= '<input type="tel" class="input-text " name="' . esc_attr(FieldConstants::RIVERTY_PHONE) . '" id="' . esc_attr(FieldConstants::RIVERTY_PHONE) . '" placeholder="' . esc_attr($placeholder) . '" value="' . esc_attr($phoneValue) . '" autocomplete="phone">';
         $html .= '</span></p>';
         return $html;
     }
