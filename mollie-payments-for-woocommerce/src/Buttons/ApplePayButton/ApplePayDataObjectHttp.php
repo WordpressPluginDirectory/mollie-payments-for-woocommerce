@@ -86,9 +86,7 @@ class ApplePayDataObjectHttp
      */
     public function validationData()
     {
-        $nonce = filter_input(\INPUT_POST, 'woocommerce-process-checkout-nonce', \FILTER_SANITIZE_SPECIAL_CHARS);
-        $isNonceValid = wp_verify_nonce($nonce, 'woocommerce-process_checkout');
-        if (!$isNonceValid) {
+        if (!$this->isNonceValid()) {
             return;
         }
         $data = $this->getFilteredRequestData();
@@ -104,9 +102,7 @@ class ApplePayDataObjectHttp
      */
     public function updateContactData()
     {
-        $nonce = filter_input(\INPUT_POST, 'woocommerce-process-checkout-nonce', \FILTER_SANITIZE_SPECIAL_CHARS);
-        $isNonceValid = wp_verify_nonce($nonce, 'woocommerce-process_checkout');
-        if (!$isNonceValid) {
+        if (!$this->isNonceValid()) {
             return;
         }
         $data = $this->getFilteredRequestData();
@@ -122,9 +118,7 @@ class ApplePayDataObjectHttp
      */
     public function updateMethodData()
     {
-        $nonce = filter_input(\INPUT_POST, 'woocommerce-process-checkout-nonce', \FILTER_SANITIZE_SPECIAL_CHARS);
-        $isNonceValid = wp_verify_nonce($nonce, 'woocommerce-process_checkout');
-        if (!$isNonceValid) {
+        if (!$this->isNonceValid()) {
             return;
         }
         $data = $this->getFilteredRequestData();
@@ -143,11 +137,10 @@ class ApplePayDataObjectHttp
      */
     public function orderData($callerPage)
     {
-        $nonce = filter_input(\INPUT_POST, 'woocommerce-process-checkout-nonce', \FILTER_SANITIZE_SPECIAL_CHARS);
-        $isNonceValid = wp_verify_nonce($nonce, 'woocommerce-process_checkout');
-        if (!$isNonceValid) {
+        if (!$this->isNonceValid()) {
             return;
         }
+        // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         $data = filter_var_array($_POST, \FILTER_SANITIZE_SPECIAL_CHARS);
         $data[\Mollie\WooCommerce\Buttons\ApplePayButton\PropertiesDictionary::CALLER_PAGE] = $callerPage;
         $result = $this->updateRequiredData($data, \Mollie\WooCommerce\Buttons\ApplePayButton\PropertiesDictionary::CREATE_ORDER_SINGLE_PROD_REQUIRED_FIELDS, \Mollie\WooCommerce\Buttons\ApplePayButton\PropertiesDictionary::CREATE_ORDER_CART_REQUIRED_FIELDS);
@@ -327,6 +320,11 @@ class ApplePayDataObjectHttp
     public function simplifiedContact()
     {
         return $this->simplifiedContact;
+    }
+    public function isNonceValid()
+    {
+        $nonce = filter_input(\INPUT_POST, 'woocommerce-process-checkout-nonce', \FILTER_SANITIZE_SPECIAL_CHARS);
+        return wp_verify_nonce($nonce, 'woocommerce-process_checkout') || wp_verify_nonce($nonce, 'mollie_apple_pay_blocks');
     }
     /**
      * @return array|false|null

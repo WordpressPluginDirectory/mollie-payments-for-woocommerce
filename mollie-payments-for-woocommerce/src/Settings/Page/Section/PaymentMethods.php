@@ -176,10 +176,11 @@ class PaymentMethods extends \Mollie\WooCommerce\Settings\Page\Section\AbstractS
         ob_start();
         ?>
         <div class="mollie-settings-pm__single">
-            <?php 
-        echo $icon->src();
-        // phpcs:ignore XSS ok.
-        ?>
+            <img src="<?php 
+        echo esc_url($icon->src());
+        ?>" class="mollie-gateway-icon" alt="<?php 
+        echo esc_attr($paymentMethod->title($this->container));
+        ?>"/>
             <?php 
         echo esc_html($paymentMethod->title($this->container));
         ?>

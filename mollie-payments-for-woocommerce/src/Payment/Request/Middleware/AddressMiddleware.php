@@ -128,7 +128,15 @@ class AddressMiddleware implements \Mollie\WooCommerce\Payment\Request\Middlewar
     {
         $postedField = $this->getPhonePostedFieldName($order);
         //phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-        return wc_clean(wp_unslash($_POST[$postedField] ?? ''));
+        $phoneFromSpecificField = wc_clean(wp_unslash($_POST[$postedField] ?? ''));
+        if (!empty($phoneFromSpecificField)) {
+            return $phoneFromSpecificField;
+        }
+        if ($postedField !== 'billing_phone') {
+            //phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+            return wc_clean(wp_unslash($_POST['billing_phone'] ?? ''));
+        }
+        return '';
     }
     /**
      * Format the phone number in E.164.

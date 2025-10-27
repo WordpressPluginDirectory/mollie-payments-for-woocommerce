@@ -58,6 +58,7 @@ class RestApi
             $this->logger->debug(__METHOD__ . ': No transaction ID provided.');
             return new \WP_REST_Response(null, 404);
         }
+        $this->logger->debug(__METHOD__ . ': Received WP-REST-API webhook with transaction ID: ' . $transactionID);
         $orders = wc_get_orders(['transaction_id' => $transactionID, 'limit' => 2]);
         if (!$orders) {
             $this->logger->debug(__METHOD__ . ': No orders found for transaction ID: ' . $transactionID . ' fall back to search in meta data');

@@ -256,6 +256,8 @@ return array(
     'Mollie\\WooCommerce\\Buttons\\PayPalButton\\PropertiesDictionary' => $baseDir . '/src/Buttons/PayPalButton/PropertiesDictionary.php',
     'Mollie\\WooCommerce\\Buttons\\PayPalButton\\WCOrderCalculator' => $baseDir . '/src/Buttons/PayPalButton/WCOrderCalculator.php',
     'Mollie\\WooCommerce\\Components\\AcceptedLocaleValuesDictionary' => $baseDir . '/src/Components/AcceptedLocaleValuesDictionary.php',
+    'Mollie\\WooCommerce\\Components\\ComponentDataService' => $baseDir . '/src/Components/ComponentDataService.php',
+    'Mollie\\WooCommerce\\Components\\ComponentsModule' => $baseDir . '/src/Components/ComponentsModule.php',
     'Mollie\\WooCommerce\\Components\\ComponentsStyles' => $baseDir . '/src/Components/ComponentsStyles.php',
     'Mollie\\WooCommerce\\Components\\StylesPropertiesDictionary' => $baseDir . '/src/Components/StylesPropertiesDictionary.php',
     'Mollie\\WooCommerce\\Gateway\\DeprecatedGatewayBuilder' => $baseDir . '/src/Gateway/DeprecatedGatewayBuilder.php',

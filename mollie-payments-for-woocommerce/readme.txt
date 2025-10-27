@@ -3,7 +3,7 @@ Contributors: daanvm, danielhuesken, davdebcom, dinamiko, syde, l.vangunst, ndij
 Tags: mollie, woocommerce, payments, ecommerce, credit card
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 8.0.6
+Stable tag: 8.1.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -219,6 +219,13 @@ Automatic updates should work like a charm; as always though, ensure you backup 
 
 
 == Changelog ==
+
+= 8.1.0 - 27-10-2025 =
+* Improvement - Refactor of Mollie payment methods in block checkout
+* Fixed - Payment methods not loading in block checkout
+* Fixed - Bizum payment failing in pay for order page
+* Fixed - Bizum placeholder
+* Fixed - For manually captured orders status displayed as ON HOLD
 
 = 8.0.6 - 29-09-2025 =
 * Fixed - TypeError in OrderLines.php when processing vouchers with Germanized plugin

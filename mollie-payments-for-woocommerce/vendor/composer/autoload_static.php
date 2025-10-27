@@ -314,6 +314,8 @@ class ComposerStaticInitbf0d59b326756ec3f097a186388c2955
         'Mollie\\WooCommerce\\Buttons\\PayPalButton\\PropertiesDictionary' => __DIR__ . '/../..' . '/src/Buttons/PayPalButton/PropertiesDictionary.php',
         'Mollie\\WooCommerce\\Buttons\\PayPalButton\\WCOrderCalculator' => __DIR__ . '/../..' . '/src/Buttons/PayPalButton/WCOrderCalculator.php',
         'Mollie\\WooCommerce\\Components\\AcceptedLocaleValuesDictionary' => __DIR__ . '/../..' . '/src/Components/AcceptedLocaleValuesDictionary.php',
+        'Mollie\\WooCommerce\\Components\\ComponentDataService' => __DIR__ . '/../..' . '/src/Components/ComponentDataService.php',
+        'Mollie\\WooCommerce\\Components\\ComponentsModule' => __DIR__ . '/../..' . '/src/Components/ComponentsModule.php',
         'Mollie\\WooCommerce\\Components\\ComponentsStyles' => __DIR__ . '/../..' . '/src/Components/ComponentsStyles.php',
         'Mollie\\WooCommerce\\Components\\StylesPropertiesDictionary' => __DIR__ . '/../..' . '/src/Components/StylesPropertiesDictionary.php',
         'Mollie\\WooCommerce\\Gateway\\DeprecatedGatewayBuilder' => __DIR__ . '/../..' . '/src/Gateway/DeprecatedGatewayBuilder.php',

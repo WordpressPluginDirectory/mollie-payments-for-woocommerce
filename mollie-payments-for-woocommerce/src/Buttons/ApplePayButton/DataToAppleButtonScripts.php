@@ -23,7 +23,7 @@ class DataToAppleButtonScripts
         if (is_product()) {
             return $this->dataForProductPage($shopCountryCode, $currencyCode, $totalLabel);
         }
-        if (is_cart() || $isBlock) {
+        if (is_cart()) {
             return $this->dataForCartPage($shopCountryCode, $currencyCode, $totalLabel);
         }
         return [];

@@ -7,7 +7,7 @@ class Bizum extends \Mollie\WooCommerce\PaymentMethods\AbstractPaymentMethod imp
 {
     protected function getConfig(): array
     {
-        return ['id' => 'bizum', 'defaultTitle' => 'Bizum', 'settingsDescription' => 'To accept payments via Bizum, all default WooCommerce checkout fields should be enabled and required.', 'defaultDescription' => '', 'paymentFields' => \true, 'additionalFields' => ['phone'], 'instructions' => \false, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'paymentCaptureMode' => 'manual', 'phonePlaceholder' => 'Please enter your phone here. +346xxxxxxxx', 'mollie-payments-for-woocommerce', 'docs' => 'https://www.mollie.com/gb/payments/bizum'];
+        return ['id' => 'bizum', 'defaultTitle' => 'Bizum', 'settingsDescription' => 'To accept payments via Bizum, all default WooCommerce checkout fields should be enabled and required.', 'defaultDescription' => '', 'paymentFields' => \true, 'additionalFields' => ['phone'], 'instructions' => \false, 'supports' => ['products', 'refunds'], 'filtersOnBuild' => \false, 'confirmationDelayed' => \false, 'phonePlaceholder' => 'Please enter your phone here. +346xxxxxxxx', 'mollie-payments-for-woocommerce', 'docs' => 'https://www.mollie.com/gb/payments/bizum'];
     }
     // Replace translatable strings after the 'after_setup_theme' hook
     public function initializeTranslations(): void

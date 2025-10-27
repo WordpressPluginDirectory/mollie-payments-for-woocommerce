@@ -1,7 +1,0 @@
-{
-  "public/css/mollie-components.min.css": "/public/css/mollie-components.min.css",
-  "public/css/mollie-gateway-icons.min.css": "/public/css/mollie-gateway-icons.min.css",
-  "public/css/unabledButton.min.css": "/public/css/unabledButton.min.css",
-  "public/css/mollie-applepaydirect.min.css": "/public/css/mollie-applepaydirect.min.css",
-  "public/css/mollie-block-custom-field.min.css": "/public/css/mollie-block-custom-field.min.css"
-}
