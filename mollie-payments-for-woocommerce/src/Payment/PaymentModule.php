@@ -351,15 +351,16 @@ class PaymentModule implements ServiceModule, ExecutableModule
             $this->logger->debug(__METHOD__ . ' - ' . $order_id . ' - Order contains Mollie payment method, but not a valid Mollie Order ID. Canceling order failed.');
             return;
         }
-        $orderStr = "ord_";
-        if (substr($mollie_order_id, 0, strlen($orderStr)) !== $orderStr) {
-            $this->logger->debug(__METHOD__ . ' - ' . $order_id . ' - Order uses Payment API, cannot cancel as order.');
-            return;
-        }
         $apiKey = $this->settingsHelper->getApiKey();
         try {
             // Get the order from the Mollie API
-            $mollie_order = $this->apiHelper->getApiClient($apiKey)->orders->get($mollie_order_id);
+            $apiClient = $this->apiHelper->getApiClient($apiKey);
+            $isOrdersApi = strpos($mollie_order_id, 'ord_') === 0;
+            if ($isOrdersApi) {
+                $mollie_order = $apiClient->orders->get($mollie_order_id);
+            } else {
+                $mollie_order = $apiClient->payments->get($mollie_order_id);
+            }
             // Check that order is not already canceled at Mollie
             if ($mollie_order->isCanceled()) {
                 $message = _x('Order already canceled at Mollie, can not be canceled again.', 'Order note info', 'mollie-payments-for-woocommerce');
@@ -368,8 +369,15 @@ class PaymentModule implements ServiceModule, ExecutableModule
                 return;
             }
             // Check that order has the correct status to be canceled
-            if ($mollie_order->isCreated() || $mollie_order->isAuthorized() || $mollie_order->isShipping()) {
-                $this->apiHelper->getApiClient($apiKey)->orders->get($mollie_order_id)->cancel();
+            if ($isOrdersApi && ($mollie_order->isCreated() || $mollie_order->isAuthorized() || $mollie_order->isShipping())) {
+                $apiClient->orders->get($mollie_order_id)->cancel();
+                $message = _x('Order also cancelled at Mollie.', 'Order note info', 'mollie-payments-for-woocommerce');
+                $order->add_order_note($message);
+                $this->logger->debug(__METHOD__ . ' - ' . $order_id . ' - Order cancelled in WooCommerce, also cancelled at Mollie.');
+                return;
+            }
+            if ($mollie_order->isAuthorized()) {
+                $apiClient->payments->cancel($mollie_order_id);
                 $message = _x('Order also cancelled at Mollie.', 'Order note info', 'mollie-payments-for-woocommerce');
                 $order->add_order_note($message);
                 $this->logger->debug(__METHOD__ . ' - ' . $order_id . ' - Order cancelled in WooCommerce, also cancelled at Mollie.');
