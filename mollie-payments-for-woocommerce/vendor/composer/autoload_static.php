@@ -7,7 +7,7 @@ namespace Composer\Autoload;
 class ComposerStaticInitbf0d59b326756ec3f097a186388c2955
 {
     public static $prefixLengthsPsr4 = array (
-        'M' => 
+        'M' =>
         array (
             'Mollie\\WooCommerce\\' => 19,
             'Mollie\\Psr\\Log\\' => 15,
@@ -18,46 +18,46 @@ class ComposerStaticInitbf0d59b326756ec3f097a186388c2955
             'Mollie\\Dhii\\Services\\' => 21,
             'Mollie\\Api\\' => 11,
         ),
-        'C' => 
+        'C' =>
         array (
             'Composer\\CaBundle\\' => 18,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Mollie\\WooCommerce\\' => 
+        'Mollie\\WooCommerce\\' =>
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
-        'Mollie\\Psr\\Log\\' => 
+        'Mollie\\Psr\\Log\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
         ),
-        'Mollie\\Psr\\Container\\' => 
+        'Mollie\\Psr\\Container\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
         ),
-        'Mollie\\Inpsyde\\PaymentGateway\\' => 
+        'Mollie\\Inpsyde\\PaymentGateway\\' =>
         array (
             0 => __DIR__ . '/../..' . '/lib/payment-gateway/src',
         ),
-        'Mollie\\Inpsyde\\Modularity\\' => 
+        'Mollie\\Inpsyde\\Modularity\\' =>
         array (
             0 => __DIR__ . '/..' . '/inpsyde/modularity/src',
         ),
-        'Mollie\\Inpsyde\\EnvironmentChecker\\' => 
+        'Mollie\\Inpsyde\\EnvironmentChecker\\' =>
         array (
             0 => __DIR__ . '/../..' . '/pluginEnvironmentChecker',
         ),
-        'Mollie\\Dhii\\Services\\' => 
+        'Mollie\\Dhii\\Services\\' =>
         array (
             0 => __DIR__ . '/..' . '/dhii/services/src',
         ),
-        'Mollie\\Api\\' => 
+        'Mollie\\Api\\' =>
         array (
             0 => __DIR__ . '/..' . '/mollie/mollie-api-php/src',
         ),
-        'Composer\\CaBundle\\' => 
+        'Composer\\CaBundle\\' =>
         array (
             0 => __DIR__ . '/..' . '/composer/ca-bundle/src',
         ),

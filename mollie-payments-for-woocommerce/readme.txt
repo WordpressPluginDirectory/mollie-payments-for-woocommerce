@@ -2,8 +2,8 @@
 Contributors: daanvm, danielhuesken, davdebcom, dinamiko, syde, l.vangunst, ndijkstra, wido, carmen222
 Tags: mollie, woocommerce, payments, ecommerce, credit card
 Requires at least: 5.0
-Tested up to: 6.8
-Stable tag: 8.1.1
+Tested up to: 6.9
+Stable tag: 8.1.2
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -13,8 +13,6 @@ Accept all major payment methods in WooCommerce today. Credit cards, iDEAL and m
 == Description ==
 
 https://www.youtube.com/watch?v=33sQNKelKW4
-
-> Limited time only! Pay ZERO processing fees for your first month. [Get started with Mollie today.](https://my.mollie.com/dashboard/signup/campaign/woocommerce2025?utm_campaign=GLO_Q3__Co-Marketing-Campaign-WooCommerce&utm_medium=referral&utm_source=partner&utm_content=wordpresspage&sf_campaign_id=701QD00000iR21IYAS&campaign_name=GLO_Q3__Co-Marketing-Campaign-WooCommerce)
 
 Quickly integrate all major payment methods in WooCommerce, wherever you need them. Mollie Payments for WooCommerce adds the critical success factor: an easy-to-install, easy-to-use, customizable payments gateway that is as flexible as WooCommerce itself.
 
@@ -71,7 +69,7 @@ Pay after delivery payment methods:
 
 = Get started with Mollie =
 
-1. [Create a Mollie account](https://my.mollie.com/dashboard/signup/campaign/woocommerce2025?utm_campaign=GLO_Q3__Co-Marketing-Campaign-WooCommerce&utm_medium=referral&utm_source=partner&utm_content=wordpresspage&sf_campaign_id=701QD00000iR21IYAS&campaign_name=GLO_Q3__Co-Marketing-Campaign-WooCommerce)
+1. [Create a Mollie account](https://my.mollie.com/dashboard/signup)
 2. Install **Mollie Payments for WooCommerce** on your WordPress website
 3. Activate Mollie in your WooCommerce webshop and enter your Mollie API key
 4. In your Mollie Dashboard, go to Settings > Website profiles and select the payment methods you want to offer
@@ -102,7 +100,7 @@ Become part of Mollie's growing community and gain access to our comprehensive s
 
 > **Your success is our mission. With Mollie, simplify your payments and focus on growing your business.**
 
-[Sign up today](https://my.mollie.com/dashboard/signup/campaign/woocommerce2025?utm_campaign=GLO_Q3__Co-Marketing-Campaign-WooCommerce&utm_medium=referral&utm_source=partner&utm_content=wordpresspage&sf_campaign_id=701QD00000iR21IYAS&campaign_name=GLO_Q3__Co-Marketing-Campaign-WooCommerce) and start enhancing your WooCommerce store with Mollie's advanced payment solutions.
+[Sign up today](https://my.mollie.com/dashboard/signup) and start enhancing your WooCommerce store with Mollie's advanced payment solutions.
 
 Feel free to contact info@mollie.com if you have any questions or comments about this plugin.
 
@@ -219,6 +217,10 @@ Automatic updates should work like a charm; as always though, ensure you backup 
 
 
 == Changelog ==
+
+= 8.1.2 - 15-12-2025 =
+* Fixed - Improve refresh method in settings
+* Added - New campaign signup Q4
 
 = 8.1.1 - 03-11-2025 =
 * Fixed - Notice on order received page

@@ -8,7 +8,7 @@ use Mollie\Isolated\Symfony\Component\Finder\Finder;
 $wp_classes = \json_decode(\file_get_contents(__DIR__ . '/vendor/sniccowp/php-scoper-wordpress-excludes/generated/exclude-wordpress-classes.json'), \true);
 $wp_constants = \json_decode(\file_get_contents(__DIR__ . '/vendor/sniccowp/php-scoper-wordpress-excludes/generated/exclude-wordpress-constants.json'), \true);
 $wp_functions = \json_decode(\file_get_contents(__DIR__ . '/vendor/sniccowp/php-scoper-wordpress-excludes/generated/exclude-wordpress-functions.json'), \true);
-$finders = [Finder::create()->files()->ignoreVCS(\true)->ignoreDotFiles(\false)->exclude(['.github', '.ddev', '.idea', 'modules.local', 'tests'])->in('.')];
+$finders = [Finder::create()->files()->ignoreVCS(\true)->ignoreDotFiles(\false)->exclude(['.github', '.ddev', '.idea', 'modules.local', 'tests', 'node_modules'])->in('.')];
 return [
     'prefix' => 'Mollie',
     // string|null
