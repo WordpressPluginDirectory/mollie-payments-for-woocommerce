@@ -79,7 +79,7 @@ class DataToAppleButtonScripts
     protected function dataForCartPage($shopCountryCode, $currencyCode, $totalLabel)
     {
         $cart = WC()->cart;
-        $nonce = wp_nonce_field('woocommerce-process_checkout', 'woocommerce-process-checkout-nonce');
+        $nonce = wp_nonce_field('woocommerce-process_checkout', 'woocommerce-process-checkout-nonce', \true, \false);
         $buttonMarkup = '<div id="mollie-applepayDirect-button">' . $nonce . '</div>';
         return ['product' => ['needShipping' => $cart->needs_shipping(), 'subtotal' => $cart->get_subtotal()], 'shop' => ['countryCode' => $shopCountryCode, 'currencyCode' => $currencyCode, 'totalLabel' => $totalLabel], 'ajaxUrl' => admin_url('admin-ajax.php'), 'buttonMarkup' => $buttonMarkup];
     }

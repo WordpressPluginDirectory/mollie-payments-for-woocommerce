@@ -67,9 +67,9 @@ class MollieSubscriptionGatewayHandler extends MolliePaymentGatewayHandler
                 $this->scheduled_subscription_payment($renewal_total, $renewal_order, $gateway);
             }, 10, 3);
             // A resubscribe order to record a customer resubscribing to an expired or cancelled subscription.
-            add_action('wcs_resubscribe_order_created', [$this, 'delete_resubscribe_meta'], 10);
+            add_action('wcs_resubscribe_order_created', [$this, 'delete_resubscribe_meta']);
             // After creating a renewal order to record a scheduled subscription payment with the same post meta, order items etc.
-            add_action('wcs_renewal_order_created', [$this, 'delete_renewal_meta'], 10);
+            add_filter('wcs_renewal_order_created', [$this, 'delete_renewal_meta']);
             add_action('woocommerce_subscription_failing_payment_method_updated_mollie', [$this, 'update_failing_payment_method'], 10, 2);
             add_filter('woocommerce_subscription_payment_meta', function ($payment_meta, $subscription) use ($gateway) {
                 return $this->add_subscription_payment_meta($payment_meta, $subscription, $gateway);
@@ -353,11 +353,14 @@ class MollieSubscriptionGatewayHandler extends MolliePaymentGatewayHandler
         $this->delete_renewal_meta($resubscribe_order);
     }
     /**
-     * @param $renewal_order
+     * @param \WC_Order|null $renewal_order
      * @return mixed
      */
     public function delete_renewal_meta($renewal_order)
     {
+        if (!$renewal_order instanceof \WC_Order) {
+            return $renewal_order;
+        }
         $renewal_order->delete_meta_data('_mollie_payment_id');
         $renewal_order->delete_meta_data('_mollie_cancelled_payment_id');
         $renewal_order->save();

@@ -103,7 +103,13 @@ class OrderLines
                     $product = wc_get_product($cart_item['product_id']);
                 }
                 $this->currency = $this->dataHelper->getOrderCurrency($this->order);
-                $mollie_order_item = ['sku' => $this->get_item_reference($product), 'type' => $product instanceof \WC_Product && $product->is_virtual() ? 'digital' : 'physical', 'name' => $this->get_item_name($cart_item), 'quantity' => $this->get_item_quantity($cart_item), 'vatRate' => round($this->get_item_vatRate($cart_item, $product), 2), 'unitPrice' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue($this->get_item_price($cart_item), $this->currency)], 'totalAmount' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue($this->get_item_total_amount($cart_item), $this->currency)], 'vatAmount' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue($this->get_item_tax_amount($cart_item), $this->currency)], 'discountAmount' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue($this->get_item_discount_amount($cart_item), $this->currency)], 'metadata' => ['order_item_id' => $cart_item->get_id()], 'productUrl' => $product instanceof \WC_Product ? $product->get_permalink() : null];
+                $vatRate = round($this->get_item_vatRate($cart_item, $product), 2);
+                $wcTotalValue = $this->get_item_total_amount($cart_item);
+                $wcUnitPrice = $this->get_item_price($cart_item);
+                // Calculate Mollie prices, they expect price including VAT
+                $mollieTotal = $this->getMolliePrice($wcTotalValue, $vatRate);
+                $mollieUnit = $this->getMolliePrice($wcUnitPrice, $vatRate);
+                $mollie_order_item = ['sku' => $this->get_item_reference($product), 'type' => $product instanceof \WC_Product && $product->is_virtual() ? 'digital' : 'physical', 'name' => $this->get_item_name($cart_item), 'quantity' => $this->get_item_quantity($cart_item), 'vatRate' => $vatRate, 'unitPrice' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue($mollieUnit['grossPrice'], $this->currency)], 'totalAmount' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue($mollieTotal['grossPrice'], $this->currency)], 'vatAmount' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue($mollieTotal['vatAmount'], $this->currency)], 'discountAmount' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue($this->get_item_discount_amount($cart_item), $this->currency)], 'metadata' => ['order_item_id' => $cart_item->get_id()], 'productUrl' => $product instanceof \WC_Product ? $product->get_permalink() : null];
                 if ($this->get_item_total_amount($cart_item) < 0) {
                     $mollie_order_item['type'] = 'discount';
                     unset($mollie_order_item['discountAmount']);
@@ -346,5 +352,17 @@ class OrderLines
     private function get_item_total_amount($cart_item)
     {
         return $cart_item['line_total'] + $cart_item['line_tax'];
+    }
+    /**
+     * Build price data for Mollie API.
+     *
+     * @param float $wcPrice
+     * @param float $vatRate
+     * @return float[]
+     */
+    private function getMolliePrice(float $wcPrice, float $vatRate): array
+    {
+        $grossPrice = wc_prices_include_tax() ? $wcPrice : $wcPrice * (1 + $vatRate / 100);
+        return ['grossPrice' => $grossPrice, 'vatAmount' => $grossPrice * ($vatRate / (100 + $vatRate))];
     }
 }

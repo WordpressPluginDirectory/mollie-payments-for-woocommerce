@@ -76,7 +76,7 @@ final class MollieCheckoutBlocksSupport
                 $componentsDescription = "{$lockIcon} {$descriptionTranslated} {$mollieLogo}";
             }
             $hasSurcharge = $method->hasSurcharge();
-            $countryCodes = ['BE' => '+32xxxxxxxxx', 'NL' => '+316xxxxxxxx', 'DE' => '+49xxxxxxxxx', 'AT' => '+43xxxxxxxxx', 'ES' => '+34xxxxxxxxx'];
+            $countryCodes = ['BE' => '+32xxxxxxxxx', 'NL' => '+316xxxxxxxx', 'DE' => '+49xxxxxxxxx', 'AT' => '+43xxxxxxxxx', 'ES' => '+34xxxxxxxxx', 'NO' => '+47xxxxxxxxx', 'DK' => '+45xxxxxxxxx', 'FI' => '+358xxxxxxxx'];
             $country = WC()->customer ? WC()->customer->get_billing_country() : '';
             $hideCompanyFieldFilter = apply_filters('mollie_wc_hide_company_field', \false);
             $phonePlaceholder = in_array($country, array_keys($countryCodes)) ? $countryCodes[$country] : $countryCodes['NL'];

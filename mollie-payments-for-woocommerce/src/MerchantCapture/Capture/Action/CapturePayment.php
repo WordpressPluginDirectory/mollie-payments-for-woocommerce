@@ -22,7 +22,7 @@ class CapturePayment extends \Mollie\WooCommerce\MerchantCapture\Capture\Action\
                 return;
             }
             $paymentCapturesApi = $this->apiHelper->getApiClient($this->apiKey)->paymentCaptures;
-            $captureData = ['amount' => ['currency' => $this->order->get_currency(), 'value' => $this->order->get_total()]];
+            $captureData = ['amount' => ['currency' => $this->order->get_currency(), 'value' => mollieWooCommerceFormatCurrencyValue($this->order->get_total(), $this->order->get_currency())]];
             $this->logger->debug('SEND AN ORDER CAPTURE, orderId: ' . $this->order->get_id() . ' transactionId: ' . $paymentId . 'Capture data: ' . wp_json_encode($captureData));
             $paymentCapturesApi->createForId($paymentId, $captureData);
             $this->order->update_meta_data(MerchantCaptureModule::ORDER_PAYMENT_STATUS_META_KEY, ManualCaptureStatus::STATUS_WAITING);

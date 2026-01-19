@@ -27,9 +27,9 @@ class ApplePayTokenMiddleware implements \Mollie\WooCommerce\Payment\Request\Mid
         }
         $encodedApplePayToken = wp_json_encode($applePayToken);
         if ($context === 'order') {
-            $requestData['payment']['applePayToken'] = $encodedApplePayToken;
+            $requestData['payment']['applePayPaymentToken'] = $encodedApplePayToken;
         } elseif ($context === 'payment') {
-            $requestData['applePayToken'] = $encodedApplePayToken;
+            $requestData['applePayPaymentToken'] = $encodedApplePayToken;
         }
         return $next($requestData, $order, $context);
     }
