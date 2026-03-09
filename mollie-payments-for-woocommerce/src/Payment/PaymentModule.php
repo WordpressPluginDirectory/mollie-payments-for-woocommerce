@@ -69,7 +69,7 @@ class PaymentModule implements ServiceModule, ExecutableModule
         $this->gatewayClassnames = $container->get('gateway.classnames');
         $this->container = $container;
         //add webhook rest API endpoint
-        add_action('rest_api_init', function () use ($container) {
+        add_action('rest_api_init', static function () use ($container) {
             $container->get(RestApi::class)->registerRoutes();
         });
         // Listen to return URL call

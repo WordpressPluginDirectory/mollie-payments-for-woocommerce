@@ -218,6 +218,15 @@ abstract class AbstractPaymentMethod implements \Mollie\WooCommerce\PaymentMetho
         $apiTitle = $apiMethod['description'] ?? null;
         return $apiTitle ?: $this->config['defaultTitle'];
     }
+    private function getApiIcon(ContainerInterface $container): string
+    {
+        $apiMethod = $container->get('gateway.getPaymentMethodsAfterFeatureFlag')[$this->getIdFromConfig()];
+        $apiIcon = null;
+        if (isset($apiMethod["image"]) && property_exists($apiMethod["image"], "svg")) {
+            $apiIcon = $apiMethod["image"]->svg;
+        }
+        return $apiIcon;
+    }
     private function isUseApiTitleChecked(): bool
     {
         return $this->getProperty(SharedDataDictionary::USE_API_TITLE_AND_IMAGE) === 'yes';
@@ -295,13 +304,13 @@ abstract class AbstractPaymentMethod implements \Mollie\WooCommerce\PaymentMetho
             $iconUrlArray = $this->getUploadedImage();
         }
         $useAPIImage = apply_filters('mollie_wc_gateway_use_api_icon', $this->isUseApiTitleChecked(), $this->getIdFromConfig());
-        if (isset($this->apiPaymentMethod["image"]) && property_exists($this->apiPaymentMethod["image"], "svg") && !$this->isCreditCardSelectorEnabled() && $useAPIImage) {
-            $iconUrlArray = $this->apiPaymentMethod["image"]->svg;
+        if (!$this->isCreditCardSelectorEnabled() && $useAPIImage) {
+            $iconUrlArray = [$this->getApiIcon($container)];
         }
         $alt = $this->getIdFromConfig() . ' icon';
         $icons = [];
         foreach ($iconUrlArray as $iconUrl) {
-            $icons[] = new Icon($this->getIdFromConfig(), $iconUrl, $alt);
+            $icons[] = new Icon('mollie-' . $this->getIdFromConfig(), $iconUrl, $alt);
         }
         return new StaticIconProvider(...$icons);
     }

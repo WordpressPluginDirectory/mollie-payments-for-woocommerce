@@ -174,7 +174,19 @@ class MollieSubscriptionGatewayHandler extends MolliePaymentGatewayHandler
             }
         }
         if (!empty($subscription_mollie_payment_id) && !empty($subscription)) {
-            $customer_id = $this->restore_mollie_customer_id_and_mandate($customer_id, $subscription_mollie_payment_id, $subscription);
+            $restoreResult = $this->restore_mollie_customer_id_and_mandate($customer_id, $subscription_mollie_payment_id, $subscription);
+            $customer_id = $restoreResult['customer_id'];
+            // If a new mandate was created during restore, use it immediately
+            if (!empty($restoreResult['mandate_id'])) {
+                $this->logger->debug("{$gateway->id}: Fresh mandate {$restoreResult['mandate_id']} created during restore, using it for renewal order {$renewal_order_id}");
+                $mandateId = $restoreResult['mandate_id'];
+                $subscription->update_meta_data('_mollie_mandate_id', $mandateId);
+                $subscription->save();
+                if ($subscriptionParentOrder) {
+                    $subscriptionParentOrder->update_meta_data('_mollie_mandate_id', $mandateId);
+                    $subscriptionParentOrder->save();
+                }
+            }
         }
         // Get all data for the renewal payment
         $initialPaymentUsedOrderAPI = $this->initialPaymentUsedOrderAPI($subscriptionParentOrder);
@@ -191,7 +203,16 @@ class MollieSubscriptionGatewayHandler extends MolliePaymentGatewayHandler
             $isRenewalMethodDirectDebit = in_array($renewalOrderMethod, self::METHODS_NEEDING_UPDATE, \true);
             $renewalOrderMethod = str_replace("mollie_wc_gateway_", "", $renewalOrderMethod);
             try {
-                if (!empty($mandateId)) {
+                // Check if we have a fresh mandate from restore (skip validation)
+                $freshMandateFromRestore = !empty($restoreResult['mandate_id']);
+                if ($freshMandateFromRestore) {
+                    $this->logger->debug("{$gateway->id}: Using fresh mandate {$mandateId} without validation for renewal order {$renewal_order_id}");
+                    $data['mandateId'] = $mandateId;
+                    if ($isRenewalMethodDirectDebit) {
+                        $data['method'] = self::DIRECTDEBIT;
+                    }
+                    $validMandate = \true;
+                } elseif (!empty($mandateId)) {
                     list($mandate, $data, $validMandate) = $this->usePreviousMandate($renewal_order_id, $customer_id, $mollieApiClient, $mandateId, $isRenewalMethodDirectDebit, $data, $validMandate, $gateway);
                 }
                 if (!$validMandate) {
@@ -425,7 +446,7 @@ class MollieSubscriptionGatewayHandler extends MolliePaymentGatewayHandler
      * @param $mollie_payment_id
      * @param $subscription
      *
-     * @return string
+     * @return array ['customer_id' => string, 'mandate_id' => string|null]
      */
     public function restore_mollie_customer_id_and_mandate($mollie_customer_id, $mollie_payment_id, $subscription)
     {
@@ -441,7 +462,7 @@ class MollieSubscriptionGatewayHandler extends MolliePaymentGatewayHandler
                 $mollie_customer_id = $payment_object_resource->getMollieCustomerIdFromPaymentObject($mollie_payment_id);
                 if (empty($mollie_customer_id)) {
                     $this->logger->debug(__METHOD__ . ' - Subscription ' . $subscription->get_id() . ' renewal payment: stopped processing, no customer ID found for this customer/payment combination.');
-                    return $mollie_customer_id;
+                    return ['customer_id' => $mollie_customer_id, 'mandate_id' => null];
                 }
                 $this->logger->debug(__METHOD__ . ' - Subscription ' . $subscription->get_id() . ' renewal payment: customer ID (' . $mollie_customer_id . ') found, verifying status of customer and mandate(s).');
             }
@@ -453,7 +474,7 @@ class MollieSubscriptionGatewayHandler extends MolliePaymentGatewayHandler
             $gateway = wc_get_payment_gateway_by_order($subscription);
             if (!$gateway || !mollieWooCommerceIsMollieGateway($gateway)) {
                 $this->logger->debug(__METHOD__ . ' - Subscription ' . $subscription->get_id() . ' renewal payment: stopped processing, not a Mollie payment gateway, could not restore customer ID.');
-                return $mollie_customer_id;
+                return ['customer_id' => $mollie_customer_id, 'mandate_id' => null];
             }
             $gatewayId = $gateway->id;
             $mollie_method = substr($gatewayId, strrpos($gatewayId, '_') + 1);
@@ -466,7 +487,7 @@ class MollieSubscriptionGatewayHandler extends MolliePaymentGatewayHandler
             // Check credit card payments and mandates
             if ($mollie_method === 'creditcard' && !$mandates->hasValidMandateForMethod($mollie_method)) {
                 $this->logger->debug(__METHOD__ . ' - Subscription ' . $subscription->get_id() . ' renewal payment: failed! No valid mandate for payment method ' . $mollie_method . ' found.');
-                return $mollie_customer_id;
+                return ['customer_id' => $mollie_customer_id, 'mandate_id' => null];
             }
             // Get a Payment object from Mollie to check for paid status
             $payment_object = $payment_object_resource->getPaymentObject($mollie_payment_id);
@@ -485,15 +506,16 @@ class MollieSubscriptionGatewayHandler extends MolliePaymentGatewayHandler
                 // Set method
                 $options['method'] = $mollie_method;
                 $customer = $this->apiHelper->getApiClient($apiKey)->customers->get($mollie_customer_id);
-                $this->apiHelper->getApiClient($apiKey)->mandates->createFor($customer, $options);
-                $this->logger->debug(__METHOD__ . ' - Subscription ' . $subscription->get_id() . ' renewal payment: mandate created successfully, customer restored.');
+                $newMandate = $this->apiHelper->getApiClient($apiKey)->mandates->createFor($customer, $options);
+                $this->logger->debug(__METHOD__ . ' - Subscription ' . $subscription->get_id() . ' renewal payment: mandate ' . $newMandate->id . ' created successfully, customer restored.');
+                return ['customer_id' => $mollie_customer_id, 'mandate_id' => $newMandate->id];
             } else {
                 $this->logger->debug(__METHOD__ . ' - Subscription ' . $subscription->get_id() . ' renewal payment: the subscription doesn\'t meet the conditions for a mandate restore.');
             }
-            return $mollie_customer_id;
+            return ['customer_id' => $mollie_customer_id, 'mandate_id' => null];
         } catch (ApiException $e) {
             $this->logger->debug(__METHOD__ . ' - Subscription ' . $subscription->get_id() . ' renewal payment: customer id and mandate restore failed. ' . $e->getMessage());
-            return $mollie_customer_id;
+            return ['customer_id' => $mollie_customer_id, 'mandate_id' => null];
         }
     }
     /**

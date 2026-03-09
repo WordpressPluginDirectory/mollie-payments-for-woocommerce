@@ -28,6 +28,7 @@ use Mollie\WooCommerce\Payment\Request\Strategies\OrderRequestStrategy;
 use Mollie\WooCommerce\Payment\Request\Strategies\PaymentRequestStrategy;
 use Mollie\WooCommerce\Payment\Request\RequestFactory;
 use Mollie\WooCommerce\Payment\Request\Strategies\RequestStrategyInterface;
+use Mollie\WooCommerce\Payment\Webhooks\WebhookHandler;
 use Mollie\WooCommerce\Payment\Webhooks\RestApi;
 use Mollie\WooCommerce\SDK\Api;
 use Mollie\WooCommerce\Settings\Settings;
@@ -123,5 +124,7 @@ return static function (): array {
         $webhookTestService = $container->get(WebhookTestService::class);
         \assert($webhookTestService instanceof WebhookTestService);
         return new RestApi($container->get(MollieOrderService::class), $container->get(Logger::class), $webhookTestService);
+    }, WebhookHandler::class => static function (ContainerInterface $c): WebhookHandler {
+        return new WebhookHandler($c->get(Logger::class), $c->get('settings.settings_helper'), $c->get('shared.plugin_id'), $c->get('settings.data_helper'));
     }];
 };

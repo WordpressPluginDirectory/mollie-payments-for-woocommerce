@@ -431,38 +431,6 @@ class MollieObject
     {
     }
     /**
-     * @param WC_Order                     $order
-     * @param Payment $payment
-     * @param string                       $paymentMethodTitle
-     */
-    public function onWebhookPaid(WC_Order $order, $payment, $paymentMethodTitle)
-    {
-    }
-    /**
-     * @param WC_Order                     $order
-     * @param Payment $payment
-     * @param string                       $paymentMethodTitle
-     */
-    protected function onWebhookCanceled(WC_Order $order, $payment, $paymentMethodTitle)
-    {
-    }
-    /**
-     * @param WC_Order                     $order
-     * @param Payment $payment
-     * @param string                       $paymentMethodTitle
-     */
-    protected function onWebhookFailed(WC_Order $order, $payment, $paymentMethodTitle)
-    {
-    }
-    /**
-     * @param WC_Order                     $order
-     * @param Payment $payment
-     * @param string                       $paymentMethodTitle
-     */
-    protected function onWebhookExpired(WC_Order $order, $payment, $paymentMethodTitle)
-    {
-    }
-    /**
      * Process a payment object refund
      *
      * @param WC_Order $order
@@ -477,21 +445,11 @@ class MollieObject
     /**
      * @return bool
      */
-    protected function setOrderPaidAndProcessed(WC_Order $order)
+    public function setOrderPaidAndProcessed(WC_Order $order)
     {
         $order->update_meta_data('_mollie_paid_and_processed', '1');
         $order->save();
         return \true;
-    }
-    /**
-     * @return bool
-     */
-    protected function isOrderPaymentStartedByOtherGateway(WC_Order $order)
-    {
-        // Get the current payment method id for the order
-        $payment_method_id = $order->get_payment_method();
-        // If the current payment method id for the order is not Mollie, return true
-        return strpos($payment_method_id, 'mollie') === \false;
     }
     /**
      * @param WC_Order $order
@@ -506,7 +464,7 @@ class MollieObject
      * @param WC_Order       $order
      * @param Order| Payment $payment
      */
-    protected function addMandateIdMetaToFirstPaymentSubscriptionOrder(WC_Order $order, $payment)
+    public function addMandateIdMetaToFirstPaymentSubscriptionOrder(WC_Order $order, $payment)
     {
         if ($this->dataHelper->isSubscriptionPluginActive()) {
             //get Payment from orders API
@@ -558,7 +516,7 @@ class MollieObject
      *
      * @return bool
      */
-    protected function isFinalOrderStatus(WC_Order $order)
+    public function isFinalOrderStatus(WC_Order $order)
     {
         $orderStatus = $order->get_status();
         return in_array($orderStatus, self::FINAL_STATUSES, \true);
@@ -571,7 +529,7 @@ class MollieObject
      * @param string                        $paymentMethodTitle
      * @param Payment|Order                 $payment
      */
-    protected function failedSubscriptionProcess($orderId, WC_Payment_Gateway $gateway, WC_Order $order, $newOrderStatus, $paymentMethodTitle, $payment)
+    public function failedSubscriptionProcess($orderId, WC_Payment_Gateway $gateway, WC_Order $order, $newOrderStatus, $paymentMethodTitle, $payment)
     {
         $paymentID = $payment->id . ($payment->mode === 'test' ? ' - ' . __('test mode', 'mollie-payments-for-woocommerce') : '');
         $orderNote = sprintf(
@@ -605,23 +563,7 @@ class MollieObject
             $this->updateOrderStatus($order, $newOrderStatus, $orderNote);
         }
     }
-    /**
-     * @param string $gatewayId
-     * @param WC_Order $order
-     */
-    protected function informNotUpdatingStatus($gatewayId, WC_Order $order)
-    {
-        $orderPaymentMethodTitle = $order->get_meta('_payment_method_title');
-        // Add message to log
-        $this->logger->debug($gatewayId . ': Order ' . $order->get_id() . ' webhook called, but payment also started via ' . $orderPaymentMethodTitle . ', so order status not updated.', [\true]);
-        // Add order note
-        $order->add_order_note(sprintf(
-            /* translators: Placeholder 1: payment method title, placeholder 2: payment ID */
-            __('Mollie webhook called, but payment also started via %s, so the order status is not updated.', 'mollie-payments-for-woocommerce'),
-            $orderPaymentMethodTitle
-        ));
-    }
-    protected function addPaypalTransactionIdToOrder(WC_Order $order)
+    public function addPaypalTransactionIdToOrder(WC_Order $order)
     {
         $payment = $this->getActiveMolliePayment($order->get_id());
         if ($payment->isPaid() && $payment->details) {

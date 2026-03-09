@@ -17,7 +17,7 @@ class MollieGeneralSettings
             /* translators: Placeholder 1: Gateway title */
             __('%s display settings', 'mollie-payments-for-woocommerce'),
             $defaultTitle
-        ), 'type' => 'title'], 'use_api_title' => ['title' => __('Use API dynamic title and gateway logo', 'mollie-payments-for-woocommerce'), 'type' => 'checkbox', 'label' => __('Retrieve the gateway title and logo from the Mollie API', 'mollie-payments-for-woocommerce'), 'default' => 'no'], 'title' => ['title' => __('Title', 'mollie-payments-for-woocommerce'), 'type' => 'text', 'description' => sprintf(
+        ), 'type' => 'title'], 'use_api_title' => ['title' => __('Use API dynamic title and gateway logo', 'mollie-payments-for-woocommerce'), 'type' => 'checkbox', 'label' => __('Retrieve the gateway title and logo from the Mollie API', 'mollie-payments-for-woocommerce'), 'default' => 'yes'], 'title' => ['title' => __('Title', 'mollie-payments-for-woocommerce'), 'type' => 'text', 'description' => sprintf(
             /* translators: Placeholder 1: Gateway title */
             __('This controls the title which the user sees during checkout. Default <code>%s</code>', 'mollie-payments-for-woocommerce'),
             $defaultTitle

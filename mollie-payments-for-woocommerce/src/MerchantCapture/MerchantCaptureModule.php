@@ -111,6 +111,9 @@ class MerchantCaptureModule implements ExecutableModule, ServiceModule
                     return;
                 }
                 if ($payment->isAuthorized()) {
+                    if ($order->get_meta(self::ORDER_PAYMENT_STATUS_META_KEY) === \Mollie\WooCommerce\MerchantCapture\ManualCaptureStatus::STATUS_AUTHORIZED) {
+                        return;
+                    }
                     if (!$payment->getAmountCaptured() == 0.0) {
                         return;
                     }

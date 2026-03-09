@@ -393,6 +393,7 @@ return array(
     'Mollie\\WooCommerce\\Payment\\Request\\Strategies\\PaymentRequestStrategy' => $baseDir . '/src/Payment/Request/Strategies/PaymentRequestStrategy.php',
     'Mollie\\WooCommerce\\Payment\\Request\\Strategies\\RequestStrategyInterface' => $baseDir . '/src/Payment/Request/Strategies/RequestStrategyInterface.php',
     'Mollie\\WooCommerce\\Payment\\Webhooks\\RestApi' => $baseDir . '/src/Payment/Webhooks/RestApi.php',
+    'Mollie\\WooCommerce\\Payment\\Webhooks\\WebhookHandler' => $baseDir . '/src/Payment/Webhooks/WebhookHandler.php',
     'Mollie\\WooCommerce\\SDK\\Api' => $baseDir . '/src/SDK/Api.php',
     'Mollie\\WooCommerce\\SDK\\CouldNotConnectToMollie' => $baseDir . '/src/SDK/CouldNotConnectToMollie.php',
     'Mollie\\WooCommerce\\SDK\\HttpResponse' => $baseDir . '/src/SDK/HttpResponse.php',

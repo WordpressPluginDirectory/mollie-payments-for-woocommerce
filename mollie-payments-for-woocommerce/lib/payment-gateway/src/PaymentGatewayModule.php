@@ -151,6 +151,7 @@ class PaymentGatewayModule implements ServiceModule, ExecutableModule
          * We will be doing string comparisons, so we have to ensure we work with
          * sanitized data
          */
+        $absoluteFilePath = realpath($absoluteFilePath) ?: '';
         $absoluteFilePath = wp_normalize_path($absoluteFilePath);
         $activePlugins = wp_get_active_and_valid_plugins();
         $networkPlugins = function_exists('wp_get_active_network_plugins') ? wp_get_active_network_plugins() : [];
@@ -161,6 +162,7 @@ class PaymentGatewayModule implements ServiceModule, ExecutableModule
             /**
              * Again, ensure the path is sanitized before doing the comparison
              */
+            $pluginPath = realpath($pluginPath) ?: '';
             $pluginPath = wp_normalize_path($pluginPath);
             if (0 === strpos($absoluteFilePath, $pluginPath)) {
                 $relativePath = (string) substr($absoluteFilePath, strlen($pluginPath) + 1);
@@ -168,8 +170,10 @@ class PaymentGatewayModule implements ServiceModule, ExecutableModule
                 return $baseUrl . '/' . $relativePath;
             }
         }
-        throw new \RuntimeException('Could not derive plugin path');
-        // File not found in active plugins
+        // Fallback: return a best-guess URL based on the plugin directory structure
+        $pluginDirName = basename(dirname(dirname(dirname(__DIR__))));
+        $relativePath = basename($absoluteFilePath);
+        return plugins_url('lib/payment-gateway/' . $relativePath, $pluginDirName . '/' . $pluginDirName . '.php');
     }
     /**
      * Register blocks integration after checking a method-specific key to control whether this method

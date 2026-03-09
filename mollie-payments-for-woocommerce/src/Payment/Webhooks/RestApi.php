@@ -2,6 +2,7 @@
 
 namespace Mollie\WooCommerce\Payment\Webhooks;
 
+use Mollie\Api\Exceptions\ApiException;
 use Mollie\WooCommerce\Payment\MollieOrderService;
 use Mollie\WooCommerce\Settings\Webhooks\WebhookTestService;
 use Mollie\Psr\Log\LoggerInterface;
@@ -73,7 +74,16 @@ class RestApi
             $orders = wc_get_orders(['limit' => 2, 'meta_key' => substr($transactionID, 0, 4) === 'ord_' ? '_mollie_order_id' : '_mollie_payment_id', 'meta_compare' => '=', 'meta_value' => $transactionID]);
             if (!$orders) {
                 $this->logger->debug(__METHOD__ . ': No orders found in mollie meta for transaction ID: ' . $transactionID);
-                return new \WP_REST_Response(null, 200);
+                try {
+                    $redirectUrl = $this->mollieOrderService->getRedirectUrlFromPaymentObject($transactionID);
+                    $order_id = $this->mollieOrderService->getOrderIdFromRedirectUrl($redirectUrl);
+                    $key = $this->mollieOrderService->getKeyFromRedirectUrl($redirectUrl);
+                    $this->mollieOrderService->onWebhookActionFallback($order_id, $key, $transactionID);
+                    return new \WP_REST_Response(null, 200);
+                } catch (ApiException $exception) {
+                    $this->logger->debug($exception->getMessage());
+                    return new \WP_REST_Response(null, 500);
+                }
             }
         }
         if (count($orders) > 1) {

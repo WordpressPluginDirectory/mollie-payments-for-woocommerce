@@ -3,19 +3,15 @@
 declare (strict_types=1);
 namespace Mollie\WooCommerce\Payment;
 
-use Mollie\Inpsyde\PaymentGateway\PaymentGateway;
 use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\Resources\Order;
 use Mollie\Api\Resources\Payment;
-use Mollie\WooCommerce\Gateway\AbstractGateway;
-use Mollie\WooCommerce\Gateway\MolliePaymentGatewayHandler;
-use Mollie\WooCommerce\PaymentMethods\Constants;
+use Mollie\WooCommerce\Payment\Webhooks\WebhookHandler;
 use Mollie\WooCommerce\SDK\HttpResponse;
 use Mollie\WooCommerce\Shared\Data;
 use Mollie\WooCommerce\Shared\SharedDataDictionary;
 use Mollie\Psr\Container\ContainerInterface;
 use Mollie\Psr\Log\LoggerInterface as Logger;
-use Mollie\Psr\Log\LogLevel;
 use WC_Order;
 class MollieOrderService
 {
@@ -39,10 +35,11 @@ class MollieOrderService
     protected $pluginId;
     private ContainerInterface $container;
     private string $currentLockValue;
+    private WebhookHandler $webhookHandler;
     /**
      * MollieOrderService constructor.
      */
-    public function __construct(HttpResponse $httpResponse, Logger $logger, \Mollie\WooCommerce\Payment\PaymentFactory $paymentFactory, Data $data, string $pluginId, ContainerInterface $container)
+    public function __construct(HttpResponse $httpResponse, Logger $logger, \Mollie\WooCommerce\Payment\PaymentFactory $paymentFactory, Data $data, string $pluginId, ContainerInterface $container, WebhookHandler $webhookHandler)
     {
         $this->httpResponse = $httpResponse;
         $this->logger = $logger;
@@ -50,6 +47,7 @@ class MollieOrderService
         $this->data = $data;
         $this->pluginId = $pluginId;
         $this->container = $container;
+        $this->webhookHandler = $webhookHandler;
     }
     public function setGateway($gateway)
     {
@@ -84,7 +82,7 @@ class MollieOrderService
             $orders = wc_get_orders(['limit' => 2, 'meta_key' => substr($transactionID, 0, 4) === 'ord_' ? '_mollie_order_id' : '_mollie_payment_id', 'meta_compare' => '=', 'meta_value' => $transactionID]);
             if (!$orders) {
                 $this->logger->debug(__METHOD__ . ': No orders found in mollie meta for transaction ID: ' . $transactionID);
-                return;
+                $this->onWebhookActionFallback($order_id, $key, $transactionID);
             }
         }
         if (count($orders) > 1) {
@@ -106,6 +104,29 @@ class MollieOrderService
             $this->httpResponse->setHttpResponseCode(400);
         }
         // Status 200
+    }
+    /**
+     * Fallback webhook handler using the old implementation logic without lock mechanism
+     *
+     * @param string $order_id
+     * @param string $key
+     * @param string $payment_object_id
+     * @return void
+     */
+    public function onWebhookActionFallback(string $order_id, string $key, string $payment_object_id)
+    {
+        $order = wc_get_order($order_id);
+        if (!$order instanceof WC_Order) {
+            $this->httpResponse->setHttpResponseCode(404);
+            $this->logger->debug(__METHOD__ . ":  Could not find order {$order_id}.");
+            return;
+        }
+        if (!$order->key_is_valid($key)) {
+            $this->httpResponse->setHttpResponseCode(401);
+            $this->logger->debug(__METHOD__ . ":  Invalid key {$key} for order {$order_id}.");
+            return;
+        }
+        $this->doPaymentForOrder($order, $payment_object_id);
     }
     protected function getPaymentIdFromRequest(): ?string
     {
@@ -135,7 +156,7 @@ class MollieOrderService
      * @param \WC_Order $order The order object for which the payment is being processed.
      * @return bool Returns true if the payment was successfully processed, false otherwise.
      */
-    public function doPaymentForOrder(\WC_Order $order): bool
+    public function doPaymentForOrder(\WC_Order $order, $payment_object_id = ''): bool
     {
         $gateway = wc_get_payment_gateway_by_order($order);
         if (!$gateway || !mollieWooCommerceIsMollieGateway($gateway->id)) {
@@ -143,7 +164,9 @@ class MollieOrderService
         }
         $this->setGateway($gateway);
         $test_mode = $this->data->getActiveMolliePaymentMode($order->get_id()) === 'test';
-        $payment_object_id = $order->get_transaction_id();
+        if (empty($payment_object_id)) {
+            $payment_object_id = $order->get_transaction_id();
+        }
         if (!$payment_object_id) {
             $payment_object_id = $order->get_meta('_mollie_order_id');
         }
@@ -172,8 +195,8 @@ class MollieOrderService
             $this->handlePaidOrderWebhook($order, $payment);
             $this->processRefunds($order, $payment);
             $this->processChargebacks($order, $payment);
-            if ($order->get_status() === 'processing' && method_exists($payment, 'isCompleted') && $payment->isCompleted() && method_exists($payment_object, 'onWebhookCompleted')) {
-                $payment_object->onWebhookCompleted($order, $payment, $payment_method_title);
+            if ($order->get_status() === 'processing' && method_exists($payment, 'isCompleted') && $payment->isCompleted() && method_exists($this->webhookHandler, 'onWebhookCompleted')) {
+                $this->webhookHandler->onWebhookCompleted($order, $payment, $payment_method_title, $payment_object);
             }
             return \true;
         }
@@ -181,9 +204,9 @@ class MollieOrderService
             $this->logger->debug($this->gateway->id . ": updating address from express button");
             $this->setBillingAddressAfterPayment($payment, $order);
         }
-        if (method_exists($payment_object, $method_name)) {
+        if (method_exists($this->webhookHandler, $method_name)) {
             do_action($this->pluginId . '_before_webhook_payment_action', $payment, $order);
-            $payment_object->{$method_name}($order, $payment, $payment_method_title);
+            $this->webhookHandler->{$method_name}($order, $payment, $payment_method_title, $payment_object);
         } else {
             $order->add_order_note(sprintf(
                 /* translators: Placeholder 1: payment method title, placeholder 2: payment status, placeholder 3: payment ID */
@@ -631,5 +654,42 @@ class MollieOrderService
     protected function isOrderButtonPayment(WC_Order $order): bool
     {
         return $order->get_meta('_mollie_payment_method_button') === 'PayPalButton';
+    }
+    public function getKeyFromRedirectUrl($redirectUrl): string
+    {
+        $parsedUrl = wp_parse_url($redirectUrl);
+        if (empty($parsedUrl['query'])) {
+            return '';
+        }
+        parse_str($parsedUrl['query'], $queryParams);
+        return isset($queryParams['key']) ? sanitize_text_field($queryParams['key']) : '';
+    }
+    public function getOrderIdFromRedirectUrl($redirectUrl): string
+    {
+        $parsedUrl = wp_parse_url($redirectUrl);
+        if (empty($parsedUrl['query'])) {
+            return '';
+        }
+        parse_str($parsedUrl['query'], $queryParams);
+        return isset($queryParams['order_id']) ? sanitize_text_field($queryParams['order_id']) : '';
+    }
+    public function getRedirectUrlFromPaymentObject($transactionID): string
+    {
+        try {
+            $payment_object = $this->paymentFactory->getPaymentObject($transactionID);
+            if (!$payment_object) {
+                $this->logger->debug(__METHOD__ . ": payment object {$transactionID} not found.", [\true]);
+                return '';
+            }
+        } catch (ApiException $exception) {
+            $this->logger->debug($exception->getMessage());
+            return '';
+        }
+        $payment = $payment_object->getPaymentObject($payment_object->data());
+        if (!$payment) {
+            $this->logger->debug(__METHOD__ . ": payment {$transactionID} not found.", [\true]);
+            return '';
+        }
+        return $payment->redirectUrl;
     }
 }
