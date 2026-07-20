@@ -4,7 +4,9 @@ declare (strict_types=1);
 namespace Mollie\WooCommerce\Buttons\ApplePayButton;
 
 use Mollie\Psr\Log\LoggerInterface as Logger;
-use Mollie\Psr\Log\LogLevel;
+/**
+ * @phpcs:disable Inpsyde.CodeQuality.PropertyPerClassLimit.TooManyProperties
+ */
 class ApplePayDataObjectHttp
 {
     /**
@@ -51,6 +53,10 @@ class ApplePayDataObjectHttp
      * @var Logger
      */
     protected $logger;
+    /**
+     * @var string|null
+     */
+    protected $callerPage = null;
     /**
      * ApplePayDataObjectHttp constructor.
      */
@@ -214,8 +220,8 @@ class ApplePayDataObjectHttp
      * are not empty.
      * If not it adds a contactField error to the object's error list
      *
-     * @param array  $post      The address to check
-     * @param array  $required  The required fields for the given address
+     * @param array $post The address to check
+     * @param array $required The required fields for the given address
      * @param string $errorCode Either shipping or billing kind
      *
      * @return bool
@@ -239,7 +245,7 @@ class ApplePayDataObjectHttp
     /**
      * Returns the address details for after authorization steps
      *
-     * @param array  $data
+     * @param array $data
      *
      * @param string $errorCode differentiates between billing and shipping information
      *

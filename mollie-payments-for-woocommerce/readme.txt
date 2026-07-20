@@ -2,8 +2,8 @@
 Contributors: daanvm, danielhuesken, davdebcom, dinamiko, syde, l.vangunst, ndijkstra, wido, carmen222
 Tags: mollie, woocommerce, payments, ecommerce, credit card
 Requires at least: 5.0
-Tested up to: 6.9
-Stable tag: 8.1.4
+Tested up to: 7.0
+Stable tag: 8.1.9
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -69,7 +69,21 @@ Pay after delivery payment methods:
 
 = Get started with Mollie =
 
-1. [Create a Mollie account](https://my.mollie.com/dashboard/signup)
+1. Create a Mollie account
+
+New WooCommerce merchants can benefit from our limited-time offer: pay ZERO processing fees for your first month with Mollie when you sign up through the dedicated campaign link for your country/currency.  
+
+Select your country/currency to claim the offer:  
+
+- [Euro countries (EUR)](https://my.mollie.com/campaigns/signup/woocommerce2026?utm_campaign=CoMarketingCampaignWooCommerce2026&utm_source=wordpressorg&utm_medium=plugin_listing&utm_content=plugin_page_cta_eur)
+- [United Kingdom (GBP)](https://my.mollie.com/campaigns/signup/woocommerce2026uk?utm_campaign=CoMarketingCampaignWooCommerce2026&utm_source=wordpressorg&utm_medium=plugin_listing&utm_content=plugin_page_cta_gbp) 
+- [Switzerland & Liechtenstein (CHF)](https://my.mollie.com/campaigns/signup/woocommerce2026ch?utm_campaign=CoMarketingCampaignWooCommerce2026&utm_source=wordpressorg&utm_medium=plugin_listing&utm_content=plugin_page_cta_chf)  
+- [Poland (PLN)](https://my.mollie.com/campaigns/signup/woocommerce2026pl?utm_campaign=CoMarketingCampaignWooCommerce2026&utm_source=wordpressorg&utm_medium=plugin_listing&utm_content=plugin_page_cta_pln) 
+- [Sweden (SEK)](https://my.mollie.com/campaigns/signup/woocommerce2026se?utm_campaign=CoMarketingCampaignWooCommerce2026&utm_source=wordpressorg&utm_medium=plugin_listing&utm_content=plugin_page_cta_sek)  
+- [Denmark (DKK)](https://my.mollie.com/campaigns/signup/woocommerce2026dk?utm_campaign=CoMarketingCampaignWooCommerce2026&utm_source=wordpressorg&utm_medium=plugin_listing&utm_content=plugin_page_cta_dkk) 
+
+Offer valid only when you sign up through the dedicated link for your country/currency. T&Cs apply.  
+
 2. Install **Mollie Payments for WooCommerce** on your WordPress website
 3. Activate Mollie in your WooCommerce webshop and enter your Mollie API key
 4. In your Mollie Dashboard, go to Settings > Website profiles and select the payment methods you want to offer
@@ -99,8 +113,6 @@ Once your Mollie account has been approved, you can start accepting payments.
 Become part of Mollie's growing community and gain access to our comprehensive support network, including a [Discord Developer Community](https://discord.gg/y2rbjqszbs) to stay connected and informed.
 
 > **Your success is our mission. With Mollie, simplify your payments and focus on growing your business.**
-
-[Sign up today](https://my.mollie.com/dashboard/signup) and start enhancing your WooCommerce store with Mollie's advanced payment solutions.
 
 Feel free to contact info@mollie.com if you have any questions or comments about this plugin.
 
@@ -163,7 +175,7 @@ Yes, you can with a separate plugin. At the moment we have tested and can recomm
 
 = Why do orders with payment method BankTransfer and Direct Debit get the status 'on-hold'? =
 
-These payment methods take longer than a few hours to complete. The order status is set to 'on-hold' to prevent the WooCommerce setting 'Hold stock (minutes)' (https://docs.woothemes.com/document/configuring-woocommerce-settings/#inventory-options) will
+These payment methods take longer than a few hours to complete. The order status is set to 'on-hold' to prevent the WooCommerce setting 'Hold stock (minutes)' (https://woocommerce.com/document/configuring-woocommerce-settings/products/#inventory) will
 cancel the order. The order stock is also reduced to reserve stock for these orders. The stock is restored if the payment fails or is cancelled. You can change the initial order status for these payment methods on their setting page.
 
 = I have a different question about this plugin =
@@ -217,6 +229,51 @@ Automatic updates should work like a charm; as always though, ensure you backup 
 
 
 == Changelog ==
+
+= 8.1.9 - 20-07-2026 =
+* Added - New payment method - Billink
+* Added - New payment method - Wero
+* Added - Notification when a gateway logo upload is declined
+* Added - Privacy policy text
+* Fixed - PayPal Payments Fastlane conflict
+* Fixed - Unwanted frame displayed around the PayPal button
+* Fixed - Gateway fee label not translatable via WPML
+* Fixed - Decimal product quantities causing Mollie API error
+* Fixed - Unnecessary checkout refresh triggered when no surcharge applies
+* Fixed - Order Received page being processed twice
+* Fixed - Missing margin for PayPal and Apple Pay buttons on the Product page
+* Fixed - Margin issue for KBC/CBC payment button on Classic Checkout
+* Fixed - Infinite order note loop for cancelled or open Bancontact/TWINT payments
+* Fixed - Top/bottom margins on credit card fields
+* Fixed - SVG gateway logo uploads silently rejected due to a gap in the file type check
+* Fixed - Repeated identical API calls on the order received page causing timeouts and a white screen
+* Fixed - PHP warning and deprecation notice in Apple Pay button
+* Fixed - Strengthened webhook request authentication
+
+= 8.1.8 - 01-07-2026 =
+* Added - Mollie incentive campaign
+
+= 8.1.7 - 15-06-2026 =
+* Fixed - Error exporting invoices in WooCommerce
+* Fixed - Undefined array key warning in Mollie PayPal button due to malformed color setting
+* Fixed - PHP warning caused by missing value key in payment_data array in WooCommerce Store API checkout
+* Fixed - Duplicate payments for the same order
+* Fixed - WordPress Playground (SQLite) causes plugin activation issue
+* Fixed - Undefined array key hide_order_lines in OrderLinesMiddleware for payment methods without setting field
+* Fixed - Replace orderId with orderKey in surcharge processing logic
+* Fixed - API key retrieval broken due to Mollie dashboard change breaking in-plugin guidance (with @fjbender)
+* Fixed - Expired webhook for stale transaction cancels order despite subsequent payment attempts
+* Fixed - Credit card fields with no margin
+* Improvement - Simplified WooCommerce payment title and logo settings
+* Improvement - Added file type validation for custom gateway logo uploads
+* Improvement - Tightened ownership and type checks for Mollie gateway objects
+
+= 8.1.6 - 20-04-2026 =
+* Added - Hide order lines setting for payments API in gateways
+* Fixed - PayPal button is missed on Cart block
+* Fixed - Send billing address with email or phone
+* Fixed - Fatal error when AutomateWoo triggers woocommerce_order_actions filter
+* Fixed - PayPal payment button on Cart page causes duplicate order to be generate and left in "draft" status
 
 = 8.1.4 - 09-03-2026 =
 * Added - Rebranding of iDEAL to iDEAL | Wero

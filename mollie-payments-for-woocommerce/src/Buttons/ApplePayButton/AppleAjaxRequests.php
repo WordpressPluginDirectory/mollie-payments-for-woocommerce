@@ -8,7 +8,6 @@ use Mollie\WooCommerce\Gateway\Surcharge;
 use Mollie\WooCommerce\Notice\NoticeInterface;
 use Mollie\WooCommerce\SDK\Api;
 use Mollie\WooCommerce\Settings\Settings;
-use Mollie\WooCommerce\Shared\GatewaySurchargeHandler;
 use Mollie\Psr\Log\LoggerInterface as Logger;
 use WC_Cart;
 use WC_Data_Exception;
@@ -49,16 +48,19 @@ class AppleAjaxRequests
      */
     public function bootstrapAjaxRequest()
     {
-        add_action('wp_ajax_' . \Mollie\WooCommerce\Buttons\ApplePayButton\PropertiesDictionary::VALIDATION, [$this, 'validateMerchant']);
-        add_action('wp_ajax_nopriv_' . \Mollie\WooCommerce\Buttons\ApplePayButton\PropertiesDictionary::VALIDATION, [$this, 'validateMerchant']);
-        add_action('wp_ajax_' . \Mollie\WooCommerce\Buttons\ApplePayButton\PropertiesDictionary::CREATE_ORDER, [$this, 'createWcOrder']);
-        add_action('wp_ajax_nopriv_' . \Mollie\WooCommerce\Buttons\ApplePayButton\PropertiesDictionary::CREATE_ORDER, [$this, 'createWcOrder']);
-        add_action('wp_ajax_' . \Mollie\WooCommerce\Buttons\ApplePayButton\PropertiesDictionary::CREATE_ORDER_CART, [$this, 'createWcOrderFromCart']);
-        add_action('wp_ajax_nopriv_' . \Mollie\WooCommerce\Buttons\ApplePayButton\PropertiesDictionary::CREATE_ORDER_CART, [$this, 'createWcOrderFromCart']);
-        add_action('wp_ajax_' . \Mollie\WooCommerce\Buttons\ApplePayButton\PropertiesDictionary::UPDATE_SHIPPING_CONTACT, [$this, 'updateShippingContact']);
-        add_action('wp_ajax_nopriv_' . \Mollie\WooCommerce\Buttons\ApplePayButton\PropertiesDictionary::UPDATE_SHIPPING_CONTACT, [$this, 'updateShippingContact']);
-        add_action('wp_ajax_' . \Mollie\WooCommerce\Buttons\ApplePayButton\PropertiesDictionary::UPDATE_SHIPPING_METHOD, [$this, 'updateShippingMethod']);
-        add_action('wp_ajax_nopriv_' . \Mollie\WooCommerce\Buttons\ApplePayButton\PropertiesDictionary::UPDATE_SHIPPING_METHOD, [$this, 'updateShippingMethod']);
+        foreach ($this->getHandlers() as $action => $handler) {
+            add_action('wp_ajax_' . $action, $handler);
+            add_action('wp_ajax_nopriv_' . $action, $handler);
+        }
+    }
+    /**
+     * Get the array of AJAX action handlers
+     *
+     * @return array
+     */
+    public function getHandlers(): array
+    {
+        return [\Mollie\WooCommerce\Buttons\ApplePayButton\PropertiesDictionary::VALIDATION => [$this, 'validateMerchant'], \Mollie\WooCommerce\Buttons\ApplePayButton\PropertiesDictionary::CREATE_ORDER => [$this, 'createWcOrder'], \Mollie\WooCommerce\Buttons\ApplePayButton\PropertiesDictionary::CREATE_ORDER_CART => [$this, 'createWcOrderFromCart'], \Mollie\WooCommerce\Buttons\ApplePayButton\PropertiesDictionary::UPDATE_SHIPPING_CONTACT => [$this, 'updateShippingContact'], \Mollie\WooCommerce\Buttons\ApplePayButton\PropertiesDictionary::UPDATE_SHIPPING_METHOD => [$this, 'updateShippingMethod']];
     }
     /**
      * Method to validate the merchant against Apple system through Mollie
@@ -167,7 +169,7 @@ class AppleAjaxRequests
         $this->emptyCurrentCart();
         $applePayRequestDataObject = $this->applePayDataObjectHttp();
         $applePayRequestDataObject->orderData('productDetail');
-        $cartItemKey = $cart->add_to_cart(filter_input(\INPUT_POST, 'productId'), (bool) filter_input(\INPUT_POST, 'productQuantity', \FILTER_VALIDATE_INT));
+        $cartItemKey = $cart->add_to_cart((int) filter_input(\INPUT_POST, 'productId', \FILTER_SANITIZE_NUMBER_INT), (int) filter_input(\INPUT_POST, 'productQuantity', \FILTER_VALIDATE_INT));
         $this->addAddressesToOrder($applePayRequestDataObject);
         WC()->checkout()->process_checkout();
         $cart->remove_cart_item($cartItemKey);
@@ -235,7 +237,7 @@ class AppleAjaxRequests
      * @param      $productId
      * @param      $productQuantity
      * @param      $customerAddress
-     * @param null $shippingMethod
+     * @param mixed $shippingMethod
      */
     protected function calculateTotalsSingleProduct($productId, $productQuantity, $customerAddress, $shippingMethod = null): array
     {
@@ -303,6 +305,8 @@ class AppleAjaxRequests
     protected function cartShippingMethods($cart, $customerAddress, $shippingMethod, $shippingMethodId): array
     {
         $shippingMethodsArray = [];
+        // phpstan:ignore [wc-stub] WC()->shipping is WC_Shipping|null at runtime; WooCommerce stubs declare it non-nullable
+        // @phpstan-ignore-next-line
         $shippingMethods = WC()->shipping->calculate_shipping($this->getShippingPackages($customerAddress, $cart->get_total('edit')));
         $done = \false;
         foreach ($shippingMethods[0]['rates'] as $rate) {
@@ -332,6 +336,8 @@ class AppleAjaxRequests
         $packages = [];
         $packages[0]['contents'] = WC()->cart->cart_contents;
         $packages[0]['contents_cost'] = $total;
+        // phpstan:ignore [wc-stub] WC()->session exposes applied_coupon as a dynamic property; WC session stubs lack coverage
+        // @phpstan-ignore-next-line
         $packages[0]['applied_coupons'] = WC()->session->applied_coupon;
         $packages[0]['destination']['country'] = $customerAddress['country'];
         $packages[0]['destination']['state'] = '';
@@ -352,6 +358,10 @@ class AppleAjaxRequests
     {
         $surcharge = new Surcharge();
         $surchargeLabel = get_option('mollie-payments-for-woocommerce_gatewayFeeLabel', $surcharge->defaultFeeLabel());
+        if (function_exists('icl_register_string')) {
+            icl_register_string('mollie-payments-for-woocommerce', 'gatewayFeeLabel', $surchargeLabel);
+        }
+        $surchargeLabel = apply_filters('wpml_translate_single_string', $surchargeLabel, 'mollie-payments-for-woocommerce', 'gatewayFeeLabel');
         $settings = get_option('mollie_wc_gateway_applepay_settings', \false);
         $calculatedFee = round((float) $surcharge->calculateFeeAmount($cart, $settings), 2);
         $surchargeFeeValue = !empty($settings) ? $calculatedFee : 0;
@@ -369,7 +379,7 @@ class AppleAjaxRequests
      * method
      *
      * @param      $customerAddress
-     * @param null $shippingMethodId
+     * @param mixed $shippingMethodId
      */
     protected function calculateTotalsCartPage($customerAddress = null, $shippingMethodId = null): array
     {
@@ -475,7 +485,7 @@ class AppleAjaxRequests
                     'ApplePay'
                 );
                 $this->notice->addNotice($message, 'error');
-                wp_send_json_error($this->responseTemplates->authorizationResultResponse('STATUS_FAILURE', 0, [['errorCode' => 'unknown']]));
+                wp_send_json_error($this->responseTemplates->authorizationResultResponse('STATUS_FAILURE', '0', [['errorCode' => 'unknown']]));
             }
             return $result;
         }, 10, 2);

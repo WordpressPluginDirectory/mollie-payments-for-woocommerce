@@ -2,12 +2,11 @@
 
 namespace Mollie\WooCommerce\Settings\General;
 
-use Mollie\WooCommerce\Gateway\MolliePaymentGatewayHandler;
 use Mollie\WooCommerce\Gateway\Surcharge;
 use Mollie\WooCommerce\Shared\SharedDataDictionary;
 class MollieGeneralSettings
 {
-    public function gatewayFormFields($defaultTitle, $defaultDescription, $paymentConfirmation)
+    public function gatewayFormFields($defaultTitle, $defaultDescription, $paymentConfirmation, bool $isOrderApi = \false)
     {
         $formFields = ['enabled' => ['title' => __('Enable/Disable', 'mollie-payments-for-woocommerce'), 'type' => 'checkbox', 'label' => sprintf(
             /* translators: Placeholder 1: Gateway title */
@@ -17,11 +16,7 @@ class MollieGeneralSettings
             /* translators: Placeholder 1: Gateway title */
             __('%s display settings', 'mollie-payments-for-woocommerce'),
             $defaultTitle
-        ), 'type' => 'title'], 'use_api_title' => ['title' => __('Use API dynamic title and gateway logo', 'mollie-payments-for-woocommerce'), 'type' => 'checkbox', 'label' => __('Retrieve the gateway title and logo from the Mollie API', 'mollie-payments-for-woocommerce'), 'default' => 'yes'], 'title' => ['title' => __('Title', 'mollie-payments-for-woocommerce'), 'type' => 'text', 'description' => sprintf(
-            /* translators: Placeholder 1: Gateway title */
-            __('This controls the title which the user sees during checkout. Default <code>%s</code>', 'mollie-payments-for-woocommerce'),
-            $defaultTitle
-        ), 'default' => $defaultTitle, 'desc_tip' => \true], 'display_logo' => ['title' => __('Display logo', 'mollie-payments-for-woocommerce'), 'type' => 'checkbox', 'label' => __('Display logo on checkout page. Default <code>enabled</code>', 'mollie-payments-for-woocommerce'), 'default' => 'yes'], 'enable_custom_logo' => ['title' => __('Enable custom logo', 'mollie-payments-for-woocommerce'), 'default' => 'no', 'type' => 'checkbox', 'label' => __('Enable the feature to add a custom logo for this gateway. This feature will have precedence over other logo options.', 'mollie-payments-for-woocommerce')], 'upload_logo' => ['title' => __('Upload custom logo', 'mollie-payments-for-woocommerce'), 'default' => null, 'type' => 'file', 'custom_attributes' => ['accept' => '.png, .jpeg, .svg, image/png, image/jpeg'], 'description' => __('Upload a custom icon for this gateway. The feature must be enabled.', 'mollie-payments-for-woocommerce'), 'desc_tip' => \true], 'description' => ['title' => __('Description', 'mollie-payments-for-woocommerce'), 'type' => 'textarea', 'description' => sprintf(
+        ), 'type' => 'title'], 'title' => ['title' => __('Title', 'mollie-payments-for-woocommerce'), 'type' => 'text', 'description' => __('Leave empty to use the payment method title from the Mollie API.', 'mollie-payments-for-woocommerce'), 'default' => '', 'desc_tip' => \true], 'display_logo' => ['title' => __('Display logo', 'mollie-payments-for-woocommerce'), 'type' => 'checkbox', 'label' => __('Display logo on checkout page. Default <code>enabled</code>', 'mollie-payments-for-woocommerce'), 'default' => 'yes'], 'upload_logo' => ['title' => __('Upload custom logo', 'mollie-payments-for-woocommerce'), 'default' => null, 'type' => 'file', 'custom_attributes' => ['accept' => '.png, .jpeg, .svg, image/png, image/jpeg'], 'description' => __('Upload a custom logo for this gateway. Leave empty to use the Mollie API logo.', 'mollie-payments-for-woocommerce'), 'desc_tip' => \true], 'description' => ['title' => __('Description', 'mollie-payments-for-woocommerce'), 'type' => 'textarea', 'description' => sprintf(
             /* translators: Placeholder 1: Gateway description */
             __('Payment method description that the customer will see on your checkout. Default <code>%s</code>', 'mollie-payments-for-woocommerce'),
             $defaultDescription
@@ -56,6 +51,7 @@ class MollieGeneralSettings
                 '<a href="' . admin_url('admin.php?page=wc-settings&tab=products&section=inventory') . '" target="_blank">' . __('Hold Stock (minutes)', 'woocommerce') . '</a>'
             )];
         }
+        $formFields['hide_order_lines'] = ['title' => __('Hide order lines', 'mollie-payments-for-woocommerce'), 'label' => __('Do not send order lines to Mollie', 'mollie-payments-for-woocommerce'), 'description' => $isOrderApi ? __('Not available when using the Orders API. Order lines are always sent for Orders API payments.', 'mollie-payments-for-woocommerce') : __('Enable this option to prevent order line details from being sent to Mollie. This may be useful for certain payment methods or compliance requirements.', 'mollie-payments-for-woocommerce'), 'type' => 'checkbox', 'default' => 'no', 'custom_attributes' => $isOrderApi ? ['disabled' => 'disabled'] : []];
         $formFields['activate_expiry_days_setting'] = ['title' => __('Activate expiry time setting', 'mollie-payments-for-woocommerce'), 'label' => __('Enable expiry time for payments', 'mollie-payments-for-woocommerce'), 'description' => __('Enable this option if you want to be able to set the time after which the order will expire.', 'mollie-payments-for-woocommerce'), 'type' => 'checkbox', 'default' => 'no'];
         $formFields['order_dueDate'] = ['title' => __('Expiry time', 'mollie-payments-for-woocommerce'), 'type' => 'number', 'custom_attributes' => ['step' => '1', 'min' => '10', 'max' => '526000'], 'description' => __('Number of MINUTES after the order will expire and will be canceled at Mollie and WooCommerce.', 'mollie-payments-for-woocommerce'), 'default' => '10', 'desc_tip' => \false];
         return $formFields;

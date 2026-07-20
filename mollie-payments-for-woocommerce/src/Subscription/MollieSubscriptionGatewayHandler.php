@@ -6,15 +6,17 @@ namespace Mollie\WooCommerce\Subscription;
 use Exception;
 use Mollie\Api\Exceptions\ApiException;
 use Mollie\WooCommerce\Gateway\MolliePaymentGatewayHandler;
+use Mollie\WooCommerce\Notice\NoticeInterface;
 use Mollie\WooCommerce\Payment\MollieObject;
+use Mollie\WooCommerce\Payment\MollieOrderService;
 use Mollie\WooCommerce\Payment\MollieSubscription;
 use Mollie\WooCommerce\Payment\PaymentFactory;
 use Mollie\WooCommerce\Payment\PaymentProcessor;
-use Mollie\WooCommerce\Notice\NoticeInterface;
-use Mollie\WooCommerce\Payment\MollieOrderService;
 use Mollie\WooCommerce\Payment\Request\Middleware\MiddlewareHandler;
 use Mollie\WooCommerce\Payment\Request\Middleware\SelectedIssuerMiddleware;
 use Mollie\WooCommerce\Payment\Request\Middleware\UrlMiddleware;
+use Mollie\WooCommerce\Payment\Webhooks\WebhookSecret;
+use Mollie\WooCommerce\PaymentMethods\Constants;
 use Mollie\WooCommerce\PaymentMethods\InstructionStrategies\OrderInstructionsManager;
 use Mollie\WooCommerce\PaymentMethods\PaymentMethodI;
 use Mollie\WooCommerce\SDK\Api;
@@ -24,7 +26,6 @@ use Mollie\WooCommerce\Settings\Settings;
 use Mollie\WooCommerce\Shared\Data;
 use Mollie\WooCommerce\Shared\SharedDataDictionary;
 use Mollie\Psr\Log\LoggerInterface as Logger;
-use Mollie\WooCommerce\PaymentMethods\Constants;
 use WC_Order;
 class MollieSubscriptionGatewayHandler extends MolliePaymentGatewayHandler
 {
@@ -52,11 +53,11 @@ class MollieSubscriptionGatewayHandler extends MolliePaymentGatewayHandler
     /**
      * AbstractSubscription constructor.
      */
-    public function __construct(PaymentMethodI $paymentMethod, OrderInstructionsManager $orderInstructionsProcessor, MollieOrderService $mollieOrderService, Data $dataService, Logger $logger, NoticeInterface $notice, HttpResponse $httpResponse, Settings $settingsHelper, MollieObject $mollieObject, PaymentFactory $paymentFactory, string $pluginId, Api $apiHelper)
+    public function __construct(PaymentMethodI $paymentMethod, OrderInstructionsManager $orderInstructionsProcessor, MollieOrderService $mollieOrderService, Data $dataService, Logger $logger, NoticeInterface $notice, HttpResponse $httpResponse, Settings $settingsHelper, MollieObject $mollieObject, PaymentFactory $paymentFactory, string $pluginId, Api $apiHelper, WebhookSecret $webhookSecret)
     {
         parent::__construct($paymentMethod, $orderInstructionsProcessor, $mollieOrderService, $dataService, $logger, $notice, $httpResponse, $mollieObject, $paymentFactory, $pluginId);
         $this->apiHelper = $apiHelper;
-        $middlewares = [new UrlMiddleware($pluginId, $logger), new SelectedIssuerMiddleware($pluginId)];
+        $middlewares = [new UrlMiddleware($pluginId, $logger, $webhookSecret), new SelectedIssuerMiddleware($pluginId)];
         $middlewareHandler = new MiddlewareHandler($middlewares);
         $this->subscriptionObject = new MollieSubscription($pluginId, $apiHelper, $settingsHelper, $dataService, $logger, $paymentMethod, $middlewareHandler);
     }
@@ -65,7 +66,7 @@ class MollieSubscriptionGatewayHandler extends MolliePaymentGatewayHandler
         if (class_exists('WC_Subscriptions_Order')) {
             add_action('woocommerce_scheduled_subscription_payment_' . $gateway->id, function ($renewal_total, WC_Order $renewal_order) use ($gateway) {
                 $this->scheduled_subscription_payment($renewal_total, $renewal_order, $gateway);
-            }, 10, 3);
+            }, 10, 2);
             // A resubscribe order to record a customer resubscribing to an expired or cancelled subscription.
             add_action('wcs_resubscribe_order_created', [$this, 'delete_resubscribe_meta']);
             // After creating a renewal order to record a scheduled subscription payment with the same post meta, order items etc.
@@ -73,7 +74,7 @@ class MollieSubscriptionGatewayHandler extends MolliePaymentGatewayHandler
             add_action('woocommerce_subscription_failing_payment_method_updated_mollie', [$this, 'update_failing_payment_method'], 10, 2);
             add_filter('woocommerce_subscription_payment_meta', function ($payment_meta, $subscription) use ($gateway) {
                 return $this->add_subscription_payment_meta($payment_meta, $subscription, $gateway);
-            }, 10, 3);
+            }, 10, 2);
             add_action('woocommerce_subscription_validate_payment_meta', function ($payment_method_id, $payment_meta) use ($gateway) {
                 $this->validate_subscription_payment_meta($payment_method_id, $payment_meta, $gateway);
             }, 10, 2);
@@ -130,12 +131,12 @@ class MollieSubscriptionGatewayHandler extends MolliePaymentGatewayHandler
     }
     /**
      * @param          $renewal_total
-     * @param WC_Order $renewal_order
+     * @param WC_Order|false $renewal_order
      *
      * @return array
      * @throws InvalidApiKey
      */
-    public function scheduled_subscription_payment($renewal_total, WC_Order $renewal_order, $gateway)
+    public function scheduled_subscription_payment($renewal_total, $renewal_order, $gateway)
     {
         if (!$renewal_order) {
             $this->logger->debug($this->id . ': Could not load renewal order or process renewal payment.');
@@ -198,6 +199,22 @@ class MollieSubscriptionGatewayHandler extends MolliePaymentGatewayHandler
             do_action($this->pluginId . '_create_payment', $data, $renewal_order);
             $apiKey = $this->dataService->getApiKey();
             $mollieApiClient = $this->apiHelper->getApiClient($apiKey);
+            // Guard against duplicate payment creation when two Action Scheduler jobs
+            // (a regular renewal and a WCS retry) fire for the same renewal order in the
+            // same cron batch. If a payment was already created for this renewal order and
+            // is still open or pending at Mollie, do not submit a second charge.
+            $existingPaymentId = $renewal_order->get_meta('_mollie_payment_id', \true);
+            if ($existingPaymentId) {
+                try {
+                    $existingPayment = $mollieApiClient->payments->get($existingPaymentId);
+                    if (in_array($existingPayment->status, ['open', 'pending'], \true)) {
+                        $this->logger->debug($gateway->id . ': Renewal order ' . $renewal_order_id . ' already has an in-flight payment ' . $existingPaymentId . ' (status: ' . $existingPayment->status . ').' . ' Skipping duplicate payment creation.');
+                        return ['result' => 'success'];
+                    }
+                } catch (ApiException $e) {
+                    $this->logger->debug($gateway->id . ': Could not verify existing payment ' . $existingPaymentId . ' for renewal order ' . $renewal_order_id . ': ' . $e->getMessage() . '. Proceeding with new payment creation.');
+                }
+            }
             $validMandate = \false;
             $renewalOrderMethod = $renewal_order->get_payment_method();
             $isRenewalMethodDirectDebit = in_array($renewalOrderMethod, self::METHODS_NEEDING_UPDATE, \true);
@@ -260,6 +277,8 @@ class MollieSubscriptionGatewayHandler extends MolliePaymentGatewayHandler
             $this->updateFirstPaymentMethodToRecurringPaymentMethod($renewal_order, $renewal_order_id, $payment);
             // Log successful creation of payment
             $this->logger->debug($gateway->id . ': Renewal payment ' . $payment->id . ' (' . $payment->mode . ') created for order ' . $renewal_order_id . ' payment json response: ' . wp_json_encode($payment));
+            // phpstan:ignore [mollie-stub] Mollie Payment object exposes _links and mode as dynamic stdClass properties not covered by type definitions
+            // @phpstan-ignore-next-line
             if (isset($payment->_links->changePaymentState->href) && $payment->mode === 'test') {
                 $renewal_order->add_order_note('MOLLIE TEST MODE: URL to change payment state for renewal payment: <a href="' . $payment->_links->changePaymentState->href . '" target="_blank">' . $payment->_links->changePaymentState->href . '</a>');
             }
@@ -437,8 +456,8 @@ class MollieSubscriptionGatewayHandler extends MolliePaymentGatewayHandler
      */
     public function update_failing_payment_method($subscription, $renewal_order)
     {
-        $subscription->update_meta_data('_mollie_customer_id', $renewal_order->mollie_customer_id);
-        $subscription->update_meta_data('_mollie_payment_id', $renewal_order->mollie_payment_id);
+        $subscription->update_meta_data('_mollie_customer_id', $renewal_order->get_meta('_mollie_customer_id', \true));
+        $subscription->update_meta_data('_mollie_payment_id', $renewal_order->get_meta('_mollie_payment_id', \true));
         $subscription->save();
     }
     /**

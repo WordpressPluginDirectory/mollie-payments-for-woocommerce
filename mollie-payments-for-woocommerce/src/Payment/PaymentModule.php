@@ -76,7 +76,7 @@ class PaymentModule implements ServiceModule, ExecutableModule
         add_action('woocommerce_api_mollie_return', function () use ($container) {
             $this->onMollieReturn($container);
         }, 10, 1);
-        add_action('template_redirect', function () use ($container) {
+        add_action('init', function () use ($container) {
             $this->mollieReturnRedirect($container);
         });
         // Show Mollie instructions on order details page
@@ -91,7 +91,7 @@ class PaymentModule implements ServiceModule, ExecutableModule
         $paymentMethods = $container->get('gateway.paymentMethods');
         add_action('init', function () use ($paymentMethods) {
             $this->handleExpiryDateCancelation($paymentMethods);
-        }, 10, 2);
+        }, 10, 0);
         add_action(OrderItemsRefunder::ACTION_AFTER_REFUND_ORDER_ITEMS, [$this, 'addOrderNoteForRefundCreated'], 10, 3);
         add_action(OrderItemsRefunder::ACTION_AFTER_CANCELED_ORDER_ITEMS, [$this, 'addOrderNoteForCancelledLineItems'], 10, 2);
         return \true;
@@ -120,7 +120,7 @@ class PaymentModule implements ServiceModule, ExecutableModule
             if (empty($gatewaySettings["activate_expiry_days_setting"]) || $gatewaySettings["activate_expiry_days_setting"] === 'no') {
                 continue;
             }
-            $heldDuration = isset($gatewaySettings) && isset($gatewaySettings['order_dueDate']) ? $gatewaySettings['order_dueDate'] : 0;
+            $heldDuration = isset($gatewaySettings['order_dueDate']) ? $gatewaySettings['order_dueDate'] : 0;
             if ($heldDuration < 1) {
                 continue;
             }
@@ -137,7 +137,10 @@ class PaymentModule implements ServiceModule, ExecutableModule
                     $order = wc_get_order($unpaid_order);
                     $mollieOrderService = $this->container->get(\Mollie\WooCommerce\Payment\MollieOrderService::class);
                     if ($mollieOrderService->checkPaymentForUnpaidOrder($order)) {
-                        continue;
+                        $order = wc_get_order($unpaid_order);
+                        if (!$order->has_status('pending')) {
+                            continue;
+                        }
                     }
                     add_filter('mollie-payments-for-woocommerce_order_status_cancelled', static function ($newOrderStatus) {
                         return SharedDataDictionary::STATUS_CANCELLED;
@@ -407,7 +410,7 @@ class PaymentModule implements ServiceModule, ExecutableModule
             if (\false === as_next_scheduled_action('mollie_woocommerce_cancel_unpaid_orders')) {
                 as_schedule_recurring_action(time(), 600, 'mollie_woocommerce_cancel_unpaid_orders');
             }
-            add_action('mollie_woocommerce_cancel_unpaid_orders', [$this, 'cancelOrderOnExpiryDate'], 11, 2);
+            add_action('mollie_woocommerce_cancel_unpaid_orders', [$this, 'cancelOrderOnExpiryDate'], 11, 0);
         }
     }
     /**

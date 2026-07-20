@@ -4,11 +4,12 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitbf0d59b326756ec3f097a186388c2955
+class ComposerStaticInit7b563cd52561b132e3f0e82f3153a09f
 {
     public static $prefixLengthsPsr4 = array (
         'M' =>
         array (
+            'Mollie\\enshrined\\svgSanitize\\' => 29,
             'Mollie\\WooCommerce\\' => 19,
             'Mollie\\Psr\\Log\\' => 15,
             'Mollie\\Psr\\Container\\' => 21,
@@ -25,6 +26,10 @@ class ComposerStaticInitbf0d59b326756ec3f097a186388c2955
     );
 
     public static $prefixDirsPsr4 = array (
+        'Mollie\\enshrined\\svgSanitize\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/enshrined/svg-sanitize/src',
+        ),
         'Mollie\\WooCommerce\\' =>
         array (
             0 => __DIR__ . '/../..' . '/src',
@@ -297,20 +302,24 @@ class ComposerStaticInitbf0d59b326756ec3f097a186388c2955
         'Mollie\\Psr\\Log\\Test\\TestLogger' => __DIR__ . '/..' . '/psr/log/Psr/Log/Test/TestLogger.php',
         'Mollie\\WooCommerce\\Activation\\ActivationModule' => __DIR__ . '/../..' . '/src/Activation/ActivationModule.php',
         'Mollie\\WooCommerce\\Activation\\ConstraintsChecker' => __DIR__ . '/../..' . '/src/Activation/ConstraintsChecker.php',
+        'Mollie\\WooCommerce\\Activation\\Migrations\\MigratorInterface' => __DIR__ . '/../..' . '/src/Activation/Migrations/MigratorInterface.php',
+        'Mollie\\WooCommerce\\Activation\\Migrations\\PaymentMethodSettingsMigrator' => __DIR__ . '/../..' . '/src/Activation/Migrations/PaymentMethodSettingsMigrator.php',
         'Mollie\\WooCommerce\\Activation\\PluginDisabler' => __DIR__ . '/../..' . '/src/Activation/PluginDisabler.php',
         'Mollie\\WooCommerce\\Assets\\AssetsModule' => __DIR__ . '/../..' . '/src/Assets/AssetsModule.php',
-        'Mollie\\WooCommerce\\Assets\\MollieCheckoutBlocksSupport' => __DIR__ . '/../..' . '/src/Assets/MollieCheckoutBlocksSupport.php',
         'Mollie\\WooCommerce\\BlockService\\CheckoutBlockService' => __DIR__ . '/../..' . '/src/BlockService/CheckoutBlockService.php',
+        'Mollie\\WooCommerce\\Buttons\\AbstractExpressButton' => __DIR__ . '/../..' . '/src/Buttons/AbstractExpressButton.php',
         'Mollie\\WooCommerce\\Buttons\\ApplePayButton\\AppleAjaxRequests' => __DIR__ . '/../..' . '/src/Buttons/ApplePayButton/AppleAjaxRequests.php',
         'Mollie\\WooCommerce\\Buttons\\ApplePayButton\\ApplePayDataObjectHttp' => __DIR__ . '/../..' . '/src/Buttons/ApplePayButton/ApplePayDataObjectHttp.php',
         'Mollie\\WooCommerce\\Buttons\\ApplePayButton\\ApplePayDirectHandler' => __DIR__ . '/../..' . '/src/Buttons/ApplePayButton/ApplePayDirectHandler.php',
+        'Mollie\\WooCommerce\\Buttons\\ApplePayButton\\ApplePayExpressButton' => __DIR__ . '/../..' . '/src/Buttons/ApplePayButton/ApplePayExpressButton.php',
         'Mollie\\WooCommerce\\Buttons\\ApplePayButton\\DataToAppleButtonScripts' => __DIR__ . '/../..' . '/src/Buttons/ApplePayButton/DataToAppleButtonScripts.php',
         'Mollie\\WooCommerce\\Buttons\\ApplePayButton\\PropertiesDictionary' => __DIR__ . '/../..' . '/src/Buttons/ApplePayButton/PropertiesDictionary.php',
         'Mollie\\WooCommerce\\Buttons\\ApplePayButton\\ResponsesToApple' => __DIR__ . '/../..' . '/src/Buttons/ApplePayButton/ResponsesToApple.php',
+        'Mollie\\WooCommerce\\Buttons\\ExpressButtonInterface' => __DIR__ . '/../..' . '/src/Buttons/ExpressButtonInterface.php',
         'Mollie\\WooCommerce\\Buttons\\PayPalButton\\DataToPayPal' => __DIR__ . '/../..' . '/src/Buttons/PayPalButton/DataToPayPal.php',
         'Mollie\\WooCommerce\\Buttons\\PayPalButton\\PayPalAjaxRequests' => __DIR__ . '/../..' . '/src/Buttons/PayPalButton/PayPalAjaxRequests.php',
-        'Mollie\\WooCommerce\\Buttons\\PayPalButton\\PayPalButtonHandler' => __DIR__ . '/../..' . '/src/Buttons/PayPalButton/PayPalButtonHandler.php',
         'Mollie\\WooCommerce\\Buttons\\PayPalButton\\PayPalDataObjectHttp' => __DIR__ . '/../..' . '/src/Buttons/PayPalButton/PayPalDataObjectHttp.php',
+        'Mollie\\WooCommerce\\Buttons\\PayPalButton\\PayPalExpressButton' => __DIR__ . '/../..' . '/src/Buttons/PayPalButton/PayPalExpressButton.php',
         'Mollie\\WooCommerce\\Buttons\\PayPalButton\\PropertiesDictionary' => __DIR__ . '/../..' . '/src/Buttons/PayPalButton/PropertiesDictionary.php',
         'Mollie\\WooCommerce\\Buttons\\PayPalButton\\WCOrderCalculator' => __DIR__ . '/../..' . '/src/Buttons/PayPalButton/WCOrderCalculator.php',
         'Mollie\\WooCommerce\\Components\\AcceptedLocaleValuesDictionary' => __DIR__ . '/../..' . '/src/Components/AcceptedLocaleValuesDictionary.php',
@@ -355,6 +364,7 @@ class ComposerStaticInitbf0d59b326756ec3f097a186388c2955
         'Mollie\\WooCommerce\\PaymentMethods\\Banktransfer' => __DIR__ . '/../..' . '/src/PaymentMethods/Banktransfer.php',
         'Mollie\\WooCommerce\\PaymentMethods\\Belfius' => __DIR__ . '/../..' . '/src/PaymentMethods/Belfius.php',
         'Mollie\\WooCommerce\\PaymentMethods\\Billie' => __DIR__ . '/../..' . '/src/PaymentMethods/Billie.php',
+        'Mollie\\WooCommerce\\PaymentMethods\\Billink' => __DIR__ . '/../..' . '/src/PaymentMethods/Billink.php',
         'Mollie\\WooCommerce\\PaymentMethods\\Bizum' => __DIR__ . '/../..' . '/src/PaymentMethods/Bizum.php',
         'Mollie\\WooCommerce\\PaymentMethods\\Blik' => __DIR__ . '/../..' . '/src/PaymentMethods/Blik.php',
         'Mollie\\WooCommerce\\PaymentMethods\\Constants' => __DIR__ . '/../..' . '/src/PaymentMethods/Constants.php',
@@ -421,15 +431,17 @@ class ComposerStaticInitbf0d59b326756ec3f097a186388c2955
         'Mollie\\WooCommerce\\PaymentMethods\\Twint' => __DIR__ . '/../..' . '/src/PaymentMethods/Twint.php',
         'Mollie\\WooCommerce\\PaymentMethods\\Vipps' => __DIR__ . '/../..' . '/src/PaymentMethods/Vipps.php',
         'Mollie\\WooCommerce\\PaymentMethods\\Voucher' => __DIR__ . '/../..' . '/src/PaymentMethods/Voucher.php',
+        'Mollie\\WooCommerce\\PaymentMethods\\Wero' => __DIR__ . '/../..' . '/src/PaymentMethods/Wero.php',
+        'Mollie\\WooCommerce\\Payment\\LineItems\\LineItemProvider' => __DIR__ . '/../..' . '/src/Payment/LineItems/LineItemProvider.php',
+        'Mollie\\WooCommerce\\Payment\\LineItems\\OrderLines' => __DIR__ . '/../..' . '/src/Payment/LineItems/OrderLines.php',
+        'Mollie\\WooCommerce\\Payment\\LineItems\\PaymentLines' => __DIR__ . '/../..' . '/src/Payment/LineItems/PaymentLines.php',
         'Mollie\\WooCommerce\\Payment\\MollieObject' => __DIR__ . '/../..' . '/src/Payment/MollieObject.php',
         'Mollie\\WooCommerce\\Payment\\MollieOrder' => __DIR__ . '/../..' . '/src/Payment/MollieOrder.php',
         'Mollie\\WooCommerce\\Payment\\MollieOrderService' => __DIR__ . '/../..' . '/src/Payment/MollieOrderService.php',
         'Mollie\\WooCommerce\\Payment\\MolliePayment' => __DIR__ . '/../..' . '/src/Payment/MolliePayment.php',
         'Mollie\\WooCommerce\\Payment\\MollieSubscription' => __DIR__ . '/../..' . '/src/Payment/MollieSubscription.php',
-        'Mollie\\WooCommerce\\Payment\\OrderLines' => __DIR__ . '/../..' . '/src/Payment/OrderLines.php',
         'Mollie\\WooCommerce\\Payment\\PaymentCheckoutRedirectService' => __DIR__ . '/../..' . '/src/Payment/PaymentCheckoutRedirectService.php',
         'Mollie\\WooCommerce\\Payment\\PaymentFactory' => __DIR__ . '/../..' . '/src/Payment/PaymentFactory.php',
-        'Mollie\\WooCommerce\\Payment\\PaymentLines' => __DIR__ . '/../..' . '/src/Payment/PaymentLines.php',
         'Mollie\\WooCommerce\\Payment\\PaymentModule' => __DIR__ . '/../..' . '/src/Payment/PaymentModule.php',
         'Mollie\\WooCommerce\\Payment\\PaymentProcessor' => __DIR__ . '/../..' . '/src/Payment/PaymentProcessor.php',
         'Mollie\\WooCommerce\\Payment\\Request\\Middleware\\AddCustomRequestFieldsMiddleware' => __DIR__ . '/../..' . '/src/Payment/Request/Middleware/AddCustomRequestFieldsMiddleware.php',
@@ -452,6 +464,8 @@ class ComposerStaticInitbf0d59b326756ec3f097a186388c2955
         'Mollie\\WooCommerce\\Payment\\Request\\Strategies\\RequestStrategyInterface' => __DIR__ . '/../..' . '/src/Payment/Request/Strategies/RequestStrategyInterface.php',
         'Mollie\\WooCommerce\\Payment\\Webhooks\\RestApi' => __DIR__ . '/../..' . '/src/Payment/Webhooks/RestApi.php',
         'Mollie\\WooCommerce\\Payment\\Webhooks\\WebhookHandler' => __DIR__ . '/../..' . '/src/Payment/Webhooks/WebhookHandler.php',
+        'Mollie\\WooCommerce\\Payment\\Webhooks\\WebhookSecret' => __DIR__ . '/../..' . '/src/Payment/Webhooks/WebhookSecret.php',
+        'Mollie\\WooCommerce\\Privacy\\PrivacyModule' => __DIR__ . '/../..' . '/src/Privacy/PrivacyModule.php',
         'Mollie\\WooCommerce\\SDK\\Api' => __DIR__ . '/../..' . '/src/SDK/Api.php',
         'Mollie\\WooCommerce\\SDK\\CouldNotConnectToMollie' => __DIR__ . '/../..' . '/src/SDK/CouldNotConnectToMollie.php',
         'Mollie\\WooCommerce\\SDK\\HttpResponse' => __DIR__ . '/../..' . '/src/SDK/HttpResponse.php',
@@ -493,16 +507,29 @@ class ComposerStaticInitbf0d59b326756ec3f097a186388c2955
         'Mollie\\WooCommerce\\Subscription\\MollieSepaRecurringGatewayHandler' => __DIR__ . '/../..' . '/src/Subscription/MollieSepaRecurringGatewayHandler.php',
         'Mollie\\WooCommerce\\Subscription\\MollieSubscriptionGatewayHandler' => __DIR__ . '/../..' . '/src/Subscription/MollieSubscriptionGatewayHandler.php',
         'Mollie\\WooCommerce\\Subscription\\SubscriptionModule' => __DIR__ . '/../..' . '/src/Subscription/SubscriptionModule.php',
+        'Mollie\\WooCommerce\\Tracks\\TracksEventRecorder' => __DIR__ . '/../..' . '/src/Tracks/TracksEventRecorder.php',
+        'Mollie\\WooCommerce\\Tracks\\TracksModule' => __DIR__ . '/../..' . '/src/Tracks/TracksModule.php',
         'Mollie\\WooCommerce\\Uninstall\\CleanDb' => __DIR__ . '/../..' . '/src/Uninstall/CleanDb.php',
         'Mollie\\WooCommerce\\Uninstall\\UninstallModule' => __DIR__ . '/../..' . '/src/Uninstall/UninstallModule.php',
+        'Mollie\\enshrined\\svgSanitize\\ElementReference\\Resolver' => __DIR__ . '/..' . '/enshrined/svg-sanitize/src/ElementReference/Resolver.php',
+        'Mollie\\enshrined\\svgSanitize\\ElementReference\\Subject' => __DIR__ . '/..' . '/enshrined/svg-sanitize/src/ElementReference/Subject.php',
+        'Mollie\\enshrined\\svgSanitize\\ElementReference\\Usage' => __DIR__ . '/..' . '/enshrined/svg-sanitize/src/ElementReference/Usage.php',
+        'Mollie\\enshrined\\svgSanitize\\Exceptions\\NestingException' => __DIR__ . '/..' . '/enshrined/svg-sanitize/src/Exceptions/NestingException.php',
+        'Mollie\\enshrined\\svgSanitize\\Helper' => __DIR__ . '/..' . '/enshrined/svg-sanitize/src/Helper.php',
+        'Mollie\\enshrined\\svgSanitize\\Sanitizer' => __DIR__ . '/..' . '/enshrined/svg-sanitize/src/Sanitizer.php',
+        'Mollie\\enshrined\\svgSanitize\\data\\AllowedAttributes' => __DIR__ . '/..' . '/enshrined/svg-sanitize/src/data/AllowedAttributes.php',
+        'Mollie\\enshrined\\svgSanitize\\data\\AllowedTags' => __DIR__ . '/..' . '/enshrined/svg-sanitize/src/data/AllowedTags.php',
+        'Mollie\\enshrined\\svgSanitize\\data\\AttributeInterface' => __DIR__ . '/..' . '/enshrined/svg-sanitize/src/data/AttributeInterface.php',
+        'Mollie\\enshrined\\svgSanitize\\data\\TagInterface' => __DIR__ . '/..' . '/enshrined/svg-sanitize/src/data/TagInterface.php',
+        'Mollie\\enshrined\\svgSanitize\\data\\XPath' => __DIR__ . '/..' . '/enshrined/svg-sanitize/src/data/XPath.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitbf0d59b326756ec3f097a186388c2955::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitbf0d59b326756ec3f097a186388c2955::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitbf0d59b326756ec3f097a186388c2955::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit7b563cd52561b132e3f0e82f3153a09f::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit7b563cd52561b132e3f0e82f3153a09f::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit7b563cd52561b132e3f0e82f3153a09f::$classMap;
 
         }, null, ClassLoader::class);
     }

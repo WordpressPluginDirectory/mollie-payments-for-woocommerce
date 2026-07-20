@@ -1,7 +1,7 @@
 <?php
 
 declare (strict_types=1);
-namespace Mollie\WooCommerce\Payment;
+namespace Mollie\WooCommerce\Payment\LineItems;
 
 use Mollie\WooCommerce\PaymentMethods\Constants;
 use Mollie\WooCommerce\PaymentMethods\Voucher;
@@ -10,12 +10,12 @@ use WC_Order;
 use WC_Order_Item;
 use WC_Order_Item_Fee;
 use WC_Tax;
-class PaymentLines
+class PaymentLines implements \Mollie\WooCommerce\Payment\LineItems\LineItemProvider
 {
     /**
      * Formatted order lines.
      *
-     * @var $order_lines
+     * @var array
      */
     private $order_lines = [];
     /**
@@ -51,7 +51,7 @@ class PaymentLines
      *
      * @return array
      */
-    public function order_lines($order)
+    public function order_lines(WC_Order $order): array
     {
         $this->order_lines = [];
         $this->order = $order;
@@ -61,7 +61,7 @@ class PaymentLines
         $this->process_fees();
         $this->process_gift_cards();
         $this->process_mismatch();
-        return ['lines' => $this->get_order_lines()];
+        return $this->get_order_lines();
     }
     private function process_mismatch()
     {
@@ -115,7 +115,7 @@ class PaymentLines
                     $mollie_order_item['vatAmount']['value'] = $this->dataHelper->formatCurrencyValue(0, $this->currency);
                 }
                 if ($product instanceof \WC_Product && $product->get_image_id()) {
-                    $productImage = wp_get_attachment_image_src($product->get_image_id(), 'full');
+                    $productImage = wp_get_attachment_image_src((int) $product->get_image_id(), 'full');
                     if (isset($productImage[0]) && wc_is_valid_url($productImage[0])) {
                         $mollie_order_item['imageUrl'] = $productImage[0];
                     }
@@ -144,9 +144,9 @@ class PaymentLines
             foreach ($shipping_methods as $shipping_method) {
                 $vatRate = 0;
                 if ($shipping_method->get_total_tax() > 0 && $shipping_method->get_total() > 0) {
-                    $vatRate = round($shipping_method->get_total_tax() / $shipping_method->get_total(), 4) * 100;
+                    $vatRate = round((float) $shipping_method->get_total_tax() / (float) $shipping_method->get_total(), 4) * 100;
                 }
-                $shipping = ['type' => 'shipping_fee', 'description' => $shipping_method->get_name() ?: __('Shipping', 'mollie-payments-for-woocommerce'), 'quantity' => 1, 'vatRate' => $vatRate, 'unitPrice' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue($shipping_method->get_total() + $shipping_method->get_total_tax(), $this->currency)], 'totalAmount' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue($shipping_method->get_total() + $shipping_method->get_total_tax(), $this->currency)], 'vatAmount' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue($shipping_method->get_total_tax(), $this->currency)]];
+                $shipping = ['type' => 'shipping_fee', 'description' => $shipping_method->get_name() ?: __('Shipping', 'mollie-payments-for-woocommerce'), 'quantity' => 1, 'vatRate' => $vatRate, 'unitPrice' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue((float) $shipping_method->get_total() + (float) $shipping_method->get_total_tax(), $this->currency)], 'totalAmount' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue((float) $shipping_method->get_total() + (float) $shipping_method->get_total_tax(), $this->currency)], 'vatAmount' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue((float) $shipping_method->get_total_tax(), $this->currency)]];
                 $this->order_lines[] = $shipping;
             }
         }
@@ -199,7 +199,10 @@ class PaymentLines
     {
         if (!empty($this->order->get_items('gift_card'))) {
             foreach ($this->order->get_items('gift_card') as $cart_gift_card) {
-                $gift_card = ['type' => 'gift_card', 'description' => $cart_gift_card->get_name(), 'unitPrice' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue(-$cart_gift_card->get_amount(), $this->currency)], 'vatRate' => 0, 'quantity' => 1, 'totalAmount' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue(-$cart_gift_card->get_amount(), $this->currency)], 'vatAmount' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue(0, $this->currency)]];
+                // phpstan:ignore [wc-stub] WC gift card item's get_amount() is not declared in stubs
+                // @phpstan-ignore-next-line
+                $giftCardAmount = $cart_gift_card->get_amount();
+                $gift_card = ['type' => 'gift_card', 'description' => $cart_gift_card->get_name(), 'unitPrice' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue(-$giftCardAmount, $this->currency)], 'vatRate' => 0, 'quantity' => 1, 'totalAmount' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue(-$giftCardAmount, $this->currency)], 'vatAmount' => ['currency' => $this->currency, 'value' => $this->dataHelper->formatCurrencyValue(0, $this->currency)]];
                 $this->order_lines[] = $gift_card;
             }
         }
@@ -247,7 +250,7 @@ class PaymentLines
     private function get_item_price($cart_item)
     {
         $item_subtotal = $cart_item['line_subtotal'] + $cart_item['line_subtotal_tax'];
-        return $item_subtotal / $cart_item['quantity'];
+        return $item_subtotal / $this->toIntegerQuantity((float) $cart_item['quantity']);
     }
     /**
      * Get cart item quantity.
@@ -261,7 +264,23 @@ class PaymentLines
      */
     private function get_item_quantity($cart_item)
     {
-        return $cart_item['quantity'];
+        return $this->toIntegerQuantity((float) $cart_item['quantity']);
+    }
+    /**
+     * Convert a fractional WooCommerce quantity to the smallest equivalent integer
+     * by finding the minimal decimal scale factor (e.g. 1.5 → ×10 → 15, 0.4 → ×10 → 4).
+     * Falls back to round()+clamp for repeating decimals that have no exact match in d=0..4.
+     */
+    private function toIntegerQuantity(float $qty): int
+    {
+        for ($d = 0; $d <= 4; $d++) {
+            $scale = (int) pow(10, $d);
+            $candidate = (int) round($qty * $scale);
+            if (abs($candidate / $scale - $qty) < 1.0E-9) {
+                return max(1, $candidate);
+            }
+        }
+        return max(1, (int) round($qty));
     }
     /**
      * Get cart item SKU.

@@ -139,7 +139,6 @@ function mollieWooCommerceIsDropdownEnabled($gatewaySettingsName)
     return $optionValue == 'yes';
 }
 
-
 /**
  * Check if is a Mollie gateway
  * @param $gateway string
@@ -148,13 +147,8 @@ function mollieWooCommerceIsDropdownEnabled($gatewaySettingsName)
 */
 function mollieWooCommerceIsMollieGateway($gateway)
 {
-    if (
-        (is_string($gateway) && strpos($gateway, 'mollie_wc_gateway_') !== false)
-        || (is_object($gateway) && strpos($gateway->id, 'mollie_wc_gateway_') !== false)
-    ) {
-        return true;
-    }
-    return false;
+    $id = is_string($gateway) ? $gateway : (is_object($gateway) ? $gateway->id : '');
+    return strpos($id, 'mollie_wc_gateway_') === 0;
 }
 
 /**

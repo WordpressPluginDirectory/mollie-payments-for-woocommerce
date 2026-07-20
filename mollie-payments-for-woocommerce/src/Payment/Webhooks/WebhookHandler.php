@@ -166,9 +166,14 @@ class WebhookHandler
             $this->logger->debug(__METHOD__ . " called for payment {$orderId} has final status. Nothing to be done");
             return;
         }
+        if ($mollieObject->getCancelledMolliePaymentId($orderId) === $payment->id) {
+            $this->logger->debug(__METHOD__ . " payment {$payment->id} already processed as cancelled for order {$orderId}, skipping.");
+            return;
+        }
         $mollieObject->unsetActiveMolliePayment($orderId, $payment->id);
         $mollieObject->setCancelledMolliePaymentId($orderId, $payment->id);
         $orderStatusCancelledPayments = $this->settingsHelper->getOrderStatusCancelledPayments();
+        $newOrderStatus = SharedDataDictionary::STATUS_PENDING;
         if ($orderStatusCancelledPayments === 'pending' || $orderStatusCancelledPayments === null) {
             $newOrderStatus = SharedDataDictionary::STATUS_PENDING;
         } elseif ($orderStatusCancelledPayments === 'cancelled') {
@@ -216,8 +221,9 @@ class WebhookHandler
         $newOrderStatus = apply_filters($this->pluginId . '_order_status_failed', $newOrderStatus);
         $newOrderStatus = apply_filters($this->pluginId . '_order_status_failed_' . $gateway->id, $newOrderStatus);
         $mollieObject->failedSubscriptionProcess($orderId, $gateway, $order, $newOrderStatus, $paymentMethodTitle, $payment);
-        if (isset($payment->details->failureReason)) {
-            $this->logger->debug(__METHOD__ . ' called for order ' . $orderId . ' and payment ' . $payment->id . ', regular payment failed because of ' . esc_attr($payment->details->failureReason) . '.');
+        $loggedReason = $payment->details->failureReason ?? $payment->details->bankReasonCode ?? null;
+        if ($loggedReason) {
+            $this->logger->debug(__METHOD__ . ' called for order ' . $orderId . ' and payment ' . $payment->id . ', regular payment failed because of ' . esc_attr($loggedReason) . '.');
         } else {
             $this->logger->debug(__METHOD__ . ' called for order ' . $orderId . ' and payment ' . $payment->id . ', regular payment failed.');
         }
@@ -234,7 +240,12 @@ class WebhookHandler
         $metaKey = $mollieObject instanceof MollieOrder ? '_mollie_order_id' : '_mollie_payment_id';
         $molliePaymentId = $order->get_meta($metaKey, \true);
         $this->logger->debug(__METHOD__ . ' called for order ' . $orderId);
-        if (!$order->needs_payment()) {
+        if ($mollieObject->isFinalOrderStatus($order)) {
+            $this->logger->debug(__METHOD__ . " called for order {$orderId} has final status. Nothing to be done");
+            return;
+        }
+        $alreadyPaid = !$order->needs_payment() || $order->get_status() === 'processing' || $order->get_meta('_mollie_paid_and_processed', \true);
+        if ($alreadyPaid) {
             $this->logger->log(LogLevel::DEBUG, __METHOD__ . ' called for order ' . $orderId . ', not processed because the order is already paid.');
             return;
         }

@@ -3,8 +3,6 @@
 declare (strict_types=1);
 namespace Mollie\WooCommerce\PaymentMethods;
 
-use Mollie\WooCommerce\Payment\MollieOrder;
-use Mollie\WooCommerce\Payment\MolliePayment;
 class Voucher extends \Mollie\WooCommerce\PaymentMethods\AbstractPaymentMethod implements \Mollie\WooCommerce\PaymentMethods\PaymentMethodI
 {
     /**
@@ -35,7 +33,7 @@ class Voucher extends \Mollie\WooCommerce\PaymentMethods\AbstractPaymentMethod i
     {
         return ['id' => 'voucher', 'defaultTitle' => 'Voucher', 'settingsDescription' => '', 'defaultDescription' => '', 'paymentFields' => \false, 'instructions' => \false, 'supports' => ['products'], 'filtersOnBuild' => \true, 'confirmationDelayed' => \false, 'docs' => 'https://www.mollie.com/gb/payments/meal-eco-gift-vouchers'];
     }
-    public function filtersOnBuild()
+    public function filtersOnBuild(): void
     {
         add_action('mollie-payments-for-woocommerce_after_webhook_action', [$this, 'addPaymentDetailsOrderNote'], 10, 2);
     }
@@ -65,7 +63,14 @@ class Voucher extends \Mollie\WooCommerce\PaymentMethods\AbstractPaymentMethod i
             $applied .= sprintf(__('%1$s: %2$s %3$s<br/>', 'mollie-payments-for-woocommerce'), $voucher->issuer, $voucher->amount->value, $voucher->amount->currency);
         }
         if (isset($details->remainderAmount)) {
-            $remainder = sprintf(__('%1$s: %2$s %3$s<br/>', 'mollie-payments-for-woocommerce'), $details->remainderMethod, $details->remainderAmount->value, $details->remainderAmount->currency);
+            $remainder = sprintf(
+                __('%1$s: %2$s %3$s<br/>', 'mollie-payments-for-woocommerce'),
+                // phpstan:ignore [mollie-stub] Mollie payment detail object exposes remainderMethod as a dynamic property not covered by type definitions
+                // @phpstan-ignore-next-line
+                $details->remainderMethod,
+                $details->remainderAmount->value,
+                $details->remainderAmount->currency
+            );
         }
         $order->add_order_note(sprintf(__('<p><strong>Voucher(s) applied:</strong><br />%1$s</p><p><strong>Remainder:</strong><br />%2$s</p>', 'mollie-payments-for-woocommerce'), $applied, $remainder));
     }
@@ -88,6 +93,15 @@ class Voucher extends \Mollie\WooCommerce\PaymentMethods\AbstractPaymentMethod i
             /* translators: Placeholder 1: Default order status, placeholder 2: Link to 'Hold Stock' setting */
             'description' => __('In order to process it, all products in the order must have a category. This selector will assign the default categories for the shop products. If orders API is active only the first category will be used!', 'mollie-payments-for-woocommerce'),
         ]];
+        /**
+         * This payment method requires line items to be sent
+         *
+         * @see https://docs.mollie.com/reference/create-payment
+         * @see https://docs.mollie.com/reference/create-order
+         */
+        if (isset($generalFormFields['hide_order_lines'])) {
+            unset($generalFormFields['hide_order_lines']);
+        }
         return array_merge($generalFormFields, $paymentMethodFormFieds);
     }
     /**

@@ -27,14 +27,14 @@ class DataToPayPal
         if ($paypalSettings) {
             $minAmount = isset($paypalSettings['mollie_paypal_button_minimum_amount']) && $paypalSettings['mollie_paypal_button_minimum_amount'] > 0 ? $paypalSettings['mollie_paypal_button_minimum_amount'] : 0;
         }
+        if ($isBlock) {
+            return $this->dataForBlockCartPage($minAmount);
+        }
         if (is_product()) {
             return $this->dataForProductPage($minAmount);
         }
         if (is_cart()) {
             return $this->dataForCartPage($minAmount);
-        }
-        if ($isBlock) {
-            return $this->dataForBlockCartPage($minAmount);
         }
         return [];
     }
@@ -61,7 +61,7 @@ class DataToPayPal
         $dataArray = explode('-', $colorSetting);
         //[0]lang [1]folder [2]first part filename [3] second part filename
         $fixPath = 'public/images/PayPal_Buttons/';
-        $buildButtonName = sprintf('%s/%s/%s-%s.png', $dataArray[0], $dataArray[1], $dataArray[2], $dataArray[3]);
+        $buildButtonName = sprintf('%s/%s/%s-%s.png', $dataArray[0] ?? 'en', $dataArray[1] ?? 'checkout', $dataArray[2] ?? 'pill', $dataArray[3] ?? 'golden');
         $path = sprintf('%s%s', $fixPath, $buildButtonName);
         if (file_exists(\M4W_PLUGIN_DIR . '/' . $path)) {
             return sprintf('%s%s', $fixPath, $buildButtonName);
@@ -110,8 +110,8 @@ class DataToPayPal
      */
     protected function dataForBlockCartPage($minAmount): array
     {
-        $nonce = wp_nonce_field('mollie_PayPal_button');
-        $buttonMarkup = '<div id="mollie-PayPal-button" class="mol-PayPal">' . $nonce . '<input type="image" src="' . esc_url($this->selectedPaypalButtonUrl()) . '" alt="PayPal Button"></div>';
-        return ['minFee' => $minAmount, 'ajaxUrl' => admin_url('admin-ajax.php'), 'buttonMarkup' => $buttonMarkup];
+        $nonce = wp_create_nonce('mollie_PayPal_button');
+        $buttonMarkup = '<div id="mollie-PayPal-button" class="mol-PayPal">' . '<input type="hidden" name="nonce" value="' . esc_attr($nonce) . '">' . '<input type="image" src="' . esc_url($this->selectedPaypalButtonUrl()) . '" alt="PayPal Button"></div>';
+        return ['minFee' => $minAmount, 'ajaxUrl' => admin_url('admin-ajax.php'), 'buttonImageUrl' => esc_url($this->selectedPaypalButtonUrl()), 'nonce' => $nonce];
     }
 }
