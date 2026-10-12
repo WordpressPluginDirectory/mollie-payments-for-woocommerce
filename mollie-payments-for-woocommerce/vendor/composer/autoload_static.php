@@ -4,19 +4,25 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit7b563cd52561b132e3f0e82f3153a09f
+class ComposerStaticInita4c27363e5cf627b2c2aab0d81ef10c3
 {
+    public static $files = array (
+        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
         'M' =>
         array (
+            'Mollie\\libphonenumber\\' => 22,
             'Mollie\\enshrined\\svgSanitize\\' => 29,
             'Mollie\\WooCommerce\\' => 19,
+            'Mollie\\Symfony\\Polyfill\\Mbstring\\' => 33,
             'Mollie\\Psr\\Log\\' => 15,
             'Mollie\\Psr\\Container\\' => 21,
             'Mollie\\Inpsyde\\PaymentGateway\\' => 30,
             'Mollie\\Inpsyde\\Modularity\\' => 26,
             'Mollie\\Inpsyde\\EnvironmentChecker\\' => 34,
-            'Mollie\\Dhii\\Services\\' => 21,
+            'Mollie\\Giggsey\\Locale\\' => 22,
             'Mollie\\Api\\' => 11,
         ),
         'C' =>
@@ -26,6 +32,10 @@ class ComposerStaticInit7b563cd52561b132e3f0e82f3153a09f
     );
 
     public static $prefixDirsPsr4 = array (
+        'Mollie\\libphonenumber\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src',
+        ),
         'Mollie\\enshrined\\svgSanitize\\' =>
         array (
             0 => __DIR__ . '/..' . '/enshrined/svg-sanitize/src',
@@ -33,6 +43,10 @@ class ComposerStaticInit7b563cd52561b132e3f0e82f3153a09f
         'Mollie\\WooCommerce\\' =>
         array (
             0 => __DIR__ . '/../..' . '/src',
+        ),
+        'Mollie\\Symfony\\Polyfill\\Mbstring\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
         ),
         'Mollie\\Psr\\Log\\' =>
         array (
@@ -54,9 +68,9 @@ class ComposerStaticInit7b563cd52561b132e3f0e82f3153a09f
         array (
             0 => __DIR__ . '/../..' . '/pluginEnvironmentChecker',
         ),
-        'Mollie\\Dhii\\Services\\' =>
+        'Mollie\\Giggsey\\Locale\\' =>
         array (
-            0 => __DIR__ . '/..' . '/dhii/services/src',
+            0 => __DIR__ . '/..' . '/giggsey/locale/src',
         ),
         'Mollie\\Api\\' =>
         array (
@@ -220,18 +234,7 @@ class ComposerStaticInit7b563cd52561b132e3f0e82f3153a09f
         'Mollie\\Api\\Types\\SettlementStatus' => __DIR__ . '/..' . '/mollie/mollie-api-php/src/Types/SettlementStatus.php',
         'Mollie\\Api\\Types\\SubscriptionStatus' => __DIR__ . '/..' . '/mollie/mollie-api-php/src/Types/SubscriptionStatus.php',
         'Mollie\\Api\\Types\\TerminalStatus' => __DIR__ . '/..' . '/mollie/mollie-api-php/src/Types/TerminalStatus.php',
-        'Mollie\\Dhii\\Services\\Extension' => __DIR__ . '/..' . '/dhii/services/src/Extension.php',
-        'Mollie\\Dhii\\Services\\Extensions\\ArrayExtension' => __DIR__ . '/..' . '/dhii/services/src/Extensions/ArrayExtension.php',
-        'Mollie\\Dhii\\Services\\Factories\\Alias' => __DIR__ . '/..' . '/dhii/services/src/Factories/Alias.php',
-        'Mollie\\Dhii\\Services\\Factories\\Constructor' => __DIR__ . '/..' . '/dhii/services/src/Factories/Constructor.php',
-        'Mollie\\Dhii\\Services\\Factories\\FuncService' => __DIR__ . '/..' . '/dhii/services/src/Factories/FuncService.php',
-        'Mollie\\Dhii\\Services\\Factories\\GlobalVar' => __DIR__ . '/..' . '/dhii/services/src/Factories/GlobalVar.php',
-        'Mollie\\Dhii\\Services\\Factories\\ServiceList' => __DIR__ . '/..' . '/dhii/services/src/Factories/ServiceList.php',
-        'Mollie\\Dhii\\Services\\Factories\\StringService' => __DIR__ . '/..' . '/dhii/services/src/Factories/StringService.php',
-        'Mollie\\Dhii\\Services\\Factories\\Value' => __DIR__ . '/..' . '/dhii/services/src/Factories/Value.php',
-        'Mollie\\Dhii\\Services\\Factory' => __DIR__ . '/..' . '/dhii/services/src/Factory.php',
-        'Mollie\\Dhii\\Services\\ResolveKeysCapableTrait' => __DIR__ . '/..' . '/dhii/services/src/ResolveKeysCapableTrait.php',
-        'Mollie\\Dhii\\Services\\Service' => __DIR__ . '/..' . '/dhii/services/src/Service.php',
+        'Mollie\\Giggsey\\Locale\\Locale' => __DIR__ . '/..' . '/giggsey/locale/src/Locale.php',
         'Mollie\\Inpsyde\\EnvironmentChecker\\ConstraintsCollectionFactory' => __DIR__ . '/../..' . '/pluginEnvironmentChecker/ConstraintsCollectionFactory.php',
         'Mollie\\Inpsyde\\EnvironmentChecker\\ConstraintsCollectionFactoryInterface' => __DIR__ . '/../..' . '/pluginEnvironmentChecker/ConstraintsCollectionFactoryInterface.php',
         'Mollie\\Inpsyde\\EnvironmentChecker\\Constraints\\AbstractVersionConstraint' => __DIR__ . '/../..' . '/pluginEnvironmentChecker/Constraints/AbstractVersionConstraint.php',
@@ -300,10 +303,12 @@ class ComposerStaticInit7b563cd52561b132e3f0e82f3153a09f
         'Mollie\\Psr\\Log\\Test\\DummyTest' => __DIR__ . '/..' . '/psr/log/Psr/Log/Test/DummyTest.php',
         'Mollie\\Psr\\Log\\Test\\LoggerInterfaceTest' => __DIR__ . '/..' . '/psr/log/Psr/Log/Test/LoggerInterfaceTest.php',
         'Mollie\\Psr\\Log\\Test\\TestLogger' => __DIR__ . '/..' . '/psr/log/Psr/Log/Test/TestLogger.php',
+        'Mollie\\Symfony\\Polyfill\\Mbstring\\Mbstring' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/Mbstring.php',
         'Mollie\\WooCommerce\\Activation\\ActivationModule' => __DIR__ . '/../..' . '/src/Activation/ActivationModule.php',
         'Mollie\\WooCommerce\\Activation\\ConstraintsChecker' => __DIR__ . '/../..' . '/src/Activation/ConstraintsChecker.php',
         'Mollie\\WooCommerce\\Activation\\Migrations\\MigratorInterface' => __DIR__ . '/../..' . '/src/Activation/Migrations/MigratorInterface.php',
         'Mollie\\WooCommerce\\Activation\\Migrations\\PaymentMethodSettingsMigrator' => __DIR__ . '/../..' . '/src/Activation/Migrations/PaymentMethodSettingsMigrator.php',
+        'Mollie\\WooCommerce\\Activation\\Migrations\\VoucherTermMetaTranslationMigrator' => __DIR__ . '/../..' . '/src/Activation/Migrations/VoucherTermMetaTranslationMigrator.php',
         'Mollie\\WooCommerce\\Activation\\PluginDisabler' => __DIR__ . '/../..' . '/src/Activation/PluginDisabler.php',
         'Mollie\\WooCommerce\\Assets\\AssetsModule' => __DIR__ . '/../..' . '/src/Assets/AssetsModule.php',
         'Mollie\\WooCommerce\\BlockService\\CheckoutBlockService' => __DIR__ . '/../..' . '/src/BlockService/CheckoutBlockService.php',
@@ -432,6 +437,7 @@ class ComposerStaticInit7b563cd52561b132e3f0e82f3153a09f
         'Mollie\\WooCommerce\\PaymentMethods\\Vipps' => __DIR__ . '/../..' . '/src/PaymentMethods/Vipps.php',
         'Mollie\\WooCommerce\\PaymentMethods\\Voucher' => __DIR__ . '/../..' . '/src/PaymentMethods/Voucher.php',
         'Mollie\\WooCommerce\\PaymentMethods\\Wero' => __DIR__ . '/../..' . '/src/PaymentMethods/Wero.php',
+        'Mollie\\WooCommerce\\Payment\\LineItems\\LineItemPriceCalculationTrait' => __DIR__ . '/../..' . '/src/Payment/LineItems/LineItemPriceCalculationTrait.php',
         'Mollie\\WooCommerce\\Payment\\LineItems\\LineItemProvider' => __DIR__ . '/../..' . '/src/Payment/LineItems/LineItemProvider.php',
         'Mollie\\WooCommerce\\Payment\\LineItems\\OrderLines' => __DIR__ . '/../..' . '/src/Payment/LineItems/OrderLines.php',
         'Mollie\\WooCommerce\\Payment\\LineItems\\PaymentLines' => __DIR__ . '/../..' . '/src/Payment/LineItems/PaymentLines.php',
@@ -439,6 +445,7 @@ class ComposerStaticInit7b563cd52561b132e3f0e82f3153a09f
         'Mollie\\WooCommerce\\Payment\\MollieOrder' => __DIR__ . '/../..' . '/src/Payment/MollieOrder.php',
         'Mollie\\WooCommerce\\Payment\\MollieOrderService' => __DIR__ . '/../..' . '/src/Payment/MollieOrderService.php',
         'Mollie\\WooCommerce\\Payment\\MolliePayment' => __DIR__ . '/../..' . '/src/Payment/MolliePayment.php',
+        'Mollie\\WooCommerce\\Payment\\MolliePaymentAttempt' => __DIR__ . '/../..' . '/src/Payment/MolliePaymentAttempt.php',
         'Mollie\\WooCommerce\\Payment\\MollieSubscription' => __DIR__ . '/../..' . '/src/Payment/MollieSubscription.php',
         'Mollie\\WooCommerce\\Payment\\PaymentCheckoutRedirectService' => __DIR__ . '/../..' . '/src/Payment/PaymentCheckoutRedirectService.php',
         'Mollie\\WooCommerce\\Payment\\PaymentFactory' => __DIR__ . '/../..' . '/src/Payment/PaymentFactory.php',
@@ -522,14 +529,54 @@ class ComposerStaticInit7b563cd52561b132e3f0e82f3153a09f
         'Mollie\\enshrined\\svgSanitize\\data\\AttributeInterface' => __DIR__ . '/..' . '/enshrined/svg-sanitize/src/data/AttributeInterface.php',
         'Mollie\\enshrined\\svgSanitize\\data\\TagInterface' => __DIR__ . '/..' . '/enshrined/svg-sanitize/src/data/TagInterface.php',
         'Mollie\\enshrined\\svgSanitize\\data\\XPath' => __DIR__ . '/..' . '/enshrined/svg-sanitize/src/data/XPath.php',
+        'Mollie\\libphonenumber\\AlternateFormatsCountryCodeSet' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/AlternateFormatsCountryCodeSet.php',
+        'Mollie\\libphonenumber\\AsYouTypeFormatter' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/AsYouTypeFormatter.php',
+        'Mollie\\libphonenumber\\CountryCodeSource' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/CountryCodeSource.php',
+        'Mollie\\libphonenumber\\CountryCodeToRegionCodeMap' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/CountryCodeToRegionCodeMap.php',
+        'Mollie\\libphonenumber\\DefaultMetadataLoader' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/DefaultMetadataLoader.php',
+        'Mollie\\libphonenumber\\Leniency' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/Leniency.php',
+        'Mollie\\libphonenumber\\Leniency\\AbstractLeniency' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/Leniency/AbstractLeniency.php',
+        'Mollie\\libphonenumber\\Leniency\\ExactGrouping' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/Leniency/ExactGrouping.php',
+        'Mollie\\libphonenumber\\Leniency\\Possible' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/Leniency/Possible.php',
+        'Mollie\\libphonenumber\\Leniency\\StrictGrouping' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/Leniency/StrictGrouping.php',
+        'Mollie\\libphonenumber\\Leniency\\Valid' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/Leniency/Valid.php',
+        'Mollie\\libphonenumber\\MatchType' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/MatchType.php',
+        'Mollie\\libphonenumber\\Matcher' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/Matcher.php',
+        'Mollie\\libphonenumber\\MatcherAPIInterface' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/MatcherAPIInterface.php',
+        'Mollie\\libphonenumber\\MetadataLoaderInterface' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/MetadataLoaderInterface.php',
+        'Mollie\\libphonenumber\\MetadataSourceInterface' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/MetadataSourceInterface.php',
+        'Mollie\\libphonenumber\\MultiFileMetadataSourceImpl' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/MultiFileMetadataSourceImpl.php',
+        'Mollie\\libphonenumber\\NumberFormat' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/NumberFormat.php',
+        'Mollie\\libphonenumber\\NumberParseException' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/NumberParseException.php',
+        'Mollie\\libphonenumber\\PhoneMetadata' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/PhoneMetadata.php',
+        'Mollie\\libphonenumber\\PhoneNumber' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/PhoneNumber.php',
+        'Mollie\\libphonenumber\\PhoneNumberDesc' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/PhoneNumberDesc.php',
+        'Mollie\\libphonenumber\\PhoneNumberFormat' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/PhoneNumberFormat.php',
+        'Mollie\\libphonenumber\\PhoneNumberMatch' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/PhoneNumberMatch.php',
+        'Mollie\\libphonenumber\\PhoneNumberMatcher' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/PhoneNumberMatcher.php',
+        'Mollie\\libphonenumber\\PhoneNumberToCarrierMapper' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/PhoneNumberToCarrierMapper.php',
+        'Mollie\\libphonenumber\\PhoneNumberToTimeZonesMapper' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/PhoneNumberToTimeZonesMapper.php',
+        'Mollie\\libphonenumber\\PhoneNumberType' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/PhoneNumberType.php',
+        'Mollie\\libphonenumber\\PhoneNumberUtil' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/PhoneNumberUtil.php',
+        'Mollie\\libphonenumber\\RegexBasedMatcher' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/RegexBasedMatcher.php',
+        'Mollie\\libphonenumber\\RegionCode' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/RegionCode.php',
+        'Mollie\\libphonenumber\\ShortNumberCost' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/ShortNumberCost.php',
+        'Mollie\\libphonenumber\\ShortNumberInfo' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/ShortNumberInfo.php',
+        'Mollie\\libphonenumber\\ShortNumbersRegionCodeSet' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/ShortNumbersRegionCodeSet.php',
+        'Mollie\\libphonenumber\\ValidationResult' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/ValidationResult.php',
+        'Mollie\\libphonenumber\\geocoding\\PhoneNumberOfflineGeocoder' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/geocoding/PhoneNumberOfflineGeocoder.php',
+        'Mollie\\libphonenumber\\prefixmapper\\MappingFileProvider' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/prefixmapper/MappingFileProvider.php',
+        'Mollie\\libphonenumber\\prefixmapper\\PhonePrefixMap' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/prefixmapper/PhonePrefixMap.php',
+        'Mollie\\libphonenumber\\prefixmapper\\PrefixFileReader' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/prefixmapper/PrefixFileReader.php',
+        'Mollie\\libphonenumber\\prefixmapper\\PrefixTimeZonesMap' => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src/prefixmapper/PrefixTimeZonesMap.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit7b563cd52561b132e3f0e82f3153a09f::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit7b563cd52561b132e3f0e82f3153a09f::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit7b563cd52561b132e3f0e82f3153a09f::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInita4c27363e5cf627b2c2aab0d81ef10c3::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInita4c27363e5cf627b2c2aab0d81ef10c3::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInita4c27363e5cf627b2c2aab0d81ef10c3::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -87,6 +87,7 @@ class MollieOrderService
             if (!$orders) {
                 $this->logger->debug(__METHOD__ . ': No orders found in mollie meta for transaction ID: ' . $transactionID);
                 $this->onWebhookActionFallback($order_id, $key, $transactionID);
+                return;
             }
         }
         if (count($orders) > 1) {
@@ -94,7 +95,7 @@ class MollieOrderService
             return;
         }
         $order = $orders[0];
-        if ($order->get_id() != $order_id) {
+        if ((int) $order->get_id() !== (int) $order_id) {
             $this->httpResponse->setHttpResponseCode(401);
             $this->logger->debug(__METHOD__ . ":  found order {$order->get_id()} is not the same as provided order {$order_id}.");
             return;
@@ -221,6 +222,16 @@ class MollieOrderService
         $this->logger->debug($this->gateway->id . ": Mollie payment object {$payment->id} (" . $payment->mode . ") action call for order {$order->get_id()}.");
         $method_name = 'onWebhook' . ucfirst($payment->status);
         $payment_method_title = $this->getPaymentMethodTitle($payment);
+        // A payment that is not the attempt the order is linked to may only act on the order when
+        // Mollie's own record of that payment names this order (metadata.order_id, written by the
+        // plugin at creation, so a caller cannot forge it).
+        // A superseded attempt that does name the order (e.g. the method the customer abandoned
+        // before paying with another one) must still not terminate it: onWebhookExpired guards that
+        // case itself (and records an order note), failed and canceled are shortcut here.
+        if (!\Mollie\WooCommerce\Payment\MolliePaymentAttempt::isCurrentAttempt($order, (string) $payment->id) && (!\Mollie\WooCommerce\Payment\MolliePaymentAttempt::wasCreatedForOrder($order, $payment) || $this->isTerminalPaymentStatus($payment))) {
+            $this->logger->debug(__METHOD__ . ": webhook for payment {$payment->id} (status {$payment->status}) ignored — " . "order {$order->get_id()} is linked to a different attempt.");
+            return \true;
+        }
         if (!$this->orderNeedsPayment($order)) {
             $this->handlePaidOrderWebhook($order, $payment);
             $this->processRefunds($order, $payment);
@@ -249,6 +260,18 @@ class MollieOrderService
         }
         do_action($this->pluginId . '_after_webhook_action', $payment, $order);
         return \true;
+    }
+    /**
+     * A terminal Mollie payment status whose webhook handler (onWebhookFailed / onWebhookCanceled)
+     * has no own "different attempt" guard and would otherwise terminate the order. 'expired' is
+     * intentionally excluded: onWebhookExpired already guards the superseded-attempt case itself.
+     *
+     * @param object $payment
+     */
+    private function isTerminalPaymentStatus($payment): bool
+    {
+        $status = isset($payment->status) ? (string) $payment->status : '';
+        return in_array($status, ['failed', 'canceled', 'cancelled'], \true);
     }
     /**
      * @param \WC_Order $order
@@ -381,19 +404,14 @@ class MollieOrderService
                 $processedChargebackIds = [];
             }
             $this->logger->debug(__METHOD__ . " Already processed chargebacks for {$logId}: " . wp_json_encode($processedChargebackIds));
-            // Order the chargeback arrays by value (chargeback ID)
-            asort($chargebackIds);
-            asort($processedChargebackIds);
             // Check if there are new chargebacks that need processing
-            if ($chargebackIds != $processedChargebackIds) {
-                // There are new chargebacks.
-                $chargebacksToProcess = array_diff($chargebackIds, $processedChargebackIds);
-                $this->logger->debug(__METHOD__ . " Chargebacks that need to be processed for {$logId}: " . wp_json_encode($chargebacksToProcess));
-            } else {
+            $chargebacksToProcess = array_diff($chargebackIds, $processedChargebackIds);
+            if (!$chargebacksToProcess) {
                 // No new chargebacks, stop processing.
                 $this->logger->debug(__METHOD__ . " No new chargebacks, stop processing for {$logId}");
                 return;
             }
+            $this->logger->debug(__METHOD__ . " Chargebacks that need to be processed for {$logId}: " . wp_json_encode($chargebacksToProcess));
             $order = wc_get_order($orderId);
             // Update order notes, add message about chargeback
             foreach ($chargebacksToProcess as $chargebackToProcess) {
